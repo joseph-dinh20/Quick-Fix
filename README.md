@@ -1,7 +1,5 @@
-# Quick-Fix
+# Vue 3 + TypeScript + Vite
 
-## How to run the front-end
-1. go into the Frontend/QuickFix folder
-2 (if using Frontend for the first time, type npm install)
-3. type npm run dev
-4. go on a browser, try localhost:5173
+This template should help get you started developing with Vue 3 and TypeScript in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+
+Learn more about the recommended Project Setup and IDE Support in the [Vue Docs TypeScript Guide](https://vuejs.org/guide/typescript/overview.html#project-setup).
