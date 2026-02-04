@@ -1,15 +1,18 @@
 <script setup>
 import { ref } from 'vue'
+
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import combobox from '@/components/combobox.vue'
 import { ScrollArea } from '@/components/ui/scroll-area'
-import { Separator } from '@/components/ui/separator'
+
+// Importing Images
+import drillImage from '@/assets/drill.png'
+import garden from '@/assets/garden.png'
 
 const showScroll = ref(false)
+
 const tags = Array.from({ length: 50 }).map(
-  (_, i, a) => `Skibidi ${a.length - i}`,
+  (_, i) => `Skibidi ${i + 1}`,
 )
 
 function handleFocus() {
@@ -17,45 +20,59 @@ function handleFocus() {
 }
 
 function handleBlur() {
-  setTimeout(() => { showScroll.value = false }, 150)
+  // Delay so clicking dropdown doesn't instantly close it
+  setTimeout(() => {
+    showScroll.value = false
+  }, 200)
+}
+
+function selectTag(tag) {
+  console.log('Selected:', tag)
+  showScroll.value = false
 }
 </script>
 
 <template>
-  <main class="mt-[30px] text-green-800 min-h-screen">
-    <h1 class="text-5xl">Get the job done today.</h1>
-    <h1 class="text-5xl">No hassle.</h1>
-    <h2 class="text-3xl">Schedule an appointment now and lets get your problems fixed!</h2>
-    <div class="relative w-full max-w-sm space-y-2">
-      <div class="flex w-full max-w-sm items-center space-x-2">
-        <Input type="text" placeholder="Looking for something else?" @focus="handleFocus" @blur='handleBlur' />
-        <Button type="submit">
-          search
-        </Button>
+  <main class="mt-10 min-h-screen w-full flex flex-col items-center gap-16 text-green-800">
+    <h1 class="text-5xl font-bold">Get the job done today.</h1>
+    <h1 class="text-5xl font-bold">No hassle.</h1>
+    <h2 class="text-xl text-center max-w-xl">
+      Schedule an appointment now and lets get your problems fixed!
+    </h2>
+
+    <!-- Search Box -->
+    <div class="w-full max-w-sm relative">
+      <!-- Input Row -->
+      <div class="flex items-center gap-2">
+        <Input type="text" placeholder="Looking for something else?" @focus="handleFocus" @blur="handleBlur" />
+        <Button type="submit"> Search </Button>
       </div>
-      <!-- Scroll Area -->
-      <ScrollArea v-if="showScroll"
-        class="absolute top-full mt-1 w-full h-[300px] rounded-md border bg-background shadow-md z-50">
-        <div class="p-2 space-y-1">
-          <div v-for="tag in tags" :key="tag" class="cursor-pointer rounded px-2 py-1 hover:bg-muted">
-            {{ tag }}
+
+      <!-- Floating Dropdown Wrapper -->
+      <div v-if="showScroll" class="absolute mt-1 w-full z-1">
+        <ScrollArea class="h-[200px] w-full rounded-md bg-background shadow-lg">
+          <div class="p-2 space-y-2">
+            <div v-for="tag in tags" :key="tag" @mousedown="selectTag(tag)"
+              class="cursor-pointer rounded px-2 py-1 border hover:bg-muted transition">
+              {{ tag }}
+            </div>
           </div>
-        </div>
-      </ScrollArea>
+        </ScrollArea>
+      </div>
+    </div>
+
+    <!-- Job Type Buttons/Icons -->
+    <div class="flex flex-wrap items-center justify-center scale-[2] p-6 rounded-lg">
+      <div class="flex flex-col items-center">
+        <Button variant="outline" size="icon" aria-label="Submit"> <img :src="drillImage"> </Button>
+        <div class="scale-[0.5] mt-1"> Home Repair </div>
+      </div>
+      <div class="flex flex-col items-center">
+        <Button variant="outline" size="icon" aria-label="Submit"> <img :src="garden"> </Button>
+        <div class="scale-[0.5] mt-1"> Gardening </div>
+      </div>
     </div>
   </main>
 </template>
 
-<style scoped>
-main {
-  /* border: black solid 1px; */
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 32px;
-}
-
-main h2 {
-  font-size: 16px;
-}
-</style>
+<style scoped></style>
