@@ -1,19 +1,22 @@
 <script setup>
 import { ref } from 'vue'
+import ModeToggle from '@/components/ModeToggle.vue'
 
 const navigate = (hash) => {
   window.location.hash = hash
 }
 </script>
-
 <template>
   <header>
     <img src="../assets/logo.png" alt="logo image" id="logoImage">
     <div class="button-scope">
       <button class="big-button" @click="navigate('#/')">Home</button>
       <button class="big-button" @click="navigate('#/Payment')">Payment</button>
+      <button class="big-button" @click="navigate('#/Login')">Login</button>
+      <button class="big-button" @click="navigate('#/Signup')">Signup</button>
       <button class="big-button" @click="navigate('#/Test')">Test</button>
     </div>
+    <ModeToggle />
   </header>
   <hr>
 </template>

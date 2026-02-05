@@ -6,11 +6,17 @@ const message = ref('')
 </script>
 
 <template>
-  <div class="p-4">
-
-
+  <!-- feel free to copy paste the divs to test more stuff of your interest. - Hao.-->
+  <div class="p-4 flex-col gap-[30] border min-w-lg min-h-30">
     <p>v-model testing</p>
-    <input v-model="message" type="text" placeholder="Type something..." class="border p-2" />
+    <input v-model="message" type="text" placeholder="type something..." class="border p-2" />
     <p>{{ message }}</p>
   </div>
+
+  <div class="p-4 flex-col gap-[30] border min-w-lg min-h-30">
+    <p>v-model testing</p>
+    <input v-model="message" type="text" placeholder="type something..." class="border p-2" />
+    <p>{{ message }}</p>
+  </div>
+
 </template>

@@ -1,5 +1,6 @@
 <script setup>
 import { ref, computed } from 'vue'
+import Footer from '@/components/Footer.vue'
 
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -11,7 +12,7 @@ import garden from '@/assets/garden.png'
 
 const showScroll = ref(false)
 const value = ref('')
-const tags = [
+const jobs = [
   { name: 'Home Repair' },
   { name: 'Gardening' },
   { name: 'Honeydew' },
@@ -21,9 +22,12 @@ const tags = [
   { name: 'Pear' },
 ]
 
-const filteredTags = computed(() => {
+// computed() is a vue function that updates
+// whenever ANYTHING in it changes.
+const filteredJobs = computed(() => {
   const query = value.value.toLowerCase()
-  return tags.filter(tag => tag.name.toLowerCase().includes(query))
+  // console.log(query)
+  return jobs.filter(job => job.name.toLowerCase().includes(query))
 })
 
 function showScrollState() {
@@ -31,8 +35,8 @@ function showScrollState() {
   // console.log("showScroll state is now " + showScroll.value)
 }
 
-function selectTag(item) {
-  console.log(item.name)
+function selectjob(item) {
+  // console.log(item.name)
   value.value = item.name
 }
 </script>
@@ -49,18 +53,18 @@ function selectTag(item) {
     <div class="w-full max-w-sm relative">
       <!-- Input Row -->
       <div class="flex items-center gap-2">
-        <Input type="text" v-model="value" placeholder="Looking for something else?" @focus="showScrollState"
-          @blur="showScrollState" />
+        <Input type="text" v-model="value" @focus="showScrollState" @blur="showScrollState"
+          placeholder="Looking for something else?" />
         <Button type="submit"> Search </Button>
       </div>
 
       <!-- Floating Dropdown Wrapper -->
       <div v-if="showScroll" class="absolute mt-1 w-full z-1">
         <ScrollArea class="h-[200px] w-full rounded-md bg-background shadow-lg">
-          <div class="p-2 space-y-2">
-            <div v-for="tag in filteredTags" :key="tag" @mousedown="selectTag(tag)"
+          <div class="p-6 space-y-3">
+            <div v-for="job in filteredJobs" :key="job" @mousedown="selectjob(job)"
               class="cursor-pointer rounded px-2 py-1 border hover:bg-muted transition">
-              {{ tag.name }}
+              {{ job.name }}
             </div>
           </div>
         </ScrollArea>
@@ -79,6 +83,7 @@ function selectTag(item) {
       </div>
     </div>
   </main>
+  <Footer />
 </template>
 
 <style scoped></style>
