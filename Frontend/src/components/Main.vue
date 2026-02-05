@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -10,25 +10,30 @@ import drillImage from '@/assets/drill.png'
 import garden from '@/assets/garden.png'
 
 const showScroll = ref(false)
+const value = ref('')
+const tags = [
+  { name: 'Home Repair' },
+  { name: 'Gardening' },
+  { name: 'Honeydew' },
+  { name: 'Grapes' },
+  { name: 'Watermelon' },
+  { name: 'Cantaloupe' },
+  { name: 'Pear' },
+]
 
-const tags = Array.from({ length: 50 }).map(
-  (_, i) => `Skibidi ${i + 1}`,
-)
+const filteredTags = computed(() => {
+  const query = value.value.toLowerCase()
+  return tags.filter(tag => tag.name.toLowerCase().includes(query))
+})
 
-function handleFocus() {
-  showScroll.value = true
+function showScrollState() {
+  showScroll.value = !showScroll.value
+  // console.log("showScroll state is now " + showScroll.value)
 }
 
-function handleBlur() {
-  // Delay so clicking dropdown doesn't instantly close it
-  setTimeout(() => {
-    showScroll.value = false
-  }, 200)
-}
-
-function selectTag(tag) {
-  console.log('Selected:', tag)
-  showScroll.value = false
+function selectTag(item) {
+  console.log(item.name)
+  value.value = item.name
 }
 </script>
 
@@ -44,7 +49,8 @@ function selectTag(tag) {
     <div class="w-full max-w-sm relative">
       <!-- Input Row -->
       <div class="flex items-center gap-2">
-        <Input type="text" placeholder="Looking for something else?" @focus="handleFocus" @blur="handleBlur" />
+        <Input type="text" v-model="value" placeholder="Looking for something else?" @focus="showScrollState"
+          @blur="showScrollState" />
         <Button type="submit"> Search </Button>
       </div>
 
@@ -52,9 +58,9 @@ function selectTag(tag) {
       <div v-if="showScroll" class="absolute mt-1 w-full z-1">
         <ScrollArea class="h-[200px] w-full rounded-md bg-background shadow-lg">
           <div class="p-2 space-y-2">
-            <div v-for="tag in tags" :key="tag" @mousedown="selectTag(tag)"
+            <div v-for="tag in filteredTags" :key="tag" @mousedown="selectTag(tag)"
               class="cursor-pointer rounded px-2 py-1 border hover:bg-muted transition">
-              {{ tag }}
+              {{ tag.name }}
             </div>
           </div>
         </ScrollArea>
