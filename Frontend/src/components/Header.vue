@@ -1,7 +1,7 @@
 <script setup>
 import { ref } from 'vue'
 import ModeToggle from '@/components/ModeToggle.vue'
-
+import LogoImage from '@/assets/logo.png'
 const navigate = (hash) => {
   window.location.hash = hash
 }
@@ -15,6 +15,9 @@ const navigate = (hash) => {
       <button class="big-button" @click="navigate('#/Login')">Login</button>
       <button class="big-button" @click="navigate('#/Signup')">Signup</button>
       <button class="big-button" @click="navigate('#/Test')">Test</button>
+      <button class="big-button" @click="navigate('#/Form')">Form</button>
+      <button class="big-button" @click="navigate('#/Form2')">Form2</button>
+      <button class="big-button" @click="navigate('#/ToastExample')">ToastExample</button>
     </div>
     <ModeToggle />
   </header>
