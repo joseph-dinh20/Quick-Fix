@@ -22,7 +22,7 @@ import { Textarea } from '@/components/ui/textarea'
 </script>
 
 <template>
-  <div class="text-green-900 font-normal w-full max-w-md border-[2px] border-black-800 rounded-lg p-6">
+  <div class="m-5 text-green-900 font-normal w-full max-w-md border-[2px] border-black-800 rounded-lg p-6">
     <form>
       <FieldGroup>
         <FieldSet>
