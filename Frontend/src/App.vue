@@ -1,6 +1,7 @@
 <script setup>
 import { ref, computed } from 'vue'
 
+import hello from './components/hello.vue'
 import Header from '@/components/Header.vue'
 import Payment from '@/components/Payment.vue'
 import Main from '@/components/Main.vue'
@@ -21,6 +22,7 @@ const routes = {
   '/Form2': Form2,
   '/ToastExample': ToastExample,
   '/Test': Test,
+  '/hello': hello,
 }
 
 const currentPath = ref(window.location.hash)
