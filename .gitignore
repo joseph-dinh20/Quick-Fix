@@ -1,12 +1,77 @@
+<<<<<<< HEAD
 # Ignore List
 DS_Store/
 .DS_Store
 dist/
 node_modules/
 .env/
+=======
+############################
+# Python
+############################
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.pyd
+*.pyo
+*.egg
+*.egg-info/
+dist/
+build/
+.eggs/
+pip-wheel-metadata/
+>>>>>>> 1498e9df7c91b8cbf19da56783f9fb2a5df42354
 
+############################
+# Virtual Environments
+############################
+.venv/
+venv/
+env/
+ENV/
+
+############################
+# Environment Variables
+############################
+.env
+.env.*
+!.env.example
+
+############################
+# Django
+############################
+*.log
+db.sqlite3
+db.sqlite3-journal
+media/
+staticfiles/
+.local_settings.py
+
+
+############################
+# Node / npm
+############################
+node_modules/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+pnpm-debug.log*
 
-.vscode
+############################
+# Vue / Vite
+############################
+dist/
+.vite/
+vite.config.ts.timestamp-*
+.cache/
+
+
+############################
+# Misc
+############################
+*.bak
+*.tmp
+*.orig
+
+DS_Store/
