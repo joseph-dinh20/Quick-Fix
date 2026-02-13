@@ -22,3 +22,6 @@ To test the connection between the two servers, navigate to http://127.0.0.1:517
 - api expansion
 - frontend stuff
 - everything
+
+## Note
+- any time you pull or get an updated files you may need to install additional packages with `npm install` or `pnpm install`

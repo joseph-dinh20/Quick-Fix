@@ -1,10 +1,6 @@
 <script setup>
 import { ref, computed } from 'vue'
-<<<<<<< HEAD
-=======
-
 import hello from './components/hello.vue'
->>>>>>> 1498e9df7c91b8cbf19da56783f9fb2a5df42354
 import Header from '@/components/Header.vue'
 import Payment from '@/components/Payment.vue'
 import Main from '@/components/Main.vue'
@@ -23,17 +19,14 @@ const routes = {
   '/Form': Form,
   '/Profile': Profile,
   '/Test': Test,
-<<<<<<< HEAD
   '/SampleForm': SampleForm,
+  '/hello': hello,
 }
 
 const isLoggedIn = ref(false)
 function handleLoginSuccess() {
   isLoggedIn.value = true
   // window.location.hash = '/'
-=======
-  '/hello': hello,
->>>>>>> 1498e9df7c91b8cbf19da56783f9fb2a5df42354
 }
 
 const currentPath = ref(window.location.hash)
