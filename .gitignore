@@ -64,3 +64,5 @@ vite.config.ts.timestamp-*
 *.bak
 *.tmp
 *.orig
+
+DS_Store/
