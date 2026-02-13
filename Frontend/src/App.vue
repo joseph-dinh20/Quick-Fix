@@ -15,8 +15,8 @@ const routes = {
   '/Login': Login,
   '/Signup': Signup,
   '/Form': Form,
-  '/Test': Test,
   '/Profile': Profile,
+  '/Test': Test,
 }
 
 const isLoggedIn = ref(false)

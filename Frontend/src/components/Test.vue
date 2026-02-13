@@ -1,17 +1,19 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-
-// A reactive variable
-const message = ref('')
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from '@/components/ui/collapsible'
 </script>
-
 <template>
-  <div>
-    <!-- feel free to copy paste the divs to test more stuff of your interest. - Hao.-->
-    <div class="p-4 flex-col gap-[30] border min-w-lg min-h-30">
-      <p>v-model testing</p>
-      <input v-model="message" type="text" placeholder="type something..." class="border p-2" />
-      <p>{{ message }}</p>
-    </div>
-  </div>
+  <Collapsible class="flex flex-col">
+    <CollapsibleTrigger>
+      <img
+        src="https://static.vecteezy.com/system/resources/thumbnails/035/117/774/small/solid-icon-for-address-vector.jpg"
+        </CollapsibleTrigger>
+      <CollapsibleContent>
+        Yes. Free to use for personal and commercial projects. No attribution
+        required.
+      </CollapsibleContent>
+  </Collapsible>
 </template>
