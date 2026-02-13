@@ -17,6 +17,7 @@ const navigate = (hash) => {
         <button class="big-button" @click="navigate('#/Form')">Form</button>
         <button class="big-button" @click="navigate('#/Profile')">Profile</button>
         <button class="big-button" @click="navigate('#/Test')">Test</button>
+        <button class="big-button" @click="navigate('#/SampleForm')">SampleForm</button>
       </div>
     </header>
     <hr>

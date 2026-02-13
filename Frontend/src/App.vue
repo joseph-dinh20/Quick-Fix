@@ -8,6 +8,7 @@ import Test from '@/components/Test.vue'
 import Signup from '@/components/Signup.vue'
 import Form from '@/components/Form.vue'
 import Profile from '@/components/Profile.vue'
+import SampleForm from '@/components/SampleForm.vue'
 
 const routes = {
   '/': Main,
@@ -17,6 +18,7 @@ const routes = {
   '/Form': Form,
   '/Profile': Profile,
   '/Test': Test,
+  '/SampleForm': SampleForm,
 }
 
 const isLoggedIn = ref(false)
@@ -26,9 +28,11 @@ function handleLoginSuccess() {
 }
 
 const currentPath = ref(window.location.hash)
+
 window.addEventListener('hashchange', () => {
   currentPath.value = window.location.hash
 })
+
 const currentView = computed(() => {
   return routes[currentPath.value.slice(1) || '/']
 })

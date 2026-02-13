@@ -103,38 +103,34 @@ async function nextStep() {
   <div v-if="step === 2" class="w-full sm:max-w-md m-5">
     <Card>
       <CardContent class="m-5">
-        <form id="form-vee-radiogroup">
-          <FieldGroup>
-            <VeeField v-slot="{ field, errors }" name="plan">
-              <FieldSet :data-invalid="!!errors.length">
-                <FieldLegend>Hours</FieldLegend>
-                <FieldDescription>
-                  How big is the project going to take?
-                </FieldDescription>
-                <RadioGroup :name="field.name" :model-value="field.value" :aria-invalid="!!errors.length"
-                  @update:model-value="field.onChange">
+        <VeeField v-slot="{ field, errors }" name="plan">
+          <FieldSet :data-invalid="!!errors.length">
+            <FieldLegend>Hours</FieldLegend>
+            <FieldDescription>
+              How big is the project going to take?
+            </FieldDescription>
+            <RadioGroup :name="field.name" :model-value="field.value" :aria-invalid="!!errors.length"
+              @update:model-value="field.onChange">
 
-                  <!-- displaying entire loop of plans -->
-                  <FieldLabel v-for="plan in plans" :key="plan.id" :for="`form-vee-radiogroup-${plan.id}`">
-                    <Field orientation="horizontal" :data-invalid="!!errors.length">
-                      <FieldContent>
-                        <FieldTitle>{{ plan.title }}</FieldTitle>
-                        <FieldDescription>
-                          {{ plan.description }}
-                        </FieldDescription>
-                      </FieldContent>
-                      <RadioGroupItem :id="`form-vee-radiogroup-${plan.id}`" :value="plan.id"
-                        :aria-invalid="!!errors.length" />
-                    </Field>
-                  </FieldLabel>
-                </RadioGroup>
-                <!-- <FieldError v-if="errors.length" :errors="errors" /> -->
-                <FieldError v-if="errors.length" class="text-red-500" />
-                {{ errors[0] }}
-              </FieldSet>
-            </VeeField>
-          </FieldGroup>
-        </form>
+              <!-- displaying entire loop of plans -->
+              <FieldLabel v-for="plan in plans" :key="plan.id" :for="`form-vee-radiogroup-${plan.id}`">
+                <Field orientation="horizontal" :data-invalid="!!errors.length">
+                  <FieldContent>
+                    <FieldTitle>{{ plan.title }}</FieldTitle>
+                    <FieldDescription>
+                      {{ plan.description }}
+                    </FieldDescription>
+                  </FieldContent>
+                  <RadioGroupItem :id="`form-vee-radiogroup-${plan.id}`" :value="plan.id"
+                    :aria-invalid="!!errors.length" />
+                </Field>
+              </FieldLabel>
+            </RadioGroup>
+            <!-- <FieldError v-if="errors.length" :errors="errors" /> -->
+            <FieldError v-if="errors.length" class="text-red-500" />
+            {{ errors[0] }}
+          </FieldSet>
+        </VeeField>
       </CardContent>
       <CardFooter>
         <Field orientation="horizontal">
