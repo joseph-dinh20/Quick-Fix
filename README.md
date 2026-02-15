@@ -4,9 +4,13 @@
 This project uses a Vue frontend, a Django backend, and SQlite for the database currently.
 
 ## Setup
-For the frontend, `npm` is the package manager and may need to run `npm install` in the frontend directory for Vue/Vite. Note that you may need to force it (we gotta fix this, man).
+1. Install `pnpm` if you do not have it installed. If you have `npm` try `npm install pnpm`
 
-For the backend, `uv` is the python package manager. Run the `uv sync` command and all backend dependencies should be handled. It is also strongly recommended to run the `uv run python manage.py migrate` command.
+2. For the frontend, `pnpm` is the package manager and may need to run `pnpm install` in the frontend directory for Vue/Vite. Using npm and pnpm in the same project is not advised.
+
+For the backend, `uv` is the python package manager. 
+1. Run the `uv sync` command and all backend dependencies should be handled.
+2. It is also strongly recommended to run the `uv run python manage.py migrate` command.
 
 ## Deployment
 Create two terminals, one for the frontend and one for the backend.
