@@ -5,12 +5,12 @@ import Header from '@/components/Header.vue'
 import Payment from '@/components/Payment.vue'
 import Main from '@/components/Main.vue'
 import Login from '@/components/Login.vue'
-import Test from '@/components/Test.vue'
 import Signup from '@/components/Signup.vue'
 import Form from '@/components/Form.vue'
 import Profile from '@/components/Profile.vue'
-import SampleForm from '@/components/SampleForm.vue'
-
+import Test from '@/components/Test.vue'
+import Test2 from '@/components/Test2.vue'
+import { Toaster } from '@/components/ui/sonner'
 const routes = {
   '/': Main,
   '/Payment': Payment,
@@ -19,7 +19,7 @@ const routes = {
   '/Form': Form,
   '/Profile': Profile,
   '/Test': Test,
-  '/SampleForm': SampleForm,
+  '/Test2': Test2,
   '/hello': hello,
 }
 
@@ -48,5 +48,6 @@ const currentView = computed(() => {
       <component class="m-20" :is="currentView" />
     </div>
     <Login v-else @login-success="handleLoginSuccess" />
+    <Toaster />
   </div>
 </template>
