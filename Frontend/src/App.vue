@@ -1,6 +1,5 @@
 <script setup>
 import { ref, computed } from 'vue'
-import hello from './components/hello.vue'
 import Header from '@/components/Header.vue'
 import Payment from '@/components/Payment.vue'
 import Main from '@/components/Main.vue'
@@ -9,7 +8,8 @@ import Signup from '@/components/Signup.vue'
 import Form from '@/components/Form.vue'
 import Profile from '@/components/Profile.vue'
 import Test from '@/components/Test.vue'
-import Test2 from '@/components/Test2.vue'
+import Hello from './components/hello.vue'
+
 import { Toaster } from '@/components/ui/sonner'
 const routes = {
   '/': Main,
@@ -19,8 +19,7 @@ const routes = {
   '/Form': Form,
   '/Profile': Profile,
   '/Test': Test,
-  '/Test2': Test2,
-  '/hello': hello,
+  '/Hello': Hello,
 }
 
 const isLoggedIn = ref(false)
