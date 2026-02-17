@@ -1,11 +1,9 @@
-<<<<<<< HEAD
-# Ignore List
-DS_Store/
+############################
+# OS
+############################
 .DS_Store
-dist/
-node_modules/
-.env/
-=======
+DS_Store/
+
 ############################
 # Python
 ############################
@@ -17,11 +15,9 @@ __pycache__/
 *.pyo
 *.egg
 *.egg-info/
-dist/
 build/
 .eggs/
 pip-wheel-metadata/
->>>>>>> 1498e9df7c91b8cbf19da56783f9fb2a5df42354
 
 ############################
 # Virtual Environments
@@ -48,6 +44,11 @@ media/
 staticfiles/
 .local_settings.py
 
+############################
+# PyCharm / VSCode
+############################
+.idea/
+.vscode/
 
 ############################
 # Node / npm
@@ -63,9 +64,8 @@ pnpm-debug.log*
 ############################
 dist/
 .vite/
-vite.config.ts.timestamp-*
 .cache/
-
+vite.config.ts.timestamp-*
 
 ############################
 # Misc
@@ -73,5 +73,3 @@ vite.config.ts.timestamp-*
 *.bak
 *.tmp
 *.orig
-
-DS_Store/
