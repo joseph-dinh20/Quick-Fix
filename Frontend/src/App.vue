@@ -9,7 +9,7 @@ import Form from '@/components/Form.vue'
 import Profile from '@/components/Profile.vue'
 import Test from '@/components/Test.vue'
 import Hello from './components/hello.vue'
-
+import Temp from '@/components/Temp.vue'
 import { Toaster } from '@/components/ui/sonner'
 const routes = {
   '/': Main,
@@ -19,10 +19,12 @@ const routes = {
   '/Form': Form,
   '/Profile': Profile,
   '/Test': Test,
+  '/Temp': Temp,
   '/Hello': Hello,
 }
 
-const isLoggedIn = ref(false)
+// const isLoggedIn = ref(false)
+const isLoggedIn = ref(true)
 function handleLoginSuccess() {
   isLoggedIn.value = true
   // window.location.hash = '/'
@@ -44,7 +46,9 @@ const currentView = computed(() => {
     <div v-if='isLoggedIn' class="flex flex-col items-center m-[30px]">
       <Header v-show="isLoggedIn" />
       <!-- <Header /> -->
-      <component class="m-20" :is="currentView" />
+      <div class="m-20">
+        <component :is="currentView" />
+      </div>
     </div>
     <Login v-else @login-success="handleLoginSuccess" />
     <Toaster />

@@ -1,112 +1,47 @@
-<script setup lang="ts">
-import { toTypedSchema } from '@vee-validate/zod'
-import { useForm, Field as VeeField } from 'vee-validate'
-import { toast } from 'vue-sonner'
-import { z } from 'zod'
-import { h } from 'vue'
-
-import { Button } from '@/components/ui/button'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
-import {
-  Field,
-  FieldDescription,
-  FieldError,
-  FieldGroup,
-  FieldLabel,
-} from '@/components/ui/field'
+<script setup>
+import { ref, reactive, computed, useTemplateRef, nextTick } from 'vue'
 import { Input } from '@/components/ui/input'
-import {
-  InputGroup,
-  InputGroupAddon,
-  InputGroupText,
-  InputGroupTextarea,
-} from '@/components/ui/input-group'
+import { Label } from '@/components/ui/label'
+import { Button } from '@/components/ui/button'
 
-const formSchema = toTypedSchema(
-  z.object({
-    title: z
-      .string()
-      .min(5, 'Bug title must be at least 5 characters.')
-      .max(32, 'Bug title must be at most 32 characters.'),
-    description: z
-      .string()
-      .min(20, 'Description must be at least 20 characters.')
-      .max(100, 'Description must be at most 100 characters.'),
-  }),
-)
+// This is for image upload, image display
+const photoList = ref([])
+const selectedImage = ref()
+const renderComponent = ref(true)
 
-const { handleSubmit, resetForm } = useForm({
-  validationSchema: formSchema,
-  initialValues: {
-    title: '',
-    description: '',
-  },
-})
+function handleFileChange(event) {
+  const file = event.target.files[0]
+  if (!file) return
+  selectedImage.value = file
+}
 
-const onSubmit = handleSubmit((data) => {
-  toast('You submitted the following values:', {
-    description: h('pre', { class: 'bg-code text-code-foreground mt-2 w-[320px] overflow-x-auto rounded-md p-4' }, h('code', JSON.stringify(data, null, 2))),
-    position: 'bottom-right',
-    class: 'flex flex-col gap-2',
-    style: {
-      '--border-radius': 'calc(var(--radius)  + 4px)',
-    },
-  })
-})
+function handleFileSubmit() {
+  if (!selectedImage.value) return
+  const fileUrl = URL.createObjectURL(selectedImage.value)
+  photoList.value.push(fileUrl)
+  selectedImage.value = null
+}
+
+const forceReRender = async () => {
+  renderComponent.value = false
+  await nextTick()
+  renderComponent.value = true
+}
+
 </script>
 
 <template>
-  <Card class="w-full sm:max-w-md">
-    <CardHeader>
-      <CardTitle>Bug Report</CardTitle>
-      <CardDescription>
-        Help us improve by reporting bugs you encounter.
-      </CardDescription>
-    </CardHeader>
-    <CardContent>
-      <form id="form-vee-demo" @submit="onSubmit">
-        <FieldGroup>
-          <VeeField v-slot="{ field, errors }" name="description">
-            <Field :data-invalid="!!errors.length">
-              <FieldLabel for="form-vee-demo-description">
-                Description
-              </FieldLabel>
-              <InputGroup>
-                <InputGroupTextarea id="form-vee-demo-description" v-bind="field"
-                  placeholder="I'm having an issue with the login button on mobile." :rows="6"
-                  class="min-h-24 resize-none" :aria-invalid="!!errors.length" />
-                <InputGroupAddon align="block-end">
-                  <InputGroupText class="tabular-nums">
-                    {{ field.value?.length || 0 }}/100 characters
-                  </InputGroupText>
-                </InputGroupAddon>
-              </InputGroup>
-              <FieldDescription>
-                Include steps to reproduce, expected behavior, and what actually
-                happened.
-              </FieldDescription>
-              <FieldError v-if="errors.length" :errors="errors.map((e) => ({ message: e }))" />
-            </Field>
-          </VeeField>
-        </FieldGroup>
-      </form>
-    </CardContent>
-    <CardFooter>
-      <Field orientation="horizontal">
-        <Button type="button" variant="outline" @click="resetForm">
-          Reset
-        </Button>
-        <Button type="submit" form="form-vee-demo">
-          Submit
-        </Button>
-      </Field>
-    </CardFooter>
-  </Card>
+  <div class="flex flex-col gap-10">
+    <Input v-if="renderComponent" type="file" accept="image/png, image/jpeg" @change="handleFileChange" />
+
+    <Button v-if="selectedImage" @click="handleFileSubmit(), forceReRender()">
+      Submit
+    </Button>
+
+    <div v-for="item in photoList">
+      <img :src="item" class="w-12 h-12 object-cover" />
+    </div>
+
+  </div>
+
 </template>

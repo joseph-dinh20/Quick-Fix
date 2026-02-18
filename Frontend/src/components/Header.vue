@@ -7,7 +7,7 @@ const navigate = (hash) => {
 </script>
 <template>
   <div>
-    <header>
+    <header class="mb-10">
       <img src="../assets/logo.png" alt="logo image" id="logoImage">
       <div class="button-scope">
         <button class="big-button" @click="navigate('#/')">Home</button>
@@ -17,7 +17,7 @@ const navigate = (hash) => {
         <button class="big-button" @click="navigate('#/Form')">Form</button>
         <button class="big-button" @click="navigate('#/Profile')">Profile</button>
         <button class="big-button" @click="navigate('#/Test')">Test</button>
-        <button class="big-button" @click="navigate('#/Test2')">Test2</button>
+        <button class="big-button" @click="navigate('#/Temp')">temp</button>
       </div>
     </header>
     <hr>

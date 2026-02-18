@@ -199,7 +199,7 @@ function onSubmit(values) {
             <template v-if="stepIndex === 2">
               <Card>
                 <CardHeader>
-                  <CardTitlte class="font-semibold">Service Length</CardTitlte>
+                  <CardTitle class="font-semibold">Service Length</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <FormField v-slot="{ componentField }" name="plan">
@@ -216,9 +216,9 @@ function onSubmit(values) {
                             }">
                             <div class="flex flex-col">
                               <FormLabel class="text-base font-medium"> {{ plan.title }} </FormLabel>
-                              <formlabel class="text-sm text-muted-foreground">
+                              <FormLabel class="text-sm text-muted-foreground">
                                 {{ plan.description }}
-                              </formlabel>
+                              </FormLabel>
                             </div>
                             <RadioGroupItem :value="plan.id" />
                           </div>
@@ -235,7 +235,7 @@ function onSubmit(values) {
 
               <Card class="min-h-full min-w-150">
                 <CardHeader>
-                  <CardTitlte class="font-semibold">Task Description</CardTitlte>
+                  <CardTitle class="font-semibold">Task Description</CardTitle>
                   <CardDescription>
                     provide additional information about the job. A good
                   </CardDescription>
@@ -250,7 +250,6 @@ function onSubmit(values) {
                       <FormControl>
                         <Textarea class="min-h-50 min-w-full" type="text" v-bind="componentField"
                           placeholder="Start describing here..." />
-
                       </FormControl>
                       <FormMessage />
                     </FormItem>
