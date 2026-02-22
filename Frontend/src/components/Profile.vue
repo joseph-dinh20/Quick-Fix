@@ -26,61 +26,75 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover'
 
-import { ref, nextTick } from 'vue'
-// temp image placeholders
-const photo = ref('https://thumbs.dreamstime.com/b/man-lawn-mower-cutting-grass-garden-summer-works-care-169327253.jpg')
-const avatar = ref('https://media.tenor.com/hHO9MW5-yw8AAAAM/jjk-jujutsu-kaisen.gif')
+import { ref } from 'vue'
 
-// will need to grab info from the backend at some point
+//NOTE: Single Value Variables
+const avatar = ref('')
 const name = "Satoru Goji"
 
-// This is for image upload, image display
+//NOTE: This is for image upload, image display
 const photoList = ref([])
 const selectedImage = ref()
-const renderComponent = ref(true)
 
 function handleFileChange(event) {
   const file = event.target.files[0] //use this for backend at some point
   if (!file) return
   selectedImage.value = file
+  console.log("file = " + file)
   handleFileSubmit()
 }
 
 function handleFileSubmit() {
   if (!selectedImage.value) return
+  //WARN: URL.createObjectURL creates a fake URL that points to a file/blob
+  //so that it can be displayed on the browser with <img src="someBlobs...">
+  //since HTML elements expect URLs and not file objects.
   const fileUrl = URL.createObjectURL(selectedImage.value)
   photoList.value.push(fileUrl)
+  console.log("fileUrl = " + fileUrl)
   selectedImage.value = null
   forceReRender()
 }
 
-// const forceReRender = async () => {
-//   renderComponent.value = false
-//   await nextTick()
-//   renderComponent.value = true
-// }
-// END OF image upload, image diplay
+//NOTE: Temporary copy pasta for avatar upload and display
+function handleAvatarUpload(event) {
+  const file = event.target.files[0]
+  if (!file) return
+  selectedImage.value = file
+  console.log(file)
+  handleAvatarSubmit()
+}
 
-// another way to force an component to re-render
+function handleAvatarSubmit() {
+  if (!selectedImage.value) return
+  const fileUrl = URL.createObjectURL(selectedImage.value)
+  avatar.value = fileUrl
+  console.log(avatar.value)
+  selectedImage.value = null
+}
+
+//NOTE: Force Re-Render Section
 // every time forceReRender is called, this updates
-// the component value by 1. Making vue "know" to
-// update the component
-
+// the component value (componentKey) by 1.
+// Making vue to aware an update the component is needed because a value has @change
 const componentKey = ref(0)
-const forceReRender = () => { componentKey.value += 1 }
+const forceReRender = () => { componentKey.value++ }
 
 </script>
 
 <template>
   <div class="justify-items-center">
-    <p class="text-3xl">Profile Setup for {Skill} </p>
+    <p class="text-3xl">Profile Setup</p>
     <Card class="min-h-200 min-w-200">
       <CardHeader class="justify-between flex-row">
         <div class="flex flex-row gap-[30px]">
-          <Avatar class="scale-[1.8]">
-            <AvatarImage :src="avatar" alt="@shadcn" />
-            <AvatarFallback>CN</AvatarFallback>
-          </Avatar>
+          <Label for="avatar" class="cursor-pointer">
+            <Input id="avatar" type="file" accept="image/png, image/jpeg" @change="handleAvatarUpload" class="hidden" />
+            <Avatar class="scale-[2]">
+              <AvatarImage :src="avatar" alt="@shadcn" />
+              <AvatarFallback>Avatar</AvatarFallback>
+            </Avatar>
+          </Label>
           <div>
             <CardTitle>Name</CardTitle>
             <Input id="name" readonly type="text" :placeholder="name"></Input>
@@ -88,7 +102,11 @@ const forceReRender = () => { componentKey.value += 1 }
           </div>
         </div>
         <div>
-          <CardTitle>Rates<Input placeholder="$00.00/hr"></Input></CardTitle>
+          <CardTitle>
+            Rates
+            <Input placeholder="$00.00/hr">
+            </Input>
+          </CardTitle>
         </div>
       </CardHeader>
       <CardContent>
@@ -97,41 +115,44 @@ const forceReRender = () => { componentKey.value += 1 }
           placeholder="Write short but detailed description on how you can help the customers.">
         </Textarea>
 
-
         <Label for="workPhotos" class="mt-5 mb-1">Work Photos</Label>
-        <div class="flex gap-1">
-          <div v-for="item in photoList" class="w-full max-w-[10rem]">
-            <Popover>
-              <PopoverTrigger class="w-full h-full">
-                <AspectRatio :ratio="1 / 1">
-                  <Input type="image" :key="componentKey" :src="item"
-                    class="border-0 object-cover w-full h-full rounded-lg" />
-                </AspectRatio>
-                <PopoverContent class="w-150 border-0">
-                  <AspectRatio :ratio="3 / 2">
-                    <img :src="item" class="w-full h-full rounded-lg" />
+        <!-- <div id="workPhotos"> -->
+        <div v-if="photoList.length < 5">
+          <p> photolength is {{ photoList.length }}</p>
+          <div class="flex">
+            <div v-for="item in photoList" class="w-35">
+              <Popover>
+                <PopoverTrigger class="w-full h-full">
+                  <AspectRatio :ratio="1 / 1">
+                    <Input type="image" :key="componentKey" :src="item"
+                      class="inline-block border-0 object-cover w-full h-full rounded-lg" />
                   </AspectRatio>
-                </PopoverContent>
-              </PopoverTrigger>
-            </Popover>
+                  <PopoverContent class="w-150 border-0">
+                    <AspectRatio :ratio="3 / 2">
+                      <img :src="item" class="w-full h-full rounded-lg" />
+                    </AspectRatio>
+                  </PopoverContent>
+                </PopoverTrigger>
+              </Popover>
+            </div>
           </div>
         </div>
+        <div v-else>
+          display something else here
+        </div>
+        <!-- </div> -->
 
         <Label for="picture" class="mt-5">Photo Upload</Label>
         <Input id="picture" :key="componentKey" type="file" accept="image/png, image/jpeg" @change="handleFileChange"
-          class="w-50" />
+          class="w-50 cursor-pointer" />
       </CardContent>
-      <CardFooter class="flex flex-col items-start gap-[16px]">
-        <div class="w-full max-w-[8rem] flex flex-col gap-[30px]">
+      <CardFooter class="flex flex-col items-start gap-[30px]">
+        <div class="w-full max-w-[8rem] flex flex-col gap-[10px]">
           <p class="text-2xl">Ratings</p>
           <p>Customer 1 (5.0)</p>
           <p>Comment:</p>
-          <p>Customer 2 (5.0)</p>
-          <p>Comment:</p>
-          <p>Customer 3 (5.0)</p>
-          <p>Comment:</p>
         </div>
-        <Button>Set Profile</Button>
+        <Button>Save Profile</Button>
       </CardFooter>
     </Card>
   </div>

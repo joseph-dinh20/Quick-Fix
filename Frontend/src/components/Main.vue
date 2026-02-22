@@ -7,8 +7,8 @@ import { Input } from '@/components/ui/input'
 import { ScrollArea } from '@/components/ui/scroll-area'
 
 // Importing Images
-import drillImage from '@/assets/drill.png'
-import garden from '@/assets/garden.png'
+import drillImage from '@/assets/icons/drill.png'
+import garden from '@/assets/icons/garden.png'
 
 const showScroll = ref(false)
 const value = ref('')

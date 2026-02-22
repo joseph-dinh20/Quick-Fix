@@ -1,6 +1,7 @@
 <script setup>
 import { ref } from 'vue'
-import LogoImage from '@/assets/logo.png'
+import LogoImage from '@/assets/icons/logo.png'
+
 const navigate = (hash) => {
   window.location.hash = hash
 }
@@ -8,14 +9,15 @@ const navigate = (hash) => {
 <template>
   <div>
     <header class="mb-10">
-      <img src="../assets/logo.png" alt="logo image" id="logoImage">
+      <img :src="LogoImage" alt="logo image" id="logoImage">
       <div class="button-scope">
-        <button class="big-button" @click="navigate('#/')">Home</button>
-        <button class="big-button" @click="navigate('#/Payment')">Payment</button>
+        <button class="big-button" @click="navigate('/')">Home</button>
+        <button class="big-button" @click="navigate('/Payment')">Payment</button>
         <button class="big-button" @click="navigate('#/Login')">Login</button>
         <button class="big-button" @click="navigate('#/Signup')">Signup</button>
         <button class="big-button" @click="navigate('#/Form')">Form</button>
         <button class="big-button" @click="navigate('#/Profile')">Profile</button>
+        <button class="big-button" @click="navigate('#/Provider')">Provider</button>
         <button class="big-button" @click="navigate('#/Test')">Test</button>
         <button class="big-button" @click="navigate('#/Temp')">temp</button>
       </div>
