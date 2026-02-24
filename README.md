@@ -12,6 +12,10 @@ For the backend, `uv` is the python package manager.
 1. Run the `uv sync` command and all backend dependencies should be handled.
 2. It is also strongly recommended to run the `uv run python manage.py migrate` command.
 
+## Backend Stuff
+- To create an admin user for database managerment, `uv run python manage.py createsuperuser`. It will prompt for username, email, and password but they can be throwaway. You can then log into the admin backend with http://127.0.0.1:8000/admin and view users and profiles.
+- The frontend url that is being used to test stuff is http://localhost:5173/#/Hello
+
 ## Deployment
 Create two terminals, one for the frontend and one for the backend.
 
