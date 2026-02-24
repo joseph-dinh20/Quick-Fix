@@ -10,7 +10,12 @@ import Profile from '@/components/Profile.vue'
 import Test from '@/components/Test.vue'
 import Hello from './components/hello.vue'
 import Temp from '@/components/Temp.vue'
+import Provider from '@/components/Provider.vue'
+
+
+
 import { Toaster } from '@/components/ui/sonner'
+
 const routes = {
   '/': Main,
   '/Payment': Payment,
@@ -20,6 +25,7 @@ const routes = {
   '/Profile': Profile,
   '/Test': Test,
   '/Temp': Temp,
+  '/Provider': Provider,
   '/Hello': Hello,
 }
 

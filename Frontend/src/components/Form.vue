@@ -172,12 +172,13 @@ function onSubmit(values) {
                   <CardDescription>where should we meet you?</CardDescription>
                 </CardHeader>
                 <CardContent class="flex flex-col gap-6">
-                  <FormField v-slot="{ componentField }" name="address">
+                  <!-- Another way to rename the componentField variable so we can use field instead -->
+                  <FormField v-slot="{ componentField: field }" name="address">
                     <FormItem>
                       <FormLabel>Address</FormLabel>
                       <FormControl>
-                        <Input type="text" v-bind="componentField"
-                          placeholder="323 W Salt Lake, Long Beach, CA, 90100" />
+                        <!-- notice how v-bind is binded to "field" and not "componentField" -->
+                        <Input type="text" v-bind="field" placeholder="323 W Salt Lake, Long Beach, CA, 90100" />
                       </FormControl>
                       <FormMessage />
                     </FormItem>

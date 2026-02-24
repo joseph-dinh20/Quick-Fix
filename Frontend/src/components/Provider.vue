@@ -38,8 +38,16 @@ import {
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog'
 
-
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel'
+
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationNext,
+  PaginationPrevious,
+} from '@/components/ui/pagination'
 
 import { ref, computed } from 'vue'
 import workPhoto1 from '@/assets/workPhotos/bathroom.jpg'
@@ -65,24 +73,33 @@ const provider = ref(
     aboutMe: 'I am a Professor, a Engineer, a Co-Founder and CEO.',
     totalRating: '150',
     averageRating: '4.9',
-    ratings: [
-      {
-        jobType: 'Gardening',
-        userName: 'Andrew Jones',
-        date: todayDate,
-        userAvatar: defaultAvatar,
-        userRated: '5',
-        userComment: 'Hot diggity damn this professor has a great mustache',
-      },
-      {
-        jobType: 'Gardening',
-        userName: 'Dave Chappelle',
-        date: todayDate,
-        userAvatar: defaultAvatar,
-        userRated: '5',
-        userComment: 'Hot diggity damn this professor has a great mustache',
-      }
-    ],
+    // ratings: [
+    //   {
+    //     jobType: 'Gardening',
+    //     userName: 'Andrew Jones',
+    //     date: todayDate,
+    //     userAvatar: defaultAvatar,
+    //     userRated: '5',
+    //     userComment: 'Hot diggity damn this professor has a great mustache',
+    //   },
+    //   {
+    //     jobType: 'Gardening',
+    //     userName: 'Dave Chappelle',
+    //     date: todayDate,
+    //     userAvatar: defaultAvatar,
+    //     userRated: '5',
+    //     userComment: 'Hot diggity damn this professor has a great mustache',
+    //   }
+    // ],
+    //NOTE: generated temporary list of ratings to display
+    ratings: Array.from({ length: 25 }, (_, i) => ({
+      jobType: ['Gardening', 'Plumbing', 'Carpentry', 'Electrical'][i % 4],
+      userName: `User ${i + 1}`,
+      date: todayDate,
+      userAvatar: defaultAvatar,
+      userRated: Math.floor(Math.random() * 2) + 4, // 4 or 5 stars
+      userComment: `This is rating #${i + 1}. Excellent service and very professional.`,
+    })),
   },
 )
 
@@ -131,7 +148,7 @@ const displayedPhotos = computed(() => provider.value.workPhotos.slice(0, 4))
                 <AspectRatio :ratio="1 / 1">
                   <img :src="photo" class="object-cover h-full rounded-lg p-0.5" />
                 </AspectRatio>
-                <PopoverContent class="w-200 border-0">
+                <PopoverContent class="w-150 border-0">
                   <AspectRatio :ratio="3 / 2">
                     <img :src="photo" class="w-full h-full rounded-lg" />
                   </AspectRatio>
@@ -154,7 +171,7 @@ const displayedPhotos = computed(() => provider.value.workPhotos.slice(0, 4))
                   </AspectRatio>
                 </button>
               </AlertDialogTrigger>
-              <AlertDialogContent class="min-w-100 max-w-200 flex justify-center">
+              <AlertDialogContent class="min-w-100 max-w-170 flex justify-center">
                 <AlertDialogHeader>
                   <AlertDialogTitle></AlertDialogTitle>
                   <AlertDialogDescription>
@@ -198,9 +215,18 @@ const displayedPhotos = computed(() => provider.value.workPhotos.slice(0, 4))
             </div>
           </div>
         </div>
-        <div v-else>
-          <p>no user ratings yet.</p>
-        </div>
+        <Pagination v-slot="{ page }" :items-per-page="1" :total="provider.ratings.length" :default-page="1">
+          <PaginationContent v-slot="{ items }">
+            <PaginationPrevious />
+            <div v-for="(item, index) in items" :key="index">
+              <PaginationItem v-if="item.type === 'page'" :value="item.value" :is-active="item.value === page">
+                {{ item.value }}
+              </PaginationItem>
+            </div>
+            <PaginationEllipsis :index="4" />
+            <PaginationNext />
+          </PaginationContent>
+        </Pagination>
       </CardFooter>
     </Card>
   </div>
