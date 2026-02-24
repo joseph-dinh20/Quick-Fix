@@ -14,7 +14,7 @@ For the backend, `uv` is the python package manager.
 
 ## Backend Stuff
 - To create an admin user for database managerment, `uv run python manage.py createsuperuser`. It will prompt for username, email, and password but they can be throwaway. You can then log into the admin backend with http://127.0.0.1:8000/admin and view users and profiles.
-- The frontend url that is being used to test stuff is http://localhost:5173/#/Hello
+- The frontend url that is being used to test stuff is http://localhost:5173/#/Hello. Right now, it is the user sign up page.
 
 ## Deployment
 Create two terminals, one for the frontend and one for the backend.
