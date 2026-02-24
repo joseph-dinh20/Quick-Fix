@@ -17,6 +17,7 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "combobox": "^1.0.1",
+    "embla-carousel-vue": "^8.6.0",
     "lucide-vue-next": "^0.563.0",
     "reka-ui": "^2.8.0",
     "shadcn-vue": "^2.4.3",
