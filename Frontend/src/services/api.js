@@ -1,9 +1,11 @@
-// src/services/api.js
-import axios from 'axios'
+import axios from "axios"
 
-const api = axios.create({
-  baseURL: 'http://localhost:8000/api/',
-})
+const API = "http://localhost:8000/api"
 
-export const Hello = () => api.get('hello/')
-export default api
+export const signup = (data) => {
+  return axios.post(`${API}/accounts/signup/`, {
+    name: data.name,
+    email: data.email,
+    password: data.password
+  })
+}
