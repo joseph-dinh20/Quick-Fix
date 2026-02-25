@@ -73,5 +73,6 @@ vite.config.ts.timestamp-*
 *.bak
 *.tmp
 *.orig
-
+*.pyc
 DS_Store/
+.idea/
