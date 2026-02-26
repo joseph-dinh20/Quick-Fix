@@ -116,6 +116,7 @@ function onSubmit(values) {
       '--border-radius': 'calc(var(--radius)  + 4px)',
     },
   })
+  console.log(JSON.stringify(values))
 }
 </script>
 

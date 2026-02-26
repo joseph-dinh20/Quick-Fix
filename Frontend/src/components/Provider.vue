@@ -38,7 +38,9 @@ import {
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog'
 
-import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel'
+import {
+  Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious
+} from '@/components/ui/carousel'
 
 import {
   Pagination,
@@ -59,6 +61,8 @@ import starIcon from '@/assets/icons/star.png'
 import aboutMeIcon from '@/assets/icons/aboutMe.png'
 import albumIcon from '@/assets/icons/album.png'
 import reviewIcon from '@/assets/icons/review.png'
+
+import { Separator } from '@/components/ui/separator'
 
 //NOTE: need to use this at some point for setting up date formatting
 import { DateFormatter, getLocalTimeZone, today } from '@internationalized/date'
@@ -82,30 +86,30 @@ const provider = ref(
     //     userRated: '5',
     //     userComment: 'Hot diggity damn this professor has a great mustache',
     //   },
-    //   {
-    //     jobType: 'Gardening',
-    //     userName: 'Dave Chappelle',
-    //     date: todayDate,
-    //     userAvatar: defaultAvatar,
-    //     userRated: '5',
-    //     userComment: 'Hot diggity damn this professor has a great mustache',
-    //   }
-    // ],
     //NOTE: generated temporary list of ratings to display
-    ratings: Array.from({ length: 25 }, (_, i) => ({
+    ratings: Array.from({ length: 26 }, (_, i) => ({
       jobType: ['Gardening', 'Plumbing', 'Carpentry', 'Electrical'][i % 4],
       userName: `User ${i + 1}`,
       date: todayDate,
       userAvatar: defaultAvatar,
-      userRated: Math.floor(Math.random() * 2) + 4, // 4 or 5 stars
+      userRated: Math.floor(Math.random() * 5) + 1,
       userComment: `This is rating #${i + 1}. Excellent service and very professional.`,
     })),
   },
 )
 
-//NOTE: slicing and display only up to 4 images
 const displayedPhotos = computed(() => provider.value.workPhotos.slice(0, 4))
 
+const ratingsPerPage = 5
+const currentPage = ref(1)
+const chunkUserRating = computed(() => {
+  const ratingList = provider.value.ratings
+  const chunks = []
+  for (let i = 0; i < ratingList.length; i += ratingsPerPage) {
+    chunks.push(ratingList.slice(i, i + ratingsPerPage))
+  }
+  return chunks
+})
 </script>
 
 <template>
@@ -120,7 +124,7 @@ const displayedPhotos = computed(() => provider.value.workPhotos.slice(0, 4))
           <div>
             <CardTitle>{{ provider.name }}</CardTitle>
             <CardDescription>
-              <img class="w-5 inline-block" :src="starIcon">
+              <img class="w-5 inline-block align-top" :src="starIcon">
               {{ provider.averageRating }}
               ({{ provider.totalRating }})
               reviews
@@ -134,12 +138,14 @@ const displayedPhotos = computed(() => provider.value.workPhotos.slice(0, 4))
         </div>
       </CardHeader>
       <CardContent class="flex flex-col gap-2">
+        <Separator class="my-4" />
         <CardTitle><img class="w-8 inline-block" :src="aboutMeIcon"> About Me</CardTitle>
         <span> {{ provider.aboutMe }} Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eligendi
           laborum nisi
           reprehenderit aspernatur, quia explicabo blanditiis iste laudantium tempora ducimus corrupti consequuntur
-          quibusdam atque, labore sequi quam sunt dolorem ut!
+          quibusdam atque, labore sequi quam sunt dolorem ut!🤑🤑🤑
         </span>
+        <Separator class="my-2" />
         <CardTitle> <img class="w-8 inline-block" :src="albumIcon"> Work Photos</CardTitle>
         <div id="workPhotos" class="flex">
           <div v-for="photo in displayedPhotos" class="w-25">
@@ -156,6 +162,7 @@ const displayedPhotos = computed(() => provider.value.workPhotos.slice(0, 4))
               </PopoverTrigger>
             </Popover>
           </div>
+
           <div v-if="provider.workPhotos.length > 4" class="w-25">
             <AlertDialog>
               <AlertDialogTrigger as-child>
@@ -192,39 +199,44 @@ const displayedPhotos = computed(() => provider.value.workPhotos.slice(0, 4))
             </AlertDialog>
           </div>
         </div>
+        <Separator class="my-2" />
       </CardContent>
-      <CardFooter class="flex flex-col items-start gap-[10px]">
-        <CardTitle><img class="w-8 inline-block" :src="reviewIcon"> Ratings</CardTitle>
-        <div v-if="provider.ratings.length > 0">
-          <div v-for="rating in provider.ratings" class="flex flex-col gap-1">
-            <div class="flex flex-row">
+      <CardFooter class="flex flex-col">
+        <div class="items-start self-start">
+          <CardTitle><img class="w-8 inline-block" :src="reviewIcon"> Ratings</CardTitle>
+          <div v-for="rating in (chunkUserRating[currentPage - 1])" class="my-4">
+            <div class="flex">
               <Avatar class="scale-[1] mr-1">
                 <AvatarImage :src="rating.userAvatar" />
                 <AvatarFallback>Img</AvatarFallback>
               </Avatar>
               <div>
                 <p>{{ rating.userName }}</p>
-                <p>Rated: {{ rating.userRated }} stars</p>
+                <img class="w-5 inline-block align-top" :src="starIcon">
+                {{ rating.userRated }}.0
               </div>
             </div>
 
             <div class="flex flex-col">
               <p>Hired For: {{ rating.jobType }}</p>
-              <p>Date: {{ rating.date }}</p>
-              <p>Comment: {{ rating.userComment }}</p>
+              <p>Rated on {{ rating.date }}</p>
+              <p>{{ rating.userComment }}</p>
             </div>
           </div>
         </div>
-        <Pagination v-slot="{ page }" :items-per-page="1" :total="provider.ratings.length" :default-page="1">
+        <Pagination :items-per-page="ratingsPerPage" :total="provider.ratings.length" :default-page="1"
+          @update:page="currentPage = $event">
           <PaginationContent v-slot="{ items }">
-            <PaginationPrevious />
-            <div v-for="(item, index) in items" :key="index">
-              <PaginationItem v-if="item.type === 'page'" :value="item.value" :is-active="item.value === page">
-                {{ item.value }}
-              </PaginationItem>
+            <div class="flex mt-5">
+              <PaginationPrevious />
+              <div v-for="(item, index) in items" :key="index">
+                <PaginationItem v-if="item.type === 'page'" :value="item.value" :is-active="item.value === currentPage">
+                  {{ item.value }}
+                </PaginationItem>
+              </div>
+              <PaginationEllipsis :index="4" />
+              <PaginationNext />
             </div>
-            <PaginationEllipsis :index="4" />
-            <PaginationNext />
           </PaginationContent>
         </Pagination>
       </CardFooter>
