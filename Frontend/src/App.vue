@@ -8,9 +8,10 @@ import Signup from '@/components/Signup.vue'
 import Form from '@/components/Form.vue'
 import Profile from '@/components/Profile.vue'
 import Test from '@/components/Test.vue'
-import Hello from './components/hello.vue'
+import Hello from './components/Hello.vue'
 import Temp from '@/components/Temp.vue'
 import Provider from '@/components/Provider.vue'
+import ProviderList from '@/components/ProviderList.vue'
 
 
 
@@ -27,6 +28,7 @@ const routes = {
   '/Temp': Temp,
   '/Provider': Provider,
   '/Hello': Hello,
+  '/ProviderList': ProviderList,
 }
 
 // const isLoggedIn = ref(false)

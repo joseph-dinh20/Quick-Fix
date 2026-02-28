@@ -27,16 +27,15 @@ import {
 } from '@/components/ui/popover'
 
 import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from '@/components/ui/alert-dialog'
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog'
 
 import {
   Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious
@@ -62,12 +61,10 @@ import aboutMeIcon from '@/assets/icons/aboutMe.png'
 import albumIcon from '@/assets/icons/album.png'
 import reviewIcon from '@/assets/icons/review.png'
 
+import { Badge } from '@/components/ui/badge'
 import { Separator } from '@/components/ui/separator'
+import { faker } from '@faker-js/faker';
 
-//NOTE: need to use this at some point for setting up date formatting
-import { DateFormatter, getLocalTimeZone, today } from '@internationalized/date'
-
-const todayDate = today(getLocalTimeZone())
 const provider = ref(
   {
     name: 'Fahd Albinali',
@@ -75,32 +72,22 @@ const provider = ref(
     price: '100',
     workPhotos: [workPhoto1, workPhoto2, workPhoto3, workPhoto1, workPhoto2, workPhoto3],
     aboutMe: 'I am a Professor, a Engineer, a Co-Founder and CEO.',
-    totalRating: '150',
     averageRating: '4.9',
-    // ratings: [
-    //   {
-    //     jobType: 'Gardening',
-    //     userName: 'Andrew Jones',
-    //     date: todayDate,
-    //     userAvatar: defaultAvatar,
-    //     userRated: '5',
-    //     userComment: 'Hot diggity damn this professor has a great mustache',
-    //   },
-    //NOTE: generated temporary list of ratings to display
-    ratings: Array.from({ length: 26 }, (_, i) => ({
+    ratings: Array.from({ length: 362 }, (_, i) => ({
       jobType: ['Gardening', 'Plumbing', 'Carpentry', 'Electrical'][i % 4],
-      userName: `User ${i + 1}`,
-      date: todayDate,
+      userName: faker.person.fullName(),
+      date: faker.date.anytime(),
       userAvatar: defaultAvatar,
       userRated: Math.floor(Math.random() * 5) + 1,
-      userComment: `This is rating #${i + 1}. Excellent service and very professional.`,
+      userComment: faker.lorem.paragraph(),
     })),
   },
 )
 
 const displayedPhotos = computed(() => provider.value.workPhotos.slice(0, 4))
 
-const ratingsPerPage = 5
+const totalRating = provider.value.ratings.length
+const ratingsPerPage = 3
 const currentPage = ref(1)
 const chunkUserRating = computed(() => {
   const ratingList = provider.value.ratings
@@ -110,15 +97,21 @@ const chunkUserRating = computed(() => {
   }
   return chunks
 })
+
+function formatDate(date) {
+  return new Date(date).toLocaleDateString('en-US', {
+    year: 'numeric', month: 'short', day: 'numeric',
+  })
+}
 </script>
 
 <template>
-  <div>
-    <Card class="flex flex-col max-w-200 min-w-120">
+  <div class="flex justify-center">
+    <Card>
       <CardHeader class="justify-between flex-row">
         <div class="flex flex-row gap-10 m-2">
           <Avatar class="scale-[2]">
-            <AvatarImage :src="provider.avatar" alt="@shadcn" />
+            <AvatarImage :src="provider.avatar" alt="photo" />
             <AvatarFallback>Avatar</AvatarFallback>
           </Avatar>
           <div>
@@ -126,7 +119,7 @@ const chunkUserRating = computed(() => {
             <CardDescription>
               <img class="w-5 inline-block align-top" :src="starIcon">
               {{ provider.averageRating }}
-              ({{ provider.totalRating }})
+              ({{ totalRating }})
               reviews
             </CardDescription>
           </div>
@@ -164,89 +157,97 @@ const chunkUserRating = computed(() => {
           </div>
 
           <div v-if="provider.workPhotos.length > 4" class="w-25">
-            <AlertDialog>
-              <AlertDialogTrigger as-child>
+            <Dialog>
+              <DialogTrigger as-child>
                 <button type="button" class="w-full h-full">
                   <AspectRatio :ratio="1 / 1">
                     <div class="relative h-full w-full">
                       <img :src="provider.workPhotos[4]" class="object-cover h-full rounded-lg p-0.5">
-                      <div class="rounded-lg absolute inset-0.5 bg-black/50
-                    flex items-center justify-center">
+                      <div class="rounded-lg absolute inset-0.5 bg-black/50 flex items-center justify-center">
                         <span class="text-xl font-bold text-white">{{ provider.workPhotos.length - 4 }}+</span>
                       </div>
                     </div>
                   </AspectRatio>
                 </button>
-              </AlertDialogTrigger>
-              <AlertDialogContent class="min-w-100 max-w-170 flex justify-center">
-                <AlertDialogHeader>
-                  <AlertDialogTitle></AlertDialogTitle>
-                  <AlertDialogDescription>
-                  </AlertDialogDescription>
+              </DialogTrigger>
+              <DialogContent class="min-w-100 max-w-170 flex justify-center">
+                <DialogHeader>
+                  <DialogTitle></DialogTitle>
+                  <DialogDescription></DialogDescription>
                   <Carousel>
                     <CarouselContent>
                       <CarouselItem v-for="photo in provider.workPhotos">
                         <div class="flex aspect-square items-center justify-center">
-                          <img :src="photo" class="w-full h-full object-over rounded-lg" />
+                          <img :src="photo" class="w-full h-full object-cover rounded-lg" />
                         </div>
                       </CarouselItem>
                     </CarouselContent>
                     <CarouselPrevious />
                     <CarouselNext />
                   </Carousel>
-                </AlertDialogHeader>
-              </AlertDialogContent>
-            </AlertDialog>
+                </DialogHeader>
+              </DialogContent>
+            </Dialog>
           </div>
         </div>
         <Separator class="my-2" />
       </CardContent>
+
       <CardFooter class="flex flex-col">
-        <div class="items-start self-start">
+        <div class="items-start self-start w-full h-auto">
           <CardTitle><img class="w-8 inline-block" :src="reviewIcon"> Ratings</CardTitle>
-          <div v-for="rating in (chunkUserRating[currentPage - 1])" class="my-4">
-            <div class="flex">
-              <Avatar class="scale-[1] mr-1">
+
+          <Card v-for="rating in chunkUserRating[currentPage - 1]" :key="rating.userName" class="my-4 p-4">
+            <div class="flex items-center gap-3">
+              <Avatar class="mr-1">
                 <AvatarImage :src="rating.userAvatar" />
                 <AvatarFallback>Img</AvatarFallback>
               </Avatar>
-              <div>
-                <p>{{ rating.userName }}</p>
-                <img class="w-5 inline-block align-top" :src="starIcon">
-                {{ rating.userRated }}.0
-              </div>
-            </div>
+              <div class="flex flex-col">
+                <p class="font-semibold">{{ rating.userName }}</p>
+                <div class="flex items-center gap-0.5">
+                  <!-- NOTE: v-for loops functions fine without :key but the docs recommend it -->
+                  <!-- in case of change of ordering is needed -->
 
-            <div class="flex flex-col">
-              <p>Hired For: {{ rating.jobType }}</p>
-              <p>Rated on {{ rating.date }}</p>
-              <p>{{ rating.userComment }}</p>
-            </div>
-          </div>
-        </div>
-        <Pagination :items-per-page="ratingsPerPage" :total="provider.ratings.length" :default-page="1"
-          @update:page="currentPage = $event">
-          <PaginationContent v-slot="{ items }">
-            <div class="flex mt-5">
-              <PaginationPrevious />
-              <div v-for="(item, index) in items" :key="index">
-                <PaginationItem v-if="item.type === 'page'" :value="item.value" :is-active="item.value === currentPage">
-                  {{ item.value }}
-                </PaginationItem>
+                  <img v-for="star in 5" :key="star" :src="starIcon" class="w-4 h-4"
+                    :class="{ 'opacity-30': star > rating.userRated }" />
+                </div>
               </div>
-              <PaginationEllipsis :index="4" />
-              <PaginationNext />
+              <div class="flex gap-1 ml-auto">
+                <Badge variant="outline">{{ rating.jobType }}</Badge>
+                <Badge variant="outline"> Rated on {{ formatDate(rating.date) }}</Badge>
+              </div>
             </div>
-          </PaginationContent>
-        </Pagination>
+            <div class="flex flex-col text-sm gap-1">
+              <p class="mt-2 line-clamp-4">{{ rating.userComment }}</p>
+            </div>
+          </Card>
+        </div>
+
+        <div v-if="provider.ratings.length > 0">
+          <Pagination :items-per-page="ratingsPerPage" :total="provider.ratings.length" :default-page="1"
+            @update:page="currentPage = $event">
+            <PaginationContent v-slot="{ items }">
+              <div class="flex mt-5">
+                <PaginationPrevious />
+                <div v-for="(item, index) in items" :key="index">
+                  <PaginationItem v-if="item.type === 'page'" :value="item.value"
+                    :is-active="item.value === currentPage">
+                    {{ item.value }}
+                  </PaginationItem>
+                </div>
+                <PaginationEllipsis :index="4" />
+                <PaginationNext />
+              </div>
+            </PaginationContent>
+          </Pagination>
+        </div>
+        <div v-else class="self-start">
+          no user ratings yet.
+        </div>
       </CardFooter>
     </Card>
   </div>
 </template>
 
-<style scoped>
-/* * { */
-/*   margin: 0; */
-/*   padding: 0; */
-/* } */
-</style>
+<style scoped></style>

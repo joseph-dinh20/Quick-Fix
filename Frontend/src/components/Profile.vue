@@ -95,10 +95,9 @@ const forceReRender = () => { componentKey.value++ }
               <AvatarFallback>Avatar</AvatarFallback>
             </Avatar>
           </Label>
-          <div>
-            <CardTitle>Name</CardTitle>
-            <Input id="name" readonly type="text" :placeholder="name"></Input>
-            <CardDescription>Star Ratings: 5.0 (999 total ratings)</CardDescription>
+          <div class="self-center">
+            <CardTitle>{{ name }}</CardTitle>
+            <!-- <CardDescription>Star Ratings: 5.0 (999 total ratings)</CardDescription> -->
           </div>
         </div>
         <div>
@@ -146,12 +145,8 @@ const forceReRender = () => { componentKey.value++ }
         <Input id="picture" :key="componentKey" type="file" accept="image/png, image/jpeg" @change="handleFileChange"
           class="w-50 cursor-pointer" />
       </CardContent>
-      <CardFooter class="flex flex-col items-start gap-[30px]">
-        <div class="w-full max-w-[8rem] flex flex-col gap-[10px]">
-          <p class="text-2xl">Ratings</p>
-          <p>Customer 1 (5.0)</p>
-          <p>Comment:</p>
-        </div>
+      <CardFooter>
+
         <Button>Save Profile</Button>
       </CardFooter>
     </Card>
