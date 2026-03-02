@@ -65,6 +65,20 @@ import { Badge } from '@/components/ui/badge'
 import { Separator } from '@/components/ui/separator'
 import { faker } from '@faker-js/faker';
 
+// const props = defineProps(['test'])
+
+const props = defineProps({
+  test: {
+    type: Object,
+    default: () => ({
+      name: 'default name',
+      address: 'default address',
+    })
+  }
+})
+console.log('name is: ' + props.test.name)
+console.log('address is: ' + props.test.address)
+
 const provider = ref(
   {
     name: 'Fahd Albinali',
@@ -124,10 +138,11 @@ function formatDate(date) {
             </CardDescription>
           </div>
         </div>
-        <div>
-          <CardTitle>
+        <div class="flex flex-col items-center">
+          <CardTitle class="mb-2">
             ${{ provider.price }}/hr
           </CardTitle>
+          <Button>Select Me</Button>
         </div>
       </CardHeader>
       <CardContent class="flex flex-col gap-2">
@@ -147,7 +162,7 @@ function formatDate(date) {
                 <AspectRatio :ratio="1 / 1">
                   <img :src="photo" class="object-cover h-full rounded-lg p-0.5" />
                 </AspectRatio>
-                <PopoverContent class="w-150 border-0">
+                <PopoverContent class="w-130 border-0">
                   <AspectRatio :ratio="3 / 2">
                     <img :src="photo" class="w-full h-full rounded-lg" />
                   </AspectRatio>

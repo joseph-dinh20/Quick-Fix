@@ -57,16 +57,26 @@ import workPhoto3 from '@/assets/workPhotos/kitchen.jpg'
 import profAvatar from '@/assets/avatars/avatar.png'
 import defaultAvatar from '@/assets/avatars/defaultAvatar.png'
 import starIcon from '@/assets/icons/star.png'
+import checkMarkIcon from '@/assets/icons/checkMark.png'
 import aboutMeIcon from '@/assets/icons/aboutMe.png'
 import albumIcon from '@/assets/icons/album.png'
 import reviewIcon from '@/assets/icons/review.png'
-
+// import mexicoFlagIcon from '@/assets/icons/mexicoFlag.png'
+// import americanFlagIcon from '@/assets/icons/americanFlag.png'
+// import chinaFlagIcon from '@/assets/icons/chinaFlag.png'
+// import vietnamFlagIcon from '@/assets/icons/vietnamFlag.png'
 import { Separator } from '@/components/ui/separator'
 import { ScrollArea } from "@/components/ui/scroll-area"
 
 import { faker } from '@faker-js/faker';
 import { Badge } from '@/components/ui/badge'
 import Provider from '@/components/Provider.vue'
+
+//NOTE: Create a temporary data to be pass down to another component Provider.vue
+const test = ref({
+  name: 'abc',
+  address: '321',
+})
 
 const lorem = faker.lorem.paragraph(20)
 const provider = ref(
@@ -75,12 +85,13 @@ const provider = ref(
     avatar: profAvatar,
     price: '100',
     workPhotos: [workPhoto1, workPhoto2, workPhoto3, workPhoto1, workPhoto2, workPhoto3],
-    aboutMe: lorem,
-    totalRating: '150',
+    aboutMe: 'I am a Professor, a Engineer, a Co-Founder and CEO.' + faker.lorem.paragraph(5),
     averageRating: '4.9',
-    ratings: Array.from({ length: 26 }, (_, i) => ({
+    jobsCompleted: '169',
+    datesBooked: [],
+    ratings: Array.from({ length: 69 }, (_, i) => ({
       jobType: ['Gardening', 'Plumbing', 'Carpentry', 'Electrical'][i % 4],
-      userName: `User ${i + 1}`,
+      userName: faker.person.fullName(),
       date: faker.date.anytime(),
       userAvatar: defaultAvatar,
       userRated: Math.floor(Math.random() * 5) + 1,
@@ -88,7 +99,7 @@ const provider = ref(
     })),
   },
 )
-
+const totalRating = provider.value.ratings.length
 const displayedPhotos = computed(() => provider.value.workPhotos.slice(0, 4))
 const ratingsPerPage = 5
 const currentPage = ref(1)
@@ -100,49 +111,67 @@ const chunkUserRating = computed(() => {
   }
   return chunks
 })
+
 </script>
 
 <template>
-  <div v-for="i in 10" class="m-5">
+  <div v-for="i in 5" class="m-5">
     <Card class="flex flex-col max-w-150 min-w-50">
       <CardHeader class="justify-between flex-row">
-        <div class="flex flex-row gap-20 m-2 pt-10 pl-10">
-          <Avatar class="scale-[4]">
+        <!-- <div class="flex flex-row gap-20 m-2 pt-10 pl-10"> -->
+        <div class="flex flex-row gap-20 m-2 pl-10">
+          <Avatar class="scale-[4] self-center">
             <AvatarImage :src="provider.avatar" alt="@shadcn" />
             <AvatarFallback>Avatar</AvatarFallback>
           </Avatar>
           <div>
             <CardTitle>{{ provider.name }}</CardTitle>
-            <CardDescription>
-              <img class="w-5 inline-block align-top" :src="starIcon">
+            <CardDescription class="mt-1">
+              <!-- <Badge variant="outline"> -->
+              <img class="w-4 inline-block align-top" :src="starIcon">
               {{ provider.averageRating }}
-              ({{ provider.totalRating }})
+              ({{ totalRating }})
               reviews
+              <!-- </Badge> -->
+            </CardDescription>
+
+            <CardDescription class="mt-1 flex flex-col">
+              <Badge variant="outline">
+                <img class="w-5 inline-block align-top" :src="checkMarkIcon">
+                Completed {{ provider.jobsCompleted }} Jobs
+              </Badge>
+              <Badge variant="outline">
+                <img class="w-5 inline-block align-top" :src="checkMarkIcon">
+                Fluent in <span class="text-1xl">🇨🇳 🇲🇽 🇻🇳 🇺🇸</span>
+              </Badge>
             </CardDescription>
             <Dialog>
               <DialogTrigger as-child>
-                <Button variant="default" class="mt-5">View Profile</Button>
+                <Button variant="default" class="mt-3">View Profile</Button>
               </DialogTrigger>
-              <DialogContent class="h-full max-h-95/100 max-w-200 p-0 gap-0 m-0">
+              <DialogContent class="h-full max-h-95/100 max-w-150 p-0 gap-0 m-0">
                 <DialogHeader class="sr-only">
                   <DialogTitle>Provider Profile</DialogTitle>
                   <DialogDescription>Full provider profile details</DialogDescription>
                 </DialogHeader>
                 <ScrollArea class="h-full max-h-full">
                   <div class="p-4">
-                    <Provider />
+                    <!-- <Provider /> -->
+                    <!-- NOTE: Added this here for testing transfer of data to Provider.vue -->
+                    <Provider :test="test" />
                   </div>
                 </ScrollArea>
               </DialogContent>
             </Dialog>
           </div>
         </div>
-        <CardTitle>
-          <Badge variant="outline" class="text-lg">${{ provider.price }}/hr</Badge>
+        <CardTitle class="w-15">
+          ${{ provider.price }}
+          <CardDescription>per hour</CardDescription>
         </CardTitle>
       </CardHeader>
       <CardContent class="flex flex-col gap-2">
-        <Separator class="my-4" />
+        <Separator class="my-2" />
         <CardTitle><img class="w-8 inline-block" :src="aboutMeIcon"> About Me</CardTitle>
         <span class="line-clamp-4"> {{ provider.aboutMe }} </span>
         <Separator class="my-2" />
