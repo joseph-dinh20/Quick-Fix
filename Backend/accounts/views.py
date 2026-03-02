@@ -3,6 +3,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from .models import Profile
 from django.middleware.csrf import get_token
+from django.middleware.csrf import get_token
 
 from django.contrib.auth import get_user_model
 from django.contrib.auth import authenticate, login as dj_login, logout as dj_logout

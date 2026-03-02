@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed onMounted} from 'vue'
 import Header from '@/components/Header.vue'
 import Payment from '@/components/Payment.vue'
 import Main from '@/components/Main.vue'
@@ -8,11 +8,10 @@ import Signup from '@/components/Signup.vue'
 import Form from '@/components/Form.vue'
 import Profile from '@/components/Profile.vue'
 import Test from '@/components/Test.vue'
-import Hello from './components/Hello.vue'
+import Hello from './components/hello.vue'
 import Temp from '@/components/Temp.vue'
 import Provider from '@/components/Provider.vue'
 import ProviderList from '@/components/ProviderList.vue'
-
 
 
 import { Toaster } from '@/components/ui/sonner'
@@ -28,7 +27,7 @@ const routes = {
   '/Temp': Temp,
   '/Provider': Provider,
   '/Hello': Hello,
-  '/ProviderList': ProviderList,
+  '/ProviderList': ProviderList
 }
 
 // const isLoggedIn = ref(false)
@@ -39,26 +38,44 @@ function handleLoginSuccess() {
 }
 
 const currentPath = ref(window.location.hash)
-
-window.addEventListener('hashchange', () => {
+window.addEventListener("hashchange", () => {
   currentPath.value = window.location.hash
 })
 
-const currentView = computed(() => {
-  return routes[currentPath.value.slice(1) || '/']
-})
+const currentView = computed(() => routes[currentPath.value.slice(1) || "/"])
+
+// ✅ real login state based on session
+const isLoggedIn = computed(() => !!user.value)
+
+async function handleLoginSuccess() {
+  await refreshUser()
+}
 </script>
+
+
+
+
 
 <template>
   <div class="flex flex-col items-center m-[30px]">
-    <div v-if='isLoggedIn' class="flex flex-col items-center m-[30px]">
-      <Header v-show="isLoggedIn" />
-      <!-- <Header /> -->
+    <div v-if="loadingUser">Loading...</div>
+
+    <div v-else-if="isLoggedIn" class="flex flex-col items-center m-[30px]">
+      <Header />
+
+      <div class="text-sm mb-3">Logged in as: {{ user.email }}</div>
+
+      <button class="mb-6 underline" @click="logout">Logout</button>
+
       <div class="m-20">
         <component :is="currentView" />
       </div>
     </div>
+
     <Login v-else @login-success="handleLoginSuccess" />
+
     <Toaster />
   </div>
 </template>
+
+
