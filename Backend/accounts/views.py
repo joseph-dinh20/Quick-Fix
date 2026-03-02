@@ -70,6 +70,7 @@ def signup(request):
 
     return Response({"message": "User created"})
 
+
 @api_view(["POST"])
 def login(request):
     email = request.data.get("email")
