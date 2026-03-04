@@ -1,24 +1,41 @@
 <script setup>
 // import type { DateValue } from '@internationalized/date'
-import { getLocalTimeZone, today } from '@internationalized/date'
+import { DateFormatter, getLocalTimeZone, today } from '@internationalized/date'
+
+import { CalendarIcon } from 'lucide-vue-next'
+import { cn } from '@/lib/utils'
+import { Button } from '@/components/ui/button'
 import { Calendar } from '@/components/ui/calendar'
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover'
+
 import { ref } from 'vue'
 
-// const date = ref(today(getLocalTimeZone())) as Ref<DateValue>
-const date = ref(today(getLocalTimeZone()))
 const defaultPlaceholder = today(getLocalTimeZone())
+const date = ref()
+const df = new DateFormatter('en-US', {
+  dateStyle: 'long',
+})
+
+const selectedDate = () => {
+  console.log(date.value)
+}
 </script>
 
 <template>
-  <Calendar v-model="date" :default-placeholder="defaultPlaceholder" weekday-format="short"
-    class="rounded-md border shadow-sm **:data-[slot=calendar-cell-trigger]:size-12!">
-    <template #calendar-heading="{ date, month }">
-      <div class="flex gap-2 items-center">
-        <div>
-          Custom heading
-        </div>
-        <component :is="month" :date="date" />
-      </div>
-    </template>
-  </Calendar>
+  <Popover>
+    <PopoverTrigger as-child>
+      <Button>
+        Schedule
+      </Button>
+    </PopoverTrigger>
+    <PopoverContent class="w-auto p-0" align="start">
+      <Calendar v-model="date" :default-placeholder="defaultPlaceholder" layout="month-and-year" initial-focus
+        @click="selectedDate" />
+      <p>{{ date }}</p>
+    </PopoverContent>
+  </Popover>
 </template>

@@ -1,17 +1,19 @@
 <script setup>
 import { ref } from 'vue'
 import LogoImage from '@/assets/icons/logo.png'
-
+import { Separator } from '@/components/ui/separator';
 const navigate = (hash) => {
   window.location.hash = hash
 }
 </script>
 <template>
   <div>
-    <header class="mb-10">
-      <img :src="LogoImage" alt="logo image" id="logoImage">
+    <header class="flex min-w-screen justify-evenly items-center p-2">
+      <div class="w-25 items-center h-auto flex justify-center">
+        <img :src="LogoImage" class="scale-[3] pointer-events-none">
+      </div>
       <div class="button-scope">
-        <button class="big-button" @click="navigate('/')">Home</button>
+        <!-- <button class="big-button" @click="navigate('/')">Home</button> -->
         <button class="big-button" @click="navigate('/Payment')">Payment</button>
         <button class="big-button" @click="navigate('#/Login')">Login</button>
         <button class="big-button" @click="navigate('#/Signup')">Signup</button>
@@ -19,57 +21,18 @@ const navigate = (hash) => {
         <button class="big-button" @click="navigate('#/Profile')">Profile</button>
         <!-- <button class="big-button" @click="navigate('#/Provider')">Provider</button> -->
         <button class="big-button" @click="navigate('#/Test')">Test</button>
-        <!-- <button class="big-button" @click="navigate('#/Temp')">temp</button> -->
+        <button class="big-button" @click="navigate('#/Temp')">temp</button>
         <button class="big-button" @click="navigate('#/ProviderList')">ProviderList</button>
       </div>
     </header>
-    <hr>
+    <Separator class="my-3" />
   </div>
 </template>
 
 <style scoped>
-header {
-  /* color: black; */
-  /* border: black solid 1px; */
-  display: flex;
-  justify-content: space-evenly;
-  gap: 100px;
-  align-items: center;
-  flex: 1;
-  min-width: 100%;
-  font-size: 20px;
-}
-
-#logoImage {
-  /* border: solid 1px; */
-  width: 125px;
-  height: auto;
-  margin-top: 25px;
-  transform: scale(3);
-  display: block;
-}
-
-
-#brand {
-  display: flex;
-  align-self: flex-start;
-  /* border: green solid 1px; */
-}
-
-hr {
-  border: 1px solid lightgrey;
-  width: 100%;
-  margin-top: 20px;
-}
-
-
-
-
 /*==============================================
 /* Lines below are purely for the big buttons */
 /*==============================================
-
-
 
 /* Wrapper that owns the theme */
 .button-scope {

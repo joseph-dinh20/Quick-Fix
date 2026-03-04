@@ -65,46 +65,14 @@ import { Badge } from '@/components/ui/badge'
 import { Separator } from '@/components/ui/separator'
 import { faker } from '@faker-js/faker';
 
-// const props = defineProps(['test'])
+const { provider } = defineProps(['provider'])
 
-const props = defineProps({
-  test: {
-    type: Object,
-    default: () => ({
-      name: 'default name',
-      address: 'default address',
-    })
-  }
-})
-console.log('name is: ' + props.test.name)
-console.log('address is: ' + props.test.address)
-
-const provider = ref(
-  {
-    name: 'Fahd Albinali',
-    avatar: profAvatar,
-    price: '100',
-    workPhotos: [workPhoto1, workPhoto2, workPhoto3, workPhoto1, workPhoto2, workPhoto3],
-    aboutMe: 'I am a Professor, a Engineer, a Co-Founder and CEO.',
-    averageRating: '4.9',
-    ratings: Array.from({ length: 362 }, (_, i) => ({
-      jobType: ['Gardening', 'Plumbing', 'Carpentry', 'Electrical'][i % 4],
-      userName: faker.person.fullName(),
-      date: faker.date.anytime(),
-      userAvatar: defaultAvatar,
-      userRated: Math.floor(Math.random() * 5) + 1,
-      userComment: faker.lorem.paragraph(),
-    })),
-  },
-)
-
-const displayedPhotos = computed(() => provider.value.workPhotos.slice(0, 4))
-
-const totalRating = provider.value.ratings.length
+const displayedPhotos = computed(() => provider.workPhotos.slice(0, 4))
+const totalRating = provider.ratings.length
 const ratingsPerPage = 3
 const currentPage = ref(1)
 const chunkUserRating = computed(() => {
-  const ratingList = provider.value.ratings
+  const ratingList = provider.ratings
   const chunks = []
   for (let i = 0; i < ratingList.length; i += ratingsPerPage) {
     chunks.push(ratingList.slice(i, i + ratingsPerPage))

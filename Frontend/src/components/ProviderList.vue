@@ -61,10 +61,12 @@ import checkMarkIcon from '@/assets/icons/checkMark.png'
 import aboutMeIcon from '@/assets/icons/aboutMe.png'
 import albumIcon from '@/assets/icons/album.png'
 import reviewIcon from '@/assets/icons/review.png'
-// import mexicoFlagIcon from '@/assets/icons/mexicoFlag.png'
-// import americanFlagIcon from '@/assets/icons/americanFlag.png'
-// import chinaFlagIcon from '@/assets/icons/chinaFlag.png'
-// import vietnamFlagIcon from '@/assets/icons/vietnamFlag.png'
+import spainFlag from '@/assets/flags/ES.svg'
+import vietnamFlag from '@/assets/flags/VN.svg'
+import arabicFlag from '@/assets/flags/SA.svg'
+import chinaFlag from '@/assets/flags/CN.svg'
+import usFlag from '@/assets/flags/US.svg'
+
 import { Separator } from '@/components/ui/separator'
 import { ScrollArea } from "@/components/ui/scroll-area"
 
@@ -72,24 +74,23 @@ import { faker } from '@faker-js/faker';
 import { Badge } from '@/components/ui/badge'
 import Provider from '@/components/Provider.vue'
 
-//NOTE: Create a temporary data to be pass down to another component Provider.vue
-const test = ref({
-  name: 'abc',
-  address: '321',
-})
-
-const lorem = faker.lorem.paragraph(20)
-const provider = ref(
-  {
-    name: 'Fahd Albinali',
-    avatar: profAvatar,
-    price: '100',
+//NOTE: these data needs to be grabbed from the backend.
+//right now averageRating cannot easily be computed on it's own
+//since it cannot calculate within something to be initialized
+//at the same time.
+const generateProvider = () => {
+  const jobsCompleted = faker.number.int(150)
+  return {
+    name: faker.person.fullName(),
+    avatar: faker.image.avatar(),
+    price: faker.number.int(150),
     workPhotos: [workPhoto1, workPhoto2, workPhoto3, workPhoto1, workPhoto2, workPhoto3],
-    aboutMe: 'I am a Professor, a Engineer, a Co-Founder and CEO.' + faker.lorem.paragraph(5),
+    aboutMe: faker.lorem.paragraph(20),
     averageRating: '4.9',
-    jobsCompleted: '169',
+    jobsCompleted: jobsCompleted,
     datesBooked: [],
-    ratings: Array.from({ length: 69 }, (_, i) => ({
+    languages: [spainFlag],
+    ratings: Array.from({ length: jobsCompleted }, (_, i) => ({
       jobType: ['Gardening', 'Plumbing', 'Carpentry', 'Electrical'][i % 4],
       userName: faker.person.fullName(),
       date: faker.date.anytime(),
@@ -97,32 +98,22 @@ const provider = ref(
       userRated: Math.floor(Math.random() * 5) + 1,
       userComment: faker.lorem.paragraph(),
     })),
-  },
-)
-const totalRating = provider.value.ratings.length
-const displayedPhotos = computed(() => provider.value.workPhotos.slice(0, 4))
-const ratingsPerPage = 5
-const currentPage = ref(1)
-const chunkUserRating = computed(() => {
-  const ratingList = provider.value.ratings
-  const chunks = []
-  for (let i = 0; i < ratingList.length; i += ratingsPerPage) {
-    chunks.push(ratingList.slice(i, i + ratingsPerPage))
   }
-  return chunks
-})
+}
+
+const providers = ref(Array.from({ length: 15 }, generateProvider))
 
 </script>
 
 <template>
-  <div v-for="i in 5" class="m-5">
-    <Card class="flex flex-col max-w-150 min-w-50">
+  <div v-for="(provider, index) in providers" :key="index" class="m-5">
+    <Card class="flex flex-col max-w-150 min-w-120">
       <CardHeader class="justify-between flex-row">
         <!-- <div class="flex flex-row gap-20 m-2 pt-10 pl-10"> -->
         <div class="flex flex-row gap-20 m-2 pl-10">
           <Avatar class="scale-[4] self-center">
             <AvatarImage :src="provider.avatar" alt="@shadcn" />
-            <AvatarFallback>Avatar</AvatarFallback>
+            <AvatarFallback><img :src="defaultAvatar"></AvatarFallback>
           </Avatar>
           <div>
             <CardTitle>{{ provider.name }}</CardTitle>
@@ -130,19 +121,23 @@ const chunkUserRating = computed(() => {
               <!-- <Badge variant="outline"> -->
               <img class="w-4 inline-block align-top" :src="starIcon">
               {{ provider.averageRating }}
-              ({{ totalRating }})
+              ({{ provider.ratings.length }})
               reviews
               <!-- </Badge> -->
             </CardDescription>
 
             <CardDescription class="mt-1 flex flex-col">
               <Badge variant="outline">
-                <img class="w-5 inline-block align-top" :src="checkMarkIcon">
+                <img class="w-5 inline-block" :src="checkMarkIcon">
                 Completed {{ provider.jobsCompleted }} Jobs
               </Badge>
               <Badge variant="outline">
                 <img class="w-5 inline-block align-top" :src="checkMarkIcon">
-                Fluent in <span class="text-1xl">🇨🇳 🇲🇽 🇻🇳 🇺🇸</span>
+                Fluent in
+                <img :src="usFlag" class="w-5">
+                <img :src="spainFlag" class="w-5">
+                <img :src="chinaFlag" class="w-5">
+                <img :src="arabicFlag" class="w-5">
               </Badge>
             </CardDescription>
             <Dialog>
@@ -156,9 +151,7 @@ const chunkUserRating = computed(() => {
                 </DialogHeader>
                 <ScrollArea class="h-full max-h-full">
                   <div class="p-4">
-                    <!-- <Provider /> -->
-                    <!-- NOTE: Added this here for testing transfer of data to Provider.vue -->
-                    <Provider :test="test" />
+                    <Provider :provider="provider" />
                   </div>
                 </ScrollArea>
               </DialogContent>
