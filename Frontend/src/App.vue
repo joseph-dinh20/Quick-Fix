@@ -38,9 +38,17 @@ onMounted(async () => {
 })
 
 async function logout() {
-  await initCsrf()
-  await apiLogout()
+  try {
+    await initCsrf()
+    await apiLogout()
+  } catch (err) {
+    console.error("Logout error:", err)
+  }
+
+  localStorage.clear()
   user.value = null
+
+  window.location = null
 }
 
 const routes = {
