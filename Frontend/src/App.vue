@@ -61,7 +61,9 @@ window.addEventListener("hashchange", () => {
   currentPath.value = window.location.hash
 })
 
-const currentView = computed(() => routes[currentPath.value.slice(1) || "/"])
+const currentView = computed(() => {
+  return routes[currentPath.value.slice(1) || "/"] || Main
+})
 
 // ✅ real login state based on session
 const isLoggedIn = computed(() => !!user.value)
@@ -79,19 +81,27 @@ async function handleLoginSuccess() {
   <div class="flex flex-col items-center m-[30px]">
     <div v-if="loadingUser">Loading...</div>
 
-    <div v-else-if="isLoggedIn" class="flex flex-col items-center m-[30px]">
+    <div v-else class="flex flex-col items-center m-[30px]">
+      <!-- ✅ always show header -->
       <Header />
 
-      <div class="text-sm mb-3">Logged in as: {{ user.email }}</div>
+      <!-- ✅ show auth info only when logged in -->
+      <div v-if="isLoggedIn" class="text-sm mb-3">Logged in as: {{ user.email }}</div>
+      <button v-if="isLoggedIn" class="mb-6 underline" @click="logout">Logout</button>
 
-      <button class="mb-6 underline" @click="logout">Logout</button>
+      <!-- ✅ guest buttons (temporary) -->
+      <div v-else class="mb-6 flex gap-3">
+        <a class="underline" href="#/Login">Login</a>
+        <a class="underline" href="#/Signup">Signup</a>
+      </div>
 
       <div class="m-20">
-        <component :is="currentView" />
+        <component
+          :is="currentView"
+          @login-success="handleLoginSuccess"
+        />
       </div>
     </div>
-
-    <Login v-else @login-success="handleLoginSuccess" />
 
     <Toaster />
   </div>
