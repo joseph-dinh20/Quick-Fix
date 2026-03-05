@@ -1,20 +1,48 @@
 <script setup>
-import { ref, computed onMounted} from 'vue'
-import Header from '@/components/Header.vue'
-import Payment from '@/components/Payment.vue'
-import Main from '@/components/Main.vue'
-import Login from '@/components/Login.vue'
-import Signup from '@/components/Signup.vue'
-import Form from '@/components/Form.vue'
-import Profile from '@/components/Profile.vue'
-import Test from '@/components/Test.vue'
-import Hello from './components/hello.vue'
-import Temp from '@/components/Temp.vue'
-import Provider from '@/components/Provider.vue'
+import { ref, computed, onMounted } from "vue"
+
+import Header from "@/components/Header.vue"
+import Payment from "@/components/Payment.vue"
+import Main from "@/components/Main.vue"
+import Login from "@/components/Login.vue"
+import Signup from "@/components/Signup.vue"
+import Form from "@/components/Form.vue"
+import Profile from "@/components/Profile.vue"
+import Test from "@/components/Test.vue"
+import Hello from "./components/hello.vue"
+import Temp from "@/components/Temp.vue"
+import Provider from "@/components/Provider.vue"
 import ProviderList from '@/components/ProviderList.vue'
 
+import { me, initCsrf, logout as apiLogout } from "@/services/api.js"
+import { Toaster } from "@/components/ui/sonner"
 
-import { Toaster } from '@/components/ui/sonner'
+const user = ref(null)
+const loadingUser = ref(true)
+
+async function refreshUser() {
+  try {
+    const res = await me()
+    user.value = res.data
+  } catch (err) {
+    user.value = null
+  }
+}
+
+onMounted(async () => {
+  try {
+    await initCsrf()
+    await refreshUser()
+  } finally {
+    loadingUser.value = false
+  }
+})
+
+async function logout() {
+  await initCsrf()
+  await apiLogout()
+  user.value = null
+}
 
 const routes = {
   '/': Main,
