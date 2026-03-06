@@ -9,6 +9,39 @@ from django.contrib.auth import authenticate, login as dj_login, logout as dj_lo
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import permission_classes
+import re
+
+User = get_user_model()
+
+
+def validate_password_strength(password):
+    """
+    Validate password meets security standards:
+    - Minimum length of 8
+    - At least one uppercase letter
+    - At least one lowercase letter
+    - At least one digit
+    - At least one special character
+    """
+    errors = []
+    
+    if len(password) < 8:
+        errors.append("Password must be at least 8 characters long")
+    
+    if not re.search(r'[A-Z]', password):
+        errors.append("Password must contain at least one uppercase letter")
+    
+    if not re.search(r'[a-z]', password):
+        errors.append("Password must contain at least one lowercase letter")
+    
+    if not re.search(r'[0-9]', password):
+        errors.append("Password must contain at least one digit")
+    
+    if not re.search(r'[!@#$%^&*()_+\-=\[\]{};:\'",.<>?/\\|`~]', password):
+        errors.append("Password must contain at least one special character")
+    
+    return errors
+
 
 @api_view(["POST"])
 def signup(request):
@@ -19,6 +52,11 @@ def signup(request):
 
     if User.objects.filter(username=email).exists():
         return Response({"error": "User exists"}, status=400)
+
+    # Validate password strength
+    password_errors = validate_password_strength(password)
+    if password_errors:
+        return Response({"errors": password_errors}, status=400)
 
     user = User.objects.create_user(
         username=email,
@@ -32,7 +70,6 @@ def signup(request):
 
     return Response({"message": "User created"})
 
-User = get_user_model()
 @api_view(["POST"])
 def login(request):
     email = request.data.get("email")

@@ -22,10 +22,13 @@ const name = ref("")
 const email = ref("")
 const password = ref("")
 const confirmPassword = ref("")
+const errors = ref<string[]>([])
 
 const handleSubmit = async () => {
+  errors.value = []
+
   if (password.value !== confirmPassword.value) {
-    alert("Passwords do not match")
+    errors.value.push("Passwords do not match")
     return
   }
 
@@ -38,7 +41,18 @@ const handleSubmit = async () => {
 
     alert("Account created!")
   } catch (err) {
-    alert("Signup failed")
+    const data = err?.response?.data
+    if (data) {
+      if (data.errors && Array.isArray(data.errors)) {
+        errors.value = data.errors
+      } else if (data.error) {
+        errors.value = [data.error]
+      } else {
+        errors.value = ["Signup failed"]
+      }
+    } else {
+      errors.value = ["Signup failed"]
+    }
   }
 }
 </script>
@@ -55,6 +69,11 @@ const handleSubmit = async () => {
     <CardContent>
       <form @submit.prevent="handleSubmit">
         <FieldGroup>
+          <template v-if="errors.length">
+            <ul class="mb-4 text-red-600 list-disc list-inside">
+              <li v-for="(err, idx) in errors" :key="idx">{{ err }}</li>
+            </ul>
+          </template>
 
           <Field>
             <FieldLabel>Full Name</FieldLabel>

@@ -100,7 +100,7 @@ async function handleLoginSuccess() {
       <!-- ✅ guest buttons (temporary) -->
       <div v-else class="mb-6 flex gap-3">
         <a class="underline" href="#/Login">Login</a>
-        <a class="underline" href="#/Signup">Signup</a>
+        <a class="underline" href="#/Hello">Signup</a>
       </div>
 
       <div class="m-20">
