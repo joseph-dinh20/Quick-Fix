@@ -1,27 +1,9 @@
-<<<<<<< HEAD
 # Ignore List
 DS_Store/
 .DS_Store
 dist/
 node_modules/
 .env/
-=======
-############################
-# Python
-############################
-__pycache__/
-*.py[cod]
-*$py.class
-*.so
-*.pyd
-*.pyo
-*.egg
-*.egg-info/
-dist/
-build/
-.eggs/
-pip-wheel-metadata/
->>>>>>> 1498e9df7c91b8cbf19da56783f9fb2a5df42354
 
 ############################
 # Virtual Environments
