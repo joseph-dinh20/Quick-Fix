@@ -31,6 +31,7 @@ import { ref } from 'vue'
 //NOTE: Single Value Variables
 const avatar = ref('')
 const name = "Satoru Goji"
+const rates = ref('')
 
 //NOTE: This is for image upload, image display
 const photoList = ref([])
