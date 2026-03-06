@@ -1,9 +1,18 @@
-# Ignore List
-DS_Store/
-.DS_Store
+############################
+# Python
+############################
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.pyd
+*.pyo
+*.egg
+*.egg-info/
 dist/
-node_modules/
-.env/
+build/
+.eggs/
+pip-wheel-metadata/
 
 ############################
 # Virtual Environments
@@ -55,6 +64,5 @@ vite.config.ts.timestamp-*
 *.bak
 *.tmp
 *.orig
-*.pyc
+
 DS_Store/
-.idea/
