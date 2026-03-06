@@ -26,12 +26,11 @@ const routes = {
   '/Profile': Profile,
   '/Test': Test,
   '/Temp': Temp,
-  '/Provider': Provider,
+  // '/Provider': Provider,
   '/Hello': Hello,
   '/ProviderList': ProviderList,
 }
 
-// const isLoggedIn = ref(false)
 const isLoggedIn = ref(true)
 function handleLoginSuccess() {
   isLoggedIn.value = true
@@ -50,8 +49,8 @@ const currentView = computed(() => {
 </script>
 
 <template>
-  <div class="flex flex-col items-center m-[30px]">
-    <div v-if='isLoggedIn' class="flex flex-col items-center m-[30px]">
+  <div class="flex flex-col items-center">
+    <div v-if='isLoggedIn' class="flex flex-col items-center">
       <Header v-show="isLoggedIn" />
       <!-- <Header /> -->
       <div class="m-20">
