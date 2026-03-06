@@ -12,7 +12,7 @@ import Test from "@/components/Test.vue"
 import Hello from "./components/hello.vue"
 import Temp from "@/components/Temp.vue"
 import Provider from "@/components/Provider.vue"
-// import ProviderList from '@/components/ProviderList.vue'
+import ProviderList from '@/components/ProviderList.vue'
 
 import { me, initCsrf, logout as apiLogout } from "@/services/api.js"
 import { Toaster } from "@/components/ui/sonner"
@@ -63,7 +63,7 @@ const routes = {
   "/Temp": Temp,
   "/Provider": Provider,
   "/Hello": Hello,
-  // '/ProviderList': ProviderList,
+  '/ProviderList': ProviderList,
 }
 
 const currentPath = ref(window.location.hash)
