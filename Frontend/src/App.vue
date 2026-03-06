@@ -12,7 +12,7 @@ import Test from "@/components/Test.vue"
 import Hello from "./components/hello.vue"
 import Temp from "@/components/Temp.vue"
 import Provider from "@/components/Provider.vue"
-import ProviderList from '@/components/ProviderList.vue'
+// import ProviderList from '@/components/ProviderList.vue'
 
 import { me, initCsrf, logout as apiLogout } from "@/services/api.js"
 import { Toaster } from "@/components/ui/sonner"
@@ -39,30 +39,31 @@ onMounted(async () => {
 })
 
 async function logout() {
-  await initCsrf()
-  await apiLogout()
+  try {
+    await initCsrf()
+    await apiLogout()
+  } catch (err) {
+    console.error("Logout error:", err)
+  }
+
+  localStorage.clear()
   user.value = null
+
+  window.location = null
 }
 
 const routes = {
-  '/': Main,
-  '/Payment': Payment,
-  '/Login': Login,
-  '/Signup': Signup,
-  '/Form': Form,
-  '/Profile': Profile,
-  '/Test': Test,
-  '/Temp': Temp,
-  '/Provider': Provider,
-  '/Hello': Hello,
-  '/ProviderList': ProviderList
-}
-
-// const isLoggedIn = ref(false)
-const isLoggedIn = ref(true)
-function handleLoginSuccess() {
-  isLoggedIn.value = true
-  // window.location.hash = '/'
+  "/": Main,
+  "/Payment": Payment,
+  "/Login": Login,
+  "/Signup": Signup,
+  "/Form": Form,
+  "/Profile": Profile,
+  "/Test": Test,
+  "/Temp": Temp,
+  "/Provider": Provider,
+  "/Hello": Hello,
+  // '/ProviderList': ProviderList,
 }
 
 const currentPath = ref(window.location.hash)
@@ -115,5 +116,4 @@ async function handleLoginSuccess() {
     <Toaster />
   </div>
 </template>
-
 
