@@ -1,6 +1,7 @@
 from django.db import models
 from services.models import Service
 from django.contrib.auth.models import User
+from django.core.validators import MinValueValidator, MaxValueValidator
 
 class Profile(models.Model):
     USER = "user"
@@ -17,14 +18,16 @@ class Profile(models.Model):
     name = models.CharField(max_length=100)
     avatar = models.ImageField(upload_to="avatars/", blank=True, null=True)
 
-    price_per_hour = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
-    about_me = models.TextField(blank=True)
-
-    total_rating = models.IntegerField(default=0)
-    average_rating = models.DecimalField(max_digits=3, decimal_places=2, default=0)
-
     def __str__(self):
         return self.name or self.user.username
+    
+
+class WorkImage(models.Model):
+    provider = models.ForeignKey("ServiceProvider", on_delete=models.CASCADE, related_name="work_images")
+    image = models.ImageField(upload_to="work_photos/")
+
+    def __str__(self):
+        return f"{self.provider.profile.name} - {self.id}"
     
 
 class ServiceProvider(models.Model):
@@ -35,5 +38,11 @@ class ServiceProvider(models.Model):
     price_per_hour = models.DecimalField(max_digits=10, decimal_places=2)
     about_me = models.TextField(blank=True)
 
-    total_rating = models.IntegerField(default=0)
-    average_rating = models.DecimalField(max_digits=3, decimal_places=2, default=0)
+    total_rating = models.IntegerField(default=0, 
+                                       validators=[MinValueValidator(0), MaxValueValidator(5)])
+    average_rating = models.DecimalField(max_digits=3, decimal_places=2, default=0,
+                                         validators=[MinValueValidator(0), MaxValueValidator(5)]
+                                         )
+
+    def __str__(self):
+        return f"{self.profile.name} (Provider)"
