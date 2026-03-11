@@ -39,3 +39,8 @@ export const logout = () => {
 export const me = () => {
   return api.get("/accounts/me/");
 };
+
+// provider fetch helper – returns promise for a single provider by ID
+export const loadProvider = (id) => {
+  return api.get(`/accounts/providers/${id}/`);
+};
