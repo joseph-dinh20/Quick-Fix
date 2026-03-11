@@ -9,7 +9,7 @@ import Signup from "@/components/Signup.vue"
 import Form from "@/components/Form.vue"
 import Profile from "@/components/Profile.vue"
 import Test from "@/components/Test.vue"
-import Hello from "./components/hello.vue"
+// import Hello from "./components/hello.vue"
 import Temp from "@/components/Temp.vue"
 import Provider from "@/components/Provider.vue"
 import ProviderList from '@/components/ProviderList.vue'
@@ -63,7 +63,7 @@ const routes = {
   "/Test": Test,
   "/Temp": Temp,
   "/Provider": Provider,
-  "/Hello": Hello,
+//   "/Hello": Hello,
   '/ProviderList': ProviderList,
   '/Hello2': Hello2,
 }
@@ -104,7 +104,7 @@ async function handleLoginSuccess() {
       <!-- ✅ guest buttons (temporary) -->
       <div v-else class="mb-6 flex gap-3">
         <a class="underline" href="#/Login">Login</a>
-        <a class="underline" href="#/Hello">Signup</a>
+        <a class="underline" href="#/Signup">Sign up</a>
       </div>
 
       <div class="m-20">
