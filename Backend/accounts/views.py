@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from .models import Profile
+from .models import Profile, ServiceProvider
 from django.middleware.csrf import get_token
 from django.middleware.csrf import get_token
 
@@ -11,6 +11,8 @@ from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import permission_classes
 import re
+
+from .serializers import ServiceProviderSerializer
 
 User = get_user_model()
 
@@ -109,3 +111,24 @@ def csrf(request):
 def me(request):
     u = request.user
     return Response({"id": u.id, "username": u.username, "email": u.email})
+
+
+@api_view(["GET"])
+def get_providers(request):
+    providers = ServiceProvider.objects.all()
+    serializer = ServiceProviderSerializer(providers, many=True)
+    return Response(serializer.data)
+
+
+@api_view(["GET"])
+def get_provider(request, provider_id):
+    provider = ServiceProvider.objects.get(id=provider_id)
+    serializer = ServiceProviderSerializer(provider)
+    return Response(serializer.data)
+
+
+# @api_view(["GET"])
+# def providers_by_service(request, service_id):
+#     providers = ServiceProvider.objects.filter(services__id=service_id)
+#     serializer = ServiceProviderSerializer(providers, many=True)
+#     return Response(serializer.data)
