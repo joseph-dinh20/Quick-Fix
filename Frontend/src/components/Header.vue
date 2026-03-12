@@ -10,7 +10,7 @@ const navigate = (hash) => {
   <div>
     <header class="flex min-w-screen justify-evenly items-center p-2">
       <div class="w-25 items-center h-auto flex justify-center">
-        <img :src="LogoImage" class="scale-[3] pointer-events-none">
+        <a href = "#/"> <img :src="LogoImage" class="scale-[3] pointer-events-none"> </a>
       </div>
       <div class="button-scope">
         <!-- <button class="big-button" @click="navigate('/')">Home</button> -->
@@ -23,6 +23,8 @@ const navigate = (hash) => {
         <button class="big-button" @click="navigate('#/Test')">Test</button>
         <button class="big-button" @click="navigate('#/Temp')">temp</button>
         <button class="big-button" @click="navigate('#/ProviderList')">ProviderList</button>
+        <button class="big-button" @click="navigate('#/Main')">Main</button>
+        <button class="big-button" @click="navigate('#/JoinUs')">Join Us</button>
       </div>
     </header>
     <Separator class="my-3" />

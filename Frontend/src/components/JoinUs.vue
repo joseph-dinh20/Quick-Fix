@@ -65,7 +65,7 @@ const steps = [
             </div>
             <p class="mt-6 text-sm text-gray-400">
                 Already have an account?
-                <a href="#" class="text-orange-500 font-bold hover:underline"
+                <a href="#/SignUp" class="text-orange-500 font-bold hover:underline"
                     >Sign In</a
                 >
             </p>
@@ -79,7 +79,7 @@ const steps = [
                 <div
                     v-for="item in features"
                     :key="item.title"
-                    class="p-10 border border-black-100 rounded-[3rem] hover:shadow-xl transition-shadow duration-300"
+                    class="p-10 border border-gray-100 rounded-[2rem] hover:shadow-xl transition-shadow duration-300"
                 >
                     <div class="text-3xl mb-6">{{ item.icon }}</div>
                     <h3 class="text-xl font-bold mb-4">{{ item.title }}</h3>
