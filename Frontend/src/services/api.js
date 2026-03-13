@@ -77,3 +77,18 @@ export const updateServiceProvider = (formData) => {
     }
   );
 }
+
+
+export const deleteWorkImage = (id) => {
+  return api.delete(`/accounts/provider/work-images/${id}/delete/`, {
+    withCredentials: true,
+    headers: {
+      "X-CSRFToken": getCSRFToken()
+    }
+  })
+}
+
+
+export const loadMyProvider = () => {
+  return api.get("/accounts/provider/me/");
+};

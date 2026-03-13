@@ -182,3 +182,35 @@ def update_service_provider(request):
 
     print(serializer.errors)   # add this
     return Response(serializer.errors, status=400)
+
+
+
+@api_view(["DELETE"])
+@permission_classes([IsAuthenticated])
+def delete_work_image(request, image_id):
+
+    try:
+        image = WorkImage.objects.get(id=image_id)
+
+        # ensure the image belongs to the logged-in provider
+        if image.provider.profile.user != request.user:
+            return Response({"error": "Not authorized"}, status=403)
+
+        image.delete()
+
+        return Response({"message": "Image deleted"}, status=200)
+
+    except WorkImage.DoesNotExist:
+        return Response({"error": "Image not found"}, status=404)
+
+
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
+def provider_me(request):
+    try:
+        provider = ServiceProvider.objects.get(profile__user=request.user)
+    except ServiceProvider.DoesNotExist:
+        return Response({"error": "Service provider not found"}, status=404)
+
+    serializer = ServiceProviderSerializer(provider)
+    return Response(serializer.data)
