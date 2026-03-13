@@ -40,7 +40,40 @@ export const me = () => {
   return api.get("/accounts/me/");
 };
 
-// provider fetch helper – returns promise for a single provider by ID
+
 export const loadProvider = (id) => {
   return api.get(`/accounts/providers/${id}/`);
 };
+
+
+function getCSRFToken() {
+  const value = `; ${document.cookie}`
+  const parts = value.split(`; csrftoken=`)
+  if (parts.length === 2) return parts.pop().split(';').shift()
+}
+
+
+export const updateProfile = (formData) => {
+  return api.put('/accounts/profile/update/',
+    formData,
+    {
+      withCredentials: true,
+      headers: {
+        "X-CSRFToken": getCSRFToken(),
+      }
+    }
+  );
+}
+
+
+export const updateServiceProvider = (formData) => {
+  return api.put('/accounts/provider/update/',
+    formData,
+    {
+      withCredentials: true,
+      headers: {
+        "X-CSRFToken": getCSRFToken(),
+      }
+    }
+  );
+}
