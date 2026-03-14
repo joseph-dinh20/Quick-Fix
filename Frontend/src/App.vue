@@ -14,6 +14,8 @@ import Temp from "@/components/Temp.vue"
 import Provider from "@/components/Provider.vue"
 import ProviderList from '@/components/ProviderList.vue'
 import Hello2 from '@/components/hello2.vue'
+import Hello3 from '@/components/hello3.vue'
+import Hello4 from '@/components/hello4.vue'
 
 import { me, initCsrf, logout as apiLogout } from "@/services/api.js"
 import { Toaster } from "@/components/ui/sonner"
@@ -66,6 +68,8 @@ const routes = {
   "/Hello": Hello,
   '/ProviderList': ProviderList,
   '/Hello2': Hello2,
+  '/Hello3': Hello3,
+  '/Hello4': Hello4,
 }
 
 const currentPath = ref(window.location.hash)

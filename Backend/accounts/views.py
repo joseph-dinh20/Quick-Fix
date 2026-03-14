@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from .models import Profile, ServiceProvider
+from .models import Profile, ServiceProvider, WorkImage
 from django.middleware.csrf import get_token
 from django.middleware.csrf import get_token
 
@@ -12,7 +12,8 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import permission_classes
 import re
 
-from .serializers import ServiceProviderSerializer
+from .serializers import ServiceProviderSerializer, ProfileUpdateSerializer, ServiceProviderUpdateSerializer
+
 
 User = get_user_model()
 
@@ -132,3 +133,84 @@ def get_provider(request, provider_id):
 #     providers = ServiceProvider.objects.filter(services__id=service_id)
 #     serializer = ServiceProviderSerializer(providers, many=True)
 #     return Response(serializer.data)
+
+@api_view(["PUT"])
+@permission_classes([IsAuthenticated])
+def update_profile(request):
+    print(request.data)
+    profile = Profile.objects.get(user=request.user)
+
+    serializer = ProfileUpdateSerializer(
+        profile,
+        data=request.data,
+        partial=True
+    )
+
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data)
+
+    return Response(serializer.errors, status=400)
+
+
+@api_view(["PUT"])
+@permission_classes([IsAuthenticated])
+def update_service_provider(request):
+    print(request.data)
+
+    provider = ServiceProvider.objects.get(profile__user=request.user)
+
+    serializer = ServiceProviderUpdateSerializer(
+        provider,
+        data=request.data,
+        partial=True
+    )
+
+    if serializer.is_valid():
+        serializer.save()
+
+        images = request.FILES.getlist("work_images")
+
+        for img in images:
+            WorkImage.objects.create(
+                provider=provider,
+                image=img
+            )
+
+        return Response(serializer.data)
+
+
+    print(serializer.errors)   # add this
+    return Response(serializer.errors, status=400)
+
+
+
+@api_view(["DELETE"])
+@permission_classes([IsAuthenticated])
+def delete_work_image(request, image_id):
+
+    try:
+        image = WorkImage.objects.get(id=image_id)
+
+        # ensure the image belongs to the logged-in provider
+        if image.provider.profile.user != request.user:
+            return Response({"error": "Not authorized"}, status=403)
+
+        image.delete()
+
+        return Response({"message": "Image deleted"}, status=200)
+
+    except WorkImage.DoesNotExist:
+        return Response({"error": "Image not found"}, status=404)
+
+
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
+def provider_me(request):
+    try:
+        provider = ServiceProvider.objects.get(profile__user=request.user)
+    except ServiceProvider.DoesNotExist:
+        return Response({"error": "Service provider not found"}, status=404)
+
+    serializer = ServiceProviderSerializer(provider)
+    return Response(serializer.data)
