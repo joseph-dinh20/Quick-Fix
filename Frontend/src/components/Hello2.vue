@@ -1,16 +1,15 @@
 <script setup>
 import { ref, onMounted } from "vue"
+import { loadProvider } from "../services/api";
 
 const provider = ref(null)
 
-async function loadProvider() {
-  const response = await fetch("http://localhost:8000/api/accounts/providers/1/")
-  const data = await response.json()
-
-  provider.value = data
+async function fetchProvider() {
+  const response = await loadProvider(1);
+  provider.value = response.data;
 }
 
-onMounted(loadProvider)
+onMounted(fetchProvider)
 </script>
 
 <template>
