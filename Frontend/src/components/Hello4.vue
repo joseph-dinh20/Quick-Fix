@@ -102,6 +102,8 @@ async function removeExistingImage(id, index) {
 onMounted(loadProfile);
 </script>
 
+
+
 <template>
 
 <div>
