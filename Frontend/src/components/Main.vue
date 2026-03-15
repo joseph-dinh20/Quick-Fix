@@ -39,6 +39,10 @@ function selectjob(item) {
   // console.log(item.name)
   value.value = item.name
 }
+function goTo(path) {
+  window.location.hash = path
+}
+
 </script>
 
 <template>
@@ -50,6 +54,9 @@ function selectjob(item) {
         Schedule an appointment now and lets get your problems fixed!
       </h2>
 
+          <Button @click="goTo('/ProviderList')">Find Services</Button>
+          <Button variant="outline" @click="goTo('/Join')">Join as Provider</Button>
+
       <!-- Search Box -->
       <div class="w-full max-w-sm relative">
         <!-- Input Row -->
@@ -60,7 +67,7 @@ function selectjob(item) {
         </div>
 
         <!-- Floating Dropdown Wrapper -->
-        <div v-if="showScroll" class="absolute mt-1 w-full z-1">
+        <div v-if="showScroll" class="absolute mt-2 w-full z-10">
           <ScrollArea class="h-[200px] w-full rounded-md bg-background shadow-lg">
             <div class="p-6 space-y-3">
               <div v-for="job in filteredJobs" :key="job" @mousedown="selectjob(job)"
