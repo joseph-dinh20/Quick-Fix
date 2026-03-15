@@ -235,7 +235,7 @@ onMounted(() => {
           {{ currentProvider.aboutMe || currentProvider.about_me || 'No bio yet.' }}
         </span>
 
-        <Separator class="my-2" />
+                <Separator class="my-2" />
 
         <CardTitle class="mb-2">Services</CardTitle>
 
@@ -244,29 +244,52 @@ onMounted(() => {
         </div>
 
         <div v-else class="flex flex-col gap-3">
-          <div class="flex flex-wrap gap-3">
-            <label
-              v-for="service in allServices"
+          <div class="flex flex-wrap gap-2">
+            <Badge
+              v-for="service in allServices.filter(service => selectedServices.includes(service.id))"
               :key="service.id"
-              class="flex items-center gap-2 border rounded-md px-3 py-2 cursor-pointer"
+              variant="secondary"
             >
-              <input
-                type="checkbox"
-                :checked="selectedServices.includes(service.id)"
-                @change="toggleService(service.id)"
-              />
-              <span>{{ service.name }}</span>
-            </label>
-          </div>
+              {{ service.name }}
+            </Badge>
 
-          <div class="flex items-center gap-3">
-            <Button @click="saveServices" :disabled="savingServices">
-              {{ savingServices ? 'Saving...' : 'Save Services' }}
-            </Button>
-            <span v-if="servicesMessage" class="text-sm">
-              {{ servicesMessage }}
+            <span
+              v-if="allServices.filter(service => selectedServices.includes(service.id)).length === 0"
+              class="text-sm text-gray-500"
+            >
+              No services selected yet.
             </span>
           </div>
+
+          <details class="border rounded-md p-3">
+            <summary class="cursor-pointer font-medium">
+              Edit Services
+            </summary>
+
+            <div class="flex flex-wrap gap-3 mt-4">
+              <label
+                v-for="service in allServices"
+                :key="service.id"
+                class="flex items-center gap-2 border rounded-md px-3 py-2 cursor-pointer"
+              >
+                <input
+                  type="checkbox"
+                  :checked="selectedServices.includes(service.id)"
+                  @change="toggleService(service.id)"
+                />
+                <span>{{ service.name }}</span>
+              </label>
+            </div>
+
+            <div class="flex items-center gap-3 mt-4">
+              <Button @click="saveServices" :disabled="savingServices">
+                {{ savingServices ? 'Saving...' : 'Save Services' }}
+              </Button>
+              <span v-if="servicesMessage" class="text-sm">
+                {{ servicesMessage }}
+              </span>
+            </div>
+          </details>
         </div>
 
         <Separator class="my-2" />
