@@ -260,3 +260,58 @@ def update_provider_services(request):
     )
 
 
+@api_view(["POST"])
+@permission_classes([IsAuthenticated])
+def favorite_provider(request, provider_id):
+    profile = request.user.profile
+    provider = ServiceProvider.objects.get(id=provider_id)
+
+    profile.favorites.add(provider)
+
+    return Response({
+        "message": "Provider favorited",
+        },
+        status=status.HTTP_200_OK
+        )
+
+
+@api_view(["DELETE"])
+@permission_classes([IsAuthenticated])
+def unfavorite_provider(request, provider_id):
+    profile = request.user.profile
+    provider = ServiceProvider.objects.get(id=provider_id)
+
+    profile.favorites.remove(provider)
+
+    return Response({
+        "message": "Provider unfavorited",
+        },
+        status=status.HTTP_200_OK
+        )
+
+
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
+def get_favorites(request):
+
+    profile = request.user.profile
+    providers = profile.favorites.all()
+
+    serializer = ServiceProviderSerializer(providers, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
+def is_favorite_provider(request, provider_id):
+
+    profile = request.user.profile
+
+    is_favorite = profile.favorites.filter(id=provider_id).exists()
+
+    return Response({
+        "provider_id": provider_id,
+        "is_favorite": is_favorite
+    },
+    status=status.HTTP_200_OK
+    )
