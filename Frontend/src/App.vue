@@ -9,12 +9,15 @@ import Signup from "@/components/Signup.vue"
 import Form from "@/components/Form.vue"
 import Profile from "@/components/Profile.vue"
 import Test from "@/components/Test.vue"
-// import Hello from "./components/hello.vue"
+import Hello from "@/components/Hello.vue"
 import Temp from "@/components/Temp.vue"
 import Provider from "@/components/Provider.vue"
 import ProviderList from '@/components/ProviderList.vue'
+  import ProviderTest from '@/components/ProviderTest.vue'
 import Hello2 from '@/components/hello2.vue'
-import JoinUs from '@/components/JoinUs.vue'
+import Hello3 from '@/components/hello3.vue'
+import Hello4 from '@/components/hello4.vue'
+import Join from './components/Join.vue'
 
 import { me, initCsrf, logout as apiLogout } from "@/services/api.js"
 import { Toaster } from "@/components/ui/sonner"
@@ -50,8 +53,7 @@ async function logout() {
 
   localStorage.clear()
   user.value = null
-
-  window.location = null
+  window.location.hash = "/"
 }
 
 const routes = {
@@ -59,27 +61,31 @@ const routes = {
   "/Payment": Payment,
   "/Login": Login,
   "/Signup": Signup,
+  "/Join": Join,
   "/Form": Form,
   "/Profile": Profile,
   "/Test": Test,
   "/Temp": Temp,
   "/Provider": Provider,
-//   "/Hello": Hello,
-  '/ProviderList': ProviderList,
-  '/Hello2': Hello2,
-  '/JoinUs': JoinUs
+  "/ProviderList": ProviderList,
+  "/ProviderTest": ProviderTest,
+  "/Hello": Hello,
+  "/Hello2": Hello2,
+  "/Hello3": Hello3,
+  "/Hello4": Hello4,
 }
 
 const currentPath = ref(window.location.hash)
+
 window.addEventListener("hashchange", () => {
   currentPath.value = window.location.hash
 })
 
 const currentView = computed(() => {
-  return routes[currentPath.value.slice(1) || "/"] || Main
+  const path = currentPath.value.replace(/^#/, '').split('?')[0] || "/"
+  return routes[path] || Main
 })
 
-// ✅ real login state based on session
 const isLoggedIn = computed(() => !!user.value)
 
 async function handleLoginSuccess() {
@@ -87,37 +93,26 @@ async function handleLoginSuccess() {
 }
 </script>
 
-
-
-
-
 <template>
   <div class="flex flex-col items-center m-[30px]">
     <div v-if="loadingUser">Loading...</div>
 
-    <div v-else class="flex flex-col items-center m-[30px]">
-      <!-- ✅ always show header -->
-      <Header />
+    <div v-else class="flex flex-col items-center m-[30px] w-full">
+      <Header :user="user" @logout="logout" />
 
-      <!-- ✅ show auth info only when logged in -->
-      <div v-if="isLoggedIn" class="text-sm mb-3">Logged in as: {{ user.email }}</div>
-      <button v-if="isLoggedIn" class="mb-6 underline" @click="logout">Logout</button>
-
-      <!-- ✅ guest buttons (temporary) -->
-      <div v-else class="mb-6 flex gap-3">
+      <div v-if="!isLoggedIn" class="mb-6 flex gap-3">
         <a class="underline" href="#/Login">Login</a>
-        <a class="underline" href="#/Signup">Sign up</a>
+        <a class="underline" href="#/Signup">Signup</a>
       </div>
 
-      <div class="m-20">
+      <div class="mt-8 mb-20">
         <component
-          :is="currentView"
-          @login-success="handleLoginSuccess"
+            :is="currentView"
+            @login-success="handleLoginSuccess"
         />
       </div>
     </div>
 
-    <Toaster />
+    <Toaster/>
   </div>
 </template>
-
