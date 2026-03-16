@@ -116,6 +116,7 @@ function onSubmit(values) {
       '--border-radius': 'calc(var(--radius)  + 4px)',
     },
   })
+  console.log(JSON.stringify(values))
 }
 </script>
 
@@ -172,12 +173,13 @@ function onSubmit(values) {
                   <CardDescription>where should we meet you?</CardDescription>
                 </CardHeader>
                 <CardContent class="flex flex-col gap-6">
-                  <FormField v-slot="{ componentField }" name="address">
+                  <!-- Another way to rename the componentField variable so we can use field instead -->
+                  <FormField v-slot="{ componentField: field }" name="address">
                     <FormItem>
                       <FormLabel>Address</FormLabel>
                       <FormControl>
-                        <Input type="text" v-bind="componentField"
-                          placeholder="323 W Salt Lake, Long Beach, CA, 90100" />
+                        <!-- notice how v-bind is binded to "field" and not "componentField" -->
+                        <Input type="text" v-bind="field" placeholder="323 W Salt Lake, Long Beach, CA, 90100" />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -199,7 +201,7 @@ function onSubmit(values) {
             <template v-if="stepIndex === 2">
               <Card>
                 <CardHeader>
-                  <CardTitlte class="font-semibold">Service Length</CardTitlte>
+                  <CardTitle class="font-semibold">Service Length</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <FormField v-slot="{ componentField }" name="plan">
@@ -216,9 +218,9 @@ function onSubmit(values) {
                             }">
                             <div class="flex flex-col">
                               <FormLabel class="text-base font-medium"> {{ plan.title }} </FormLabel>
-                              <formlabel class="text-sm text-muted-foreground">
+                              <FormLabel class="text-sm text-muted-foreground">
                                 {{ plan.description }}
-                              </formlabel>
+                              </FormLabel>
                             </div>
                             <RadioGroupItem :value="plan.id" />
                           </div>
@@ -235,7 +237,7 @@ function onSubmit(values) {
 
               <Card class="min-h-full min-w-150">
                 <CardHeader>
-                  <CardTitlte class="font-semibold">Task Description</CardTitlte>
+                  <CardTitle class="font-semibold">Task Description</CardTitle>
                   <CardDescription>
                     provide additional information about the job. A good
                   </CardDescription>
@@ -250,7 +252,6 @@ function onSubmit(values) {
                       <FormControl>
                         <Textarea class="min-h-50 min-w-full" type="text" v-bind="componentField"
                           placeholder="Start describing here..." />
-
                       </FormControl>
                       <FormMessage />
                     </FormItem>

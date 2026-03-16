@@ -1,6 +1,7 @@
 <script setup>
 // import type { HTMLAttributes } from "vue"
 import { cn } from "@/lib/utils"
+import { initCsrf, login as apiLogin } from "@/services/api"
 import { Button } from "@/components/ui/button"
 import {
   Card,
@@ -51,30 +52,31 @@ function quickLogin() {
 }
 async function login() {
   const $toast = useToast()
-  const response = await fetch('http://localhost:8080/users/login', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      name: email.value,
+
+  try {
+    // get CSRF cookie + header set for axios
+    await initCsrf()
+
+    const res = await apiLogin({
+      email: email.value,
       password: password.value,
-    }),
-  })
+    })
 
-  const data = await response.json()
+    // success
+    $toast.success(res.data?.message || "Login success")
+    emit("login-success")
+    return res.data
+  } catch (err) {
+    const msg =
+      err?.response?.data?.error ||
+      err?.response?.data?.detail ||
+      err?.message ||
+      "Login failed"
 
-  if (!response.ok) {
-    let instance = $toast.success(data.message)
-    console.error('Login Failed', data.message)
-    throw new Error(data.message)
+    $toast.error(msg)
+    console.error("Login Failed:", err?.response?.data || err)
+    throw err
   }
-
-  // sends data to App.vue (our root node)
-  emit('login-success')
-  let instance = $toast.success(data.message)
-  console.log('Login Success', data.message)
-  return data
 }
 
 </script>

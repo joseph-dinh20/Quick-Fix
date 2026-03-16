@@ -1,45 +1,106 @@
-<template>
-  <div class="min-h-screen flex flex-col items-center justify-center gap-6 p-6">
-    <h1 class="text-4xl font-bold text-green-800">Welcome!</h1>
-    
-    <!-- Display message from backend -->
-    <h2 class="text-xl text-blue-600 text-center">
-      INTERCEPTED: {{ backendMessage }}
-    </h2>
+<script setup lang="ts">
+import { ref } from "vue"
+import { signup } from "@/services/api"
 
-    <!-- Optional: Retry button if fetch fails -->
-    <button
-      v-if="backendMessage.includes('Could not')"
-      @click="fetchMessage"
-      class="px-4 py-2 bg-green-500 text-white rounded"
-    >
-      Retry
-    </button>
-  </div>
-</template>
+import { Button } from "@/components/ui/button"
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
+import {
+  Field,
+  // FieldDescription,
+  FieldGroup,
+  FieldLabel,
+} from "@/components/ui/field"
+import { Input } from "@/components/ui/input"
 
-<script setup>
-import { ref, onMounted } from 'vue'
-import { Hello } from '@/services/api'  // Import the Django API function
+const name = ref("")
+const email = ref("")
+const password = ref("")
+const confirmPassword = ref("")
+const errors = ref<string[]>([])
 
-// Reactive variable to store backend message
-const backendMessage = ref('Loading...')
+const handleSubmit = async () => {
+  errors.value = []
 
-// Function to fetch message from Django
-async function fetchMessage() {
+  if (password.value !== confirmPassword.value) {
+    errors.value.push("Passwords do not match")
+    return
+  }
+
   try {
-    const res = await Hello()
-    backendMessage.value = res.data.message
+    await signup({
+      name: name.value,
+      email: email.value,
+      password: password.value,
+    })
+
+    alert("Account created!")
   } catch (err) {
-    console.error('Failed to fetch backend message:', err)
-    backendMessage.value = 'Could not fetch message'
+    const data = err?.response?.data
+    if (data) {
+      if (data.errors && Array.isArray(data.errors)) {
+        errors.value = data.errors
+      } else if (data.error) {
+        errors.value = [data.error]
+      } else {
+        errors.value = ["Signup failed"]
+      }
+    } else {
+      errors.value = ["Signup failed"]
+    }
   }
 }
-
-// Fetch message once when component mounts
-onMounted(fetchMessage)
 </script>
 
-<style scoped>
-/* Optional styling */
-</style>
+<template>
+  <Card>
+    <CardHeader>
+      <CardTitle>Create an account</CardTitle>
+      <CardDescription>
+        Enter your information below to create your account
+      </CardDescription>
+    </CardHeader>
+
+    <CardContent>
+      <form @submit.prevent="handleSubmit">
+        <FieldGroup>
+          <template v-if="errors.length">
+            <ul class="mb-4 text-red-600 list-disc list-inside">
+              <li v-for="(err, idx) in errors" :key="idx">{{ err }}</li>
+            </ul>
+          </template>
+
+          <Field>
+            <FieldLabel>Full Name</FieldLabel>
+            <Input v-model="name" type="text" required />
+          </Field>
+
+          <Field>
+            <FieldLabel>Email</FieldLabel>
+            <Input v-model="email" type="email" required />
+          </Field>
+
+          <Field>
+            <FieldLabel>Password</FieldLabel>
+            <Input v-model="password" type="password" required />
+          </Field>
+
+          <Field>
+            <FieldLabel>Confirm Password</FieldLabel>
+            <Input v-model="confirmPassword" type="password" required />
+          </Field>
+
+          <Button type="submit">
+            Create Account
+          </Button>
+
+        </FieldGroup>
+      </form>
+    </CardContent>
+  </Card>
+</template>
