@@ -91,4 +91,20 @@ export const updateProviderServices = (services) => {
   });
 };
 
+export const favoriteProvider = (id) => {
+  return api.post(`/accounts/providers/${id}/favorite/`)
+}
+
+export const unfavoriteProvider = (id) => {
+  return api.delete(`/accounts/providers/${id}/favorite/remove/`)
+}
+
+export const getFavorites = () => {
+  return api.get(`/accounts/providers/favorites/`)
+}
+
+export const isFavoriteProvider = (id) => {
+  return api.get(`/accounts/providers/${id}/is-favorite/`)
+}
+
 export default api;

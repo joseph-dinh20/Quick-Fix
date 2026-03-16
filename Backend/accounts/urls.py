@@ -1,5 +1,8 @@
 from django.urls import path
-from .views import signup, login, logout, csrf, me, get_providers, get_provider, update_profile, update_service_provider, delete_work_image, provider_me, get_services, update_provider_services
+from .views import signup, login, logout, csrf, me
+from .views import get_providers, get_provider
+from .views import update_profile, update_service_provider, delete_work_image, provider_me, get_services, update_provider_services
+from .views import get_favorites, unfavorite_provider, favorite_provider, is_favorite_provider
 
 urlpatterns = [
     path("csrf/", csrf),
@@ -15,4 +18,8 @@ urlpatterns = [
     path("provider/me/", provider_me),
     path("services/", get_services, name="get_services"),
     path("provider/services/update/", update_provider_services, name="update_provider_services"),
+    path("providers/<int:provider_id>/favorite/", favorite_provider),
+    path("providers/<int:provider_id>/favorite/remove/", unfavorite_provider),
+    path("providers/favorites/", get_favorites),
+    path("providers/<int:provider_id>/is-favorite/", is_favorite_provider),
 ]

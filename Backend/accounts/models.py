@@ -18,6 +18,13 @@ class Profile(models.Model):
     name = models.CharField(max_length=100)
     avatar = models.ImageField(upload_to="avatars/", blank=True, null=True)
 
+    favorites = models.ManyToManyField(
+        "ServiceProvider",
+        related_name="favorited_by",
+        blank=True
+    )
+
+
     def __str__(self):
         return self.name or self.user.username
     
