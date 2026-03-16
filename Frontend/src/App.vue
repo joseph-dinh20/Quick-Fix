@@ -94,23 +94,15 @@ async function handleLoginSuccess() {
   <div class="flex flex-col items-center m-[30px]">
     <div v-if="loadingUser">Loading...</div>
 
-    <div v-else class="flex flex-col items-center m-[30px]">
-      <Header />
+    <div v-else class="flex flex-col items-center m-[30px] w-full">
+      <Header :user="user" @logout="logout" />
 
-      <div v-if="isLoggedIn" class="text-sm mb-3">
-        Logged in as: {{ user.email }}
-      </div>
-
-      <button v-if="isLoggedIn" class="mb-6 underline" @click="logout">
-        Logout
-      </button>
-
-      <div v-else class="mb-6 flex gap-3">
+      <div v-if="!isLoggedIn" class="mb-6 flex gap-3">
         <a class="underline" href="#/Login">Login</a>
         <a class="underline" href="#/Signup">Signup</a>
       </div>
 
-      <div class="m-20">
+      <div class="mt-8 mb-20">
         <component
           :is="currentView"
           @login-success="handleLoginSuccess"
