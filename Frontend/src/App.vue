@@ -9,13 +9,14 @@ import Signup from "@/components/Signup.vue"
 import Form from "@/components/Form.vue"
 import Profile from "@/components/Profile.vue"
 import Test from "@/components/Test.vue"
-import Hello from "./components/hello.vue"
+import Hello from "@/components/Hello.vue"
 import Temp from "@/components/Temp.vue"
 import Provider from "@/components/Provider.vue"
-import ProviderList from '@/components/ProviderList.vue'
-import Hello2 from '@/components/hello2.vue'
-import Hello3 from '@/components/hello3.vue'
-import Hello4 from '@/components/hello4.vue'
+import ProviderList from "@/components/ProviderList.vue"
+import ProviderTest from "@/components/ProviderTest.vue"
+import Hello2 from "@/components/Hello2.vue"
+import Hello3 from "@/components/Hello3.vue"
+import Hello4 from "@/components/Hello4.vue"
 
 import { me, initCsrf, logout as apiLogout } from "@/services/api.js"
 import { Toaster } from "@/components/ui/sonner"
@@ -51,8 +52,7 @@ async function logout() {
 
   localStorage.clear()
   user.value = null
-
-  window.location = null
+  window.location.hash = "/"
 }
 
 const routes = {
@@ -65,14 +65,16 @@ const routes = {
   "/Test": Test,
   "/Temp": Temp,
   "/Provider": Provider,
+  "/ProviderList": ProviderList,
+  "/ProviderTest": ProviderTest,
   "/Hello": Hello,
-  '/ProviderList': ProviderList,
-  '/Hello2': Hello2,
-  '/Hello3': Hello3,
-  '/Hello4': Hello4,
+  "/Hello2": Hello2,
+  "/Hello3": Hello3,
+  "/Hello4": Hello4,
 }
 
 const currentPath = ref(window.location.hash)
+
 window.addEventListener("hashchange", () => {
   currentPath.value = window.location.hash
 })
@@ -81,17 +83,12 @@ const currentView = computed(() => {
   return routes[currentPath.value.slice(1) || "/"] || Main
 })
 
-// ✅ real login state based on session
 const isLoggedIn = computed(() => !!user.value)
 
 async function handleLoginSuccess() {
   await refreshUser()
 }
 </script>
-
-
-
-
 
 <template>
   <div class="flex flex-col items-center m-[30px]">
@@ -116,4 +113,3 @@ async function handleLoginSuccess() {
     <Toaster />
   </div>
 </template>
-
