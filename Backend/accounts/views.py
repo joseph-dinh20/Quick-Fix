@@ -3,7 +3,6 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from .models import Profile, ServiceProvider, WorkImage
 from django.middleware.csrf import get_token
-from django.middleware.csrf import get_token
 
 from django.contrib.auth import get_user_model
 from django.contrib.auth import authenticate, login as dj_login, logout as dj_logout
@@ -12,6 +11,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import permission_classes
 import re
 
+from services.models import Service
 from .serializers import ServiceProviderSerializer, ProfileUpdateSerializer, ServiceProviderUpdateSerializer
 
 
@@ -123,7 +123,11 @@ def get_providers(request):
 
 @api_view(["GET"])
 def get_provider(request, provider_id):
-    provider = ServiceProvider.objects.get(id=provider_id)
+    try:
+        provider = ServiceProvider.objects.get(id=provider_id)
+    except ServiceProvider.DoesNotExist:
+        return Response({"error": "Provider not found"}, status=404)
+
     serializer = ServiceProviderSerializer(provider)
     return Response(serializer.data)
 
@@ -214,3 +218,45 @@ def provider_me(request):
 
     serializer = ServiceProviderSerializer(provider)
     return Response(serializer.data)
+
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
+def get_services(request):
+    services = Service.objects.all().values("id", "name")
+    return Response(list(services), status=status.HTTP_200_OK)
+
+@api_view(["PUT"])
+@permission_classes([IsAuthenticated])
+def update_provider_services(request):
+    try:
+        provider = ServiceProvider.objects.get(profile__user=request.user)
+    except ServiceProvider.DoesNotExist:
+        return Response(
+            {
+                "error": "Service provider not found",
+                "user_id": request.user.id,
+                "email": request.user.email,
+            },
+            status=status.HTTP_404_NOT_FOUND
+        )
+
+    service_ids = request.data.get("services", [])
+
+    if not isinstance(service_ids, list):
+        return Response(
+            {"error": "services must be a list of service ids"},
+            status=status.HTTP_400_BAD_REQUEST
+        )
+
+    valid_services = Service.objects.filter(id__in=service_ids)
+    provider.services.set(valid_services)
+
+    return Response(
+        {
+            "message": "Provider services updated successfully",
+            "services": list(valid_services.values("id", "name"))
+        },
+        status=status.HTTP_200_OK
+    )
+
+

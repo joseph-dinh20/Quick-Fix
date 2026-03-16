@@ -2,30 +2,56 @@
 import LogoImage from '@/assets/icons/logo.png'
 import { Separator } from '@/components/ui/separator'
 
+defineProps({
+  user: {
+    type: Object,
+    default: null,
+  },
+})
+
+const emit = defineEmits(['logout'])
+
 const navigate = (hash) => {
   window.location.hash = hash
+}
+
+function handleLogout() {
+  emit('logout')
 }
 </script>
 
 <template>
   <div>
-    <header class="flex min-w-screen justify-evenly items-center p-2">
-      <div class="w-25 items-center h-auto flex justify-center">
-        <img :src="LogoImage" class="scale-[3] pointer-events-none">
+    <header class="header-bar">
+      <!-- LEFT -->
+      <div class="logo-wrap">
+        <img :src="LogoImage" class="logo-image pointer-events-none" />
       </div>
 
-      <div class="button-scope">
+      <!-- CENTER -->
+      <div class="button-scope nav-buttons">
         <!-- <button class="big-button" @click="navigate('/')">Home</button> -->
         <button class="big-button" @click="navigate('/Payment')">Payment</button>
-        <button class="big-button" @click="navigate('/Login')">Login</button>
-        <button class="big-button" @click="navigate('/Signup')">Signup</button>
-        <button class="big-button" @click="navigate('/Form')">Form</button>
-        <button class="big-button" @click="navigate('/Profile')">Profile</button>
-        <!-- <button class="big-button" @click="navigate('/Provider')">Provider</button> -->
-        <button class="big-button" @click="navigate('/Test')">Test</button>
-        <button class="big-button" @click="navigate('/Temp')">Temp</button>
-        <button class="big-button" @click="navigate('/ProviderList')">ProviderList</button>
-        <button class="big-button" @click="navigate('/Join')">Join</button>
+        <button class="big-button" @click="navigate('#/Login')">Login</button>
+        <button class="big-button" @click="navigate('#/Signup')">Signup</button>
+        <button class="big-button" @click="navigate('#/Form')">Form</button>
+        <button class="big-button" @click="navigate('#/Profile')">Profile</button>
+        <!-- <button class="big-button" @click="navigate('#/Provider')">Provider</button> -->
+        <button class="big-button" @click="navigate('#/Test')">Test</button>
+        <button class="big-button" @click="navigate('#/Temp')">Temp</button>
+        <button class="big-button" @click="navigate('#/ProviderList')">ProviderList</button>
+      </div>
+
+      <!-- RIGHT -->
+      <div class="user-panel">
+        <template v-if="user">
+          <div class="user-email">
+            Logged in as: {{ user.email }}
+          </div>
+          <button class="logout-link" @click="handleLogout">
+            Logout
+          </button>
+        </template>
       </div>
     </header>
 
@@ -34,6 +60,75 @@ const navigate = (hash) => {
 </template>
 
 <style scoped>
+.header-bar {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 320px 1fr 220px;
+  align-items: center;
+  gap: 20px;
+  padding: 12px 20px;
+}
+
+.logo-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  height: 80px;
+  overflow: hidden;
+}
+
+.logo-image {
+  width: 400px;
+  height: auto;
+  display: block;
+}
+
+.logo-image:hover {
+  opacity: 0.9;
+  cursor: pointer;
+}
+
+.nav-buttons {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.user-panel {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: center;
+  min-height: 60px;
+  gap: 6px;
+}
+
+.user-email {
+  font-size: 0.85rem;
+  color: #374151;
+  text-align: right;
+  word-break: break-word;
+}
+
+.logout-link {
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 0.85rem;
+  text-decoration: underline;
+  cursor: pointer;
+  color: #111827;
+}
+
+.logout-link:hover {
+  opacity: 0.8;
+}
+
+/*==============================================*/
+/* Lines below are purely for the big buttons   */
+/*==============================================*/
+
 .button-scope {
   --backgroundColor: rgba(246, 241, 209);
   --colorShadeA: rgb(106, 163, 137);
@@ -42,17 +137,6 @@ const navigate = (hash) => {
   --colorShadeD: rgb(187, 232, 211);
   --colorShadeE: rgb(205, 255, 232);
   font-family: "Open Sans", sans-serif;
-}
-
-@media (max-width: 600px) {
-  header {
-    flex-direction: column;
-  }
-
-  .button-scope {
-    display: flex;
-    flex-direction: column;
-  }
 }
 
 .button-scope *,
@@ -77,7 +161,7 @@ const navigate = (hash) => {
 }
 
 .button-scope .big-button {
-  padding: 1em 3em;
+  padding: 0.8em 2em;
   border: 2px solid var(--colorShadeA);
   border-radius: 1em;
   background: var(--colorShadeE);
@@ -112,5 +196,35 @@ const navigate = (hash) => {
   box-shadow:
     0 0 0 2px var(--colorShadeB),
     0 0.25em 0 0 var(--colorShadeB);
+}
+
+@media (max-width: 1100px) {
+  .header-bar {
+    grid-template-columns: 1fr;
+    justify-items: center;
+  }
+
+  .logo-wrap {
+    justify-content: center;
+  }
+
+  .logo-image {
+    transform-origin: center;
+  }
+
+  .user-panel {
+    align-items: center;
+  }
+
+  .user-email {
+    text-align: center;
+  }
+}
+
+@media (max-width: 600px) {
+  .nav-buttons {
+    flex-direction: column;
+    align-items: center;
+  }
 }
 </style>
