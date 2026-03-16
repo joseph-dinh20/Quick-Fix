@@ -12,11 +12,12 @@ import Test from "@/components/Test.vue"
 import Hello from "@/components/Hello.vue"
 import Temp from "@/components/Temp.vue"
 import Provider from "@/components/Provider.vue"
-import ProviderList from "@/components/ProviderList.vue"
-import ProviderTest from "@/components/ProviderTest.vue"
-import Hello2 from "@/components/Hello2.vue"
-import Hello3 from "@/components/Hello3.vue"
-import Hello4 from "@/components/Hello4.vue"
+import ProviderList from '@/components/ProviderList.vue'
+  import ProviderTest from '@/components/ProviderTest.vue'
+import Hello2 from '@/components/hello2.vue'
+import Hello3 from '@/components/hello3.vue'
+import Hello4 from '@/components/hello4.vue'
+import Join from './components/Join.vue'
 
 import { me, initCsrf, logout as apiLogout } from "@/services/api.js"
 import { Toaster } from "@/components/ui/sonner"
@@ -60,6 +61,7 @@ const routes = {
   "/Payment": Payment,
   "/Login": Login,
   "/Signup": Signup,
+  "/Join": Join,
   "/Form": Form,
   "/Profile": Profile,
   "/Test": Test,
@@ -80,7 +82,8 @@ window.addEventListener("hashchange", () => {
 })
 
 const currentView = computed(() => {
-  return routes[currentPath.value.slice(1) || "/"] || Main
+  const path = currentPath.value.replace(/^#/, '').split('?')[0] || "/"
+  return routes[path] || Main
 })
 
 const isLoggedIn = computed(() => !!user.value)
@@ -104,12 +107,12 @@ async function handleLoginSuccess() {
 
       <div class="mt-8 mb-20">
         <component
-          :is="currentView"
-          @login-success="handleLoginSuccess"
+            :is="currentView"
+            @login-success="handleLoginSuccess"
         />
       </div>
     </div>
 
-    <Toaster />
+    <Toaster/>
   </div>
 </template>

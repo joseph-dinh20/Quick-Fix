@@ -57,6 +57,10 @@ function handleSearch() {
   if (!value.value.trim()) return
   window.location.hash = `/ProviderList?service=${encodeURIComponent(value.value.trim())}`
 }
+function goTo(path) {
+  window.location.hash = path
+}
+
 </script>
 
 <template>
@@ -84,7 +88,7 @@ function handleSearch() {
             <Button>Find Services</Button>
           </a>
 
-          <a href="#/Signup">
+          <a href="#/Join">
             <Button variant="outline">Join as Provider</Button>
           </a>
         </div>
