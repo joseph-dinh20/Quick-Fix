@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from "vue"
-import { signup } from "@/services/api"
+import { signup } from "@/services/api.js"
 
 import { Button } from "@/components/ui/button"
 import {

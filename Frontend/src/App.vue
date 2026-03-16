@@ -18,6 +18,8 @@ import Hello2 from '@/components/hello2.vue'
 import Hello3 from '@/components/hello3.vue'
 import Hello4 from '@/components/hello4.vue'
 import Join from './components/Join.vue'
+import JoinUs from './components/JoinUs.vue'
+import Settings from './components/Settings.vue'
 
 import { me, initCsrf, logout as apiLogout } from "@/services/api.js"
 import { Toaster } from "@/components/ui/sonner"
@@ -73,6 +75,9 @@ const routes = {
   "/Hello2": Hello2,
   "/Hello3": Hello3,
   "/Hello4": Hello4,
+  "/JoinUs": JoinUs,
+  "/Settings": Settings
+
 }
 
 const currentPath = ref(window.location.hash)
@@ -94,7 +99,7 @@ async function handleLoginSuccess() {
 </script>
 
 <template>
-  <div class="flex flex-col items-center m-[30px]">
+  <div class="flex flex-col items-center min-h-screen m-[30px] w-full">
     <div v-if="loadingUser">Loading...</div>
 
     <div v-else class="flex flex-col items-center m-[30px] w-full">
