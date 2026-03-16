@@ -18,6 +18,7 @@ import { Input } from "@/components/ui/input"
 
 <script setup>
 import { reactive } from 'vue'
+import { signup } from "@/services/api.js"
 
 const formData = reactive({
   firstName: '',
@@ -112,7 +113,7 @@ const handleSignUp = () => {
           </div>
 
           <div class="flex flex-col sm:flex-row gap-4 pt-4">
-            <button type="submit" class="flex-1 bg-[#318CF1] hover:bg-blue-600 text-white font-bold py-3.5 rounded-xl transition-all shadow-lg shadow-blue-100">
+            <button type="submit" @click = "signup({name: formData.firstName, email: formData.email, password: formData.password})" class="flex-1 bg-[#318CF1] hover:bg-blue-600 text-white font-bold py-3.5 rounded-xl transition-all shadow-lg shadow-blue-100">
               Create Account
             </button>
           </div>

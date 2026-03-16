@@ -65,7 +65,7 @@ const steps = [
             </div>
             <p class="mt-6 text-sm text-gray-400">
                 Already have an account?
-                <a href="#/SignUp" class="text-orange-500 font-bold hover:underline"
+                <a href="#/Signup" class="text-orange-500 font-bold hover:underline"
                     >Sign In</a
                 >
             </p>
@@ -79,7 +79,7 @@ const steps = [
                 <div
                     v-for="item in features"
                     :key="item.title"
-                    class="p-10 border border-gray-100 rounded-[2rem] hover:shadow-xl transition-shadow duration-300"
+                    class="p-10 border border-gray-400 rounded-[2rem] hover:shadow-2xl transition-shadow duration-300"
                 >
                     <div class="text-3xl mb-6">{{ item.icon }}</div>
                     <h3 class="text-xl font-bold mb-4">{{ item.title }}</h3>
@@ -88,7 +88,7 @@ const steps = [
             </div>
         </section>
 
-        <section class="py-24 px-6 bg-[#0f172a] text-white">
+        <section class="relative left-[50%] right-[50%] ml-[-50vw] mr-[-50vw] w-[99vw] py-24 px-6 bg-[#0f172a] text-white overflow-hidden">
             <div class="max-w-7xl mx-auto">
                 <h2 class="text-3xl font-extrabold text-center mb-20">
                     How to get started
@@ -123,7 +123,7 @@ const steps = [
                     get things done.
                 </p>
                 <button
-                    class="bg-[#1a1a1a] hover:bg-black text-white font-bold px-12 py-4 rounded-xl transition-transform active:scale-95 shadow-lg"
+                    class="bg-[#1a1a1a] hover:bg-black text-white font-bold px-12 py-4 rounded-xl transition-transform active:scale-95 shadow-lg hover:shadow-xl"
                 >
                     Apply Now
                 </button>
