@@ -13,6 +13,7 @@ import Hello from "@/components/Hello.vue"
 import Temp from "@/components/Temp.vue"
 import Provider from "@/components/Provider.vue"
 import ProviderList from '@/components/ProviderList.vue'
+  import ProviderList from '@/components/ProviderTest.vue'
 import Hello2 from '@/components/hello2.vue'
 import Hello3 from '@/components/hello3.vue'
 import Hello4 from '@/components/hello4.vue'
