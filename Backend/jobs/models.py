@@ -11,9 +11,9 @@ class Job(models.Model):
         related_name="posted_jobs"
     )
 
-    service = models.ForeignKey(
+    services = models.ManyToManyField(
         Service,
-        on_delete=models.CASCADE
+        related_name="jobs"  
     )
 
     title = models.CharField(max_length=200)
