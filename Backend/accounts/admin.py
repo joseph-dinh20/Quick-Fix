@@ -6,6 +6,7 @@ class ProfileAdmin(admin.ModelAdmin):
     list_display = ("name", "user", "role")  # user is fine here
     search_fields = ("name", "user__username", "user__email")
     list_filter = ("role",)
+    filter_horizontal = ("favorites",)
 
 class WorkImageInline(admin.TabularInline):
     model = WorkImage
