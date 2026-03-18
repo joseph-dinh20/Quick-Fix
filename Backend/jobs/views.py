@@ -5,7 +5,8 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
 
-from .serializers import JobCreateSerializer
+from .models import Job
+from .serializers import JobCreateSerializer, JobSerializer
 
 
 @api_view(["POST"])
@@ -22,3 +23,14 @@ def create_job(request):
         return Response({"id": job.id}, status=status.HTTP_201_CREATED)
 
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
+def my_jobs(request):
+    profile = request.user.profile
+
+    jobs = Job.objects.filter(customer=profile).order_by("-created_at")
+
+    serializer = JobSerializer(jobs, many=True)
+    return Response(serializer.data)

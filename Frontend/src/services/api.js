@@ -149,5 +149,9 @@ export const createJob = (data) => {
   });
 };
 
+export const getMyJobs = () => {
+  return api.get("/jobs/mine/");
+};
+
 
 export default api;

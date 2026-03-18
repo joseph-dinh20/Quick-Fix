@@ -22,6 +22,7 @@ import JoinUs from './components/JoinUs.vue'
 import Settings from './components/Settings.vue'
 import DemoLocation from './components/DemoLocation.vue'
 import DemoCreateJob from './components/DemoCreateJob.vue'
+import DemoMyJobs from './components/DemoMyJobs.vue'
 
 import { me, initCsrf, logout as apiLogout } from "@/services/api.js"
 import { Toaster } from "@/components/ui/sonner"
@@ -80,7 +81,8 @@ const routes = {
   "/JoinUs": JoinUs,
   "/Settings": Settings,
   "/DemoLocation": DemoLocation,
-  "/DemoCreateJob": DemoCreateJob
+  "/DemoCreateJob": DemoCreateJob,
+  "/DemoMyJobs": DemoMyJobs
 
 }
 

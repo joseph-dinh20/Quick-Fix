@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from .models import Job, JobImage
 from services.models import Service
+from services.serializers import ServiceSerializer
 
 
 class JobImageSerializer(serializers.ModelSerializer):
@@ -52,3 +53,23 @@ class JobCreateSerializer(serializers.ModelSerializer):
             JobImage.objects.create(job=job, image=img)
 
         return job
+
+
+class JobSerializer(serializers.ModelSerializer):
+    services = ServiceSerializer(many=True)
+    images = JobImageSerializer(many=True)
+
+    class Meta:
+        model = Job
+        fields = [
+            "id",
+            "title",
+            "description",
+            "budget",
+            "deadline",
+            "is_open",
+            "request_type",
+            "created_at",
+            "services",
+            "images",
+        ]
