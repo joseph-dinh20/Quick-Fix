@@ -107,4 +107,15 @@ export const isFavoriteProvider = (id) => {
   return api.get(`/accounts/providers/${id}/is-favorite/`)
 }
 
+export const getNearbyProviders = (userLat=33.7816133, userLng=-118.1084064, milesRadius=5) => {
+  return api.get("accounts/providers/nearby/", {
+    params: {
+      lat: userLat,
+      lng: userLng,
+      max_distance: milesRadius
+    }
+  })
+}
+
+
 export default api;

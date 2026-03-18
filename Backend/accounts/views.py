@@ -12,8 +12,9 @@ from rest_framework.decorators import permission_classes
 import re
 
 from services.models import Service
-from .serializers import ServiceProviderSerializer, ProfileUpdateSerializer, ServiceProviderUpdateSerializer
+from .serializers import ServiceProviderSerializer, ProfileUpdateSerializer, ServiceProviderUpdateSerializer, MeSerializer
 
+from haversine import haversine, Unit
 
 User = get_user_model()
 
@@ -110,8 +111,7 @@ def csrf(request):
 @api_view(["GET"])
 @permission_classes([IsAuthenticated])
 def me(request):
-    u = request.user
-    return Response({"id": u.id, "username": u.username, "email": u.email})
+    return Response(MeSerializer(request.user).data)
 
 
 @api_view(["GET"])
@@ -219,6 +219,7 @@ def provider_me(request):
     serializer = ServiceProviderSerializer(provider)
     return Response(serializer.data)
 
+
 @api_view(["GET"])
 @permission_classes([IsAuthenticated])
 def get_services(request):
@@ -315,3 +316,32 @@ def is_favorite_provider(request, provider_id):
     },
     status=status.HTTP_200_OK
     )
+
+
+@api_view(["GET"])
+def get_nearby_providers(request):
+
+    lat = float(request.GET.get("lat"))
+    lng = float(request.GET.get("lng"))
+    max_distance = float(request.GET.get("max_distance", 25))  # default 25 miles
+
+    user_coord = (lat, lng)
+    nearby_providers = []
+    providers = ServiceProvider.objects.select_related("profile").all()
+
+    for provider in providers:
+
+        profile = provider.profile
+
+        if profile.latitude is None or profile.longitude is None:
+            continue
+
+        provider_coord = (profile.latitude, profile.longitude)
+        distance = haversine(user_coord, provider_coord, unit=Unit.MILES)
+
+        if distance <= max_distance:
+            nearby_providers.append(provider)
+
+    serializer = ServiceProviderSerializer(nearby_providers, many=True)
+    return Response(serializer.data)
+

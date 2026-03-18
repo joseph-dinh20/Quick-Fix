@@ -18,6 +18,12 @@ class Profile(models.Model):
     name = models.CharField(max_length=100)
     avatar = models.ImageField(upload_to="avatars/", blank=True, null=True)
 
+    city = models.CharField(max_length=50, default="Long Beach")
+    state = models.CharField(max_length=100, default="California")
+
+    latitude = models.FloatField(null=True, blank=True, default=33.7816133)
+    longitude = models.FloatField(null=True, blank=True, default=-118.1084064)
+
     favorites = models.ManyToManyField(
         "ServiceProvider",
         related_name="favorited_by",

@@ -27,6 +27,7 @@ onMounted(fetchProvider)
       />
 
       <p>Email: {{ provider.email }}</p>
+      <p>Location: {{ provider.city }}, {{ provider.state }}, Lat {{ provider.latitude }}, Lng {{ provider.longitude }}</p>
       <p>Price per hour: {{ provider.price_per_hour }}</p>
       <p>About: {{ provider.about_me }}</p>
 

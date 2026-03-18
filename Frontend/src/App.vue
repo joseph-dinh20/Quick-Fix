@@ -13,13 +13,15 @@ import Hello from "@/components/Hello.vue"
 import Temp from "@/components/Temp.vue"
 import Provider from "@/components/Provider.vue"
 import ProviderList from '@/components/ProviderList.vue'
-  import ProviderTest from '@/components/ProviderTest.vue'
+import ProviderTest from '@/components/ProviderTest.vue'
+import Hello1 from '@/components/hello1.vue'
 import Hello2 from '@/components/hello2.vue'
 import Hello3 from '@/components/hello3.vue'
 import Hello4 from '@/components/hello4.vue'
 import Join from './components/Join.vue'
 import JoinUs from './components/JoinUs.vue'
 import Settings from './components/Settings.vue'
+import DemoLocation from './components/DemoLocation.vue'
 
 import { me, initCsrf, logout as apiLogout } from "@/services/api.js"
 import { Toaster } from "@/components/ui/sonner"
@@ -72,11 +74,13 @@ const routes = {
   "/ProviderList": ProviderList,
   "/ProviderTest": ProviderTest,
   "/Hello": Hello,
+  "/Hello1": Hello1,
   "/Hello2": Hello2,
   "/Hello3": Hello3,
   "/Hello4": Hello4,
   "/JoinUs": JoinUs,
-  "/Settings": Settings
+  "/Settings": Settings,
+  "/DemoLocation": DemoLocation
 
 }
 
