@@ -1,49 +1,65 @@
 <script setup>
 import { ref, onMounted } from "vue"
-import { loadProvider } from "../services/api";
+import { loadProviders } from "../services/api" // <-- new API
 
-const provider = ref(null)
+const providers = ref([])
 
-async function fetchProvider() {
-  const response = await loadProvider(1);
-  provider.value = response.data;
+async function fetchProviders() {
+  try {
+    const response = await loadProviders()
+    providers.value = response.data
+  } catch (error) {
+    console.error("Failed to load providers", error)
+  }
 }
 
-onMounted(fetchProvider)
+onMounted(fetchProviders)
 </script>
 
 <template>
   <div>
-    <h1>Provider Test Page</h1>
+    <h1>Providers</h1>
 
-    <div v-if="provider">
+    <div v-if="providers.length">
 
-      <h2>{{ provider.name }}</h2>
+      <div
+        v-for="provider in providers"
+        :key="provider.id"
+        style="border: 1px solid #ccc; margin-bottom: 20px; padding: 10px;"
+      >
 
-      <img
-        v-if="provider.avatar"
-        :src="'http://localhost:8000' + provider.avatar"
-        width="150"
-      />
+        <h2>{{ provider.name }}</h2>
 
-      <p>Email: {{ provider.email }}</p>
-      <p>Location: {{ provider.city }}, {{ provider.state }}, Lat {{ provider.latitude }}, Lng {{ provider.longitude }}</p>
-      <p>Price per hour: {{ provider.price_per_hour }}</p>
-      <p>About: {{ provider.about_me }}</p>
-
-      <h3>Services</h3>
-      <ul>
-        <li v-for="service in provider.services" :key="service.id">
-          {{ service.name }}
-        </li>
-      </ul>
-
-      <h3>Work Images</h3>
-      <div v-for="img in provider.work_images" :key="img.id">
         <img
-          :src="'http://localhost:8000' + img.image"
-          width="200"
+          v-if="provider.avatar"
+          :src="'http://localhost:8000' + provider.avatar"
+          width="150"
         />
+
+        <p>Email: {{ provider.email }}</p>
+        <p>
+          Location:
+          {{ provider.city }}, {{ provider.state }},
+          Lat {{ provider.latitude }}, Lng {{ provider.longitude }}
+        </p>
+        <p>Price per hour: {{ provider.price_per_hour }}</p>
+        <p>About: {{ provider.about_me }}</p>
+
+        <h3>Services</h3>
+        <ul>
+          <li v-for="service in provider.services" :key="service.id">
+            {{ service.name }}
+          </li>
+        </ul>
+
+        <h3>Work Images</h3>
+        <div v-for="img in provider.work_images" :key="img.id">
+          <img
+            :src="'http://localhost:8000' + img.image"
+            width="200"
+          />
+        </div>
+
       </div>
 
     </div>

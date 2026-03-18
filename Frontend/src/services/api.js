@@ -43,6 +43,10 @@ export const loadProvider = (id) => {
   return api.get(`/accounts/providers/${id}/`);
 };
 
+export const loadProviders = () => {
+  return api.get(`/accounts/providers/`);
+};
+
 function getCSRFToken() {
   const value = `; ${document.cookie}`;
   const parts = value.split(`; csrftoken=`);
