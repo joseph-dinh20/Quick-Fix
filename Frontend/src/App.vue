@@ -18,7 +18,6 @@ import Hello1 from '@/components/hello1.vue'
 import Hello2 from '@/components/hello2.vue'
 import Hello3 from '@/components/hello3.vue'
 import Hello4 from '@/components/hello4.vue'
-import Join from './components/Join.vue'
 import JoinUs from './components/JoinUs.vue'
 import Settings from './components/Settings.vue'
 import DemoLocation from './components/DemoLocation.vue'
@@ -65,7 +64,6 @@ const routes = {
   "/Payment": Payment,
   "/Login": Login,
   "/Signup": Signup,
-  "/Join": Join,
   "/Form": Form,
   "/Profile": Profile,
   "/Test": Test,
