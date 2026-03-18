@@ -5,6 +5,9 @@ import { updateProfile, me } from "@/services/api"
 const city = ref("")
 const state = ref("")
 
+const lat = ref("")
+const lng = ref("")
+
 const currentCity = ref("")
 const currentState = ref("")
 
@@ -18,6 +21,8 @@ async function loadProfile() {
 
     currentCity.value = data.city || "Not set"
     currentState.value = data.state || "Not set"
+    lat.value = data.latitude || "Not set"
+    lng.value = data.longitude || "Not set"
   } catch (err) {
     console.error("Failed to load profile", err)
   }
@@ -60,6 +65,7 @@ onMounted(() => {
   <div>
     <p><strong>Current City:</strong> {{ currentCity }}</p>
     <p><strong>Current State:</strong> {{ currentState }}</p>
+    <p><strong>Current Coords:</strong>Lat {{ lat }}, Lng {{ lng }}</p>
   </div>
 
   <hr />

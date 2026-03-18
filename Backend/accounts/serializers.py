@@ -2,7 +2,9 @@ from rest_framework import serializers
 from django.contrib.auth.models import User
 from .models import Profile, ServiceProvider, WorkImage
 from services.models import Service
+from geopy.exc import GeocoderTimedOut, GeocoderServiceError
 from .utils import geolocator
+
 
 
 class WorkImageSerializer(serializers.ModelSerializer):
@@ -27,6 +29,9 @@ class ServiceProviderSerializer(serializers.ModelSerializer):
     city = serializers.CharField(source="profile.city")
     state = serializers.CharField(source="profile.state")
 
+    latitude = serializers.FloatField(source="profile.latitude")
+    longitude = serializers.FloatField(source="profile.longitude")
+
     class Meta:
         model = ServiceProvider
         fields = [
@@ -40,7 +45,9 @@ class ServiceProviderSerializer(serializers.ModelSerializer):
             "services",
             "work_images",
             "city",
-            "state"
+            "state",
+            "latitude",
+            "longitude"
         ]
 
 
@@ -81,6 +88,24 @@ class ProfileUpdateSerializer(serializers.ModelSerializer):
             })
 
         return attrs
+    
+
+    def update(self, instance, validated_data):
+        city = validated_data.get("city")
+        state = validated_data.get("state")
+
+        try:
+            query = f"{city}, {state}" if city and state else city or state
+            location = geolocator.geocode(query, timeout=3)
+
+            if location:
+                instance.latitude = location.latitude
+                instance.longitude = location.longitude
+
+        except (GeocoderTimedOut, GeocoderServiceError):
+            pass  # don't crash request
+
+        return super().update(instance, validated_data)
 
 
 class ServiceProviderUpdateSerializer(serializers.ModelSerializer):
