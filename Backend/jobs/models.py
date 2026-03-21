@@ -1,7 +1,7 @@
 from django.db import models
 from accounts.models import Profile
 from services.models import Service
-
+from django.core.validators import MinValueValidator
 
 class Job(models.Model):
 
@@ -19,7 +19,7 @@ class Job(models.Model):
     title = models.CharField(max_length=200)
     description = models.TextField()
 
-    budget = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    budget = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True, validators=[MinValueValidator(0)])
 
     created_at = models.DateTimeField(auto_now_add=True)
     deadline = models.DateTimeField()
