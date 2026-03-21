@@ -2,6 +2,7 @@ from rest_framework import serializers
 from .models import Job, JobImage
 from services.models import Service
 from services.serializers import ServiceSerializer
+from accounts.models import ServiceProvider
 
 
 class JobImageSerializer(serializers.ModelSerializer):
@@ -56,6 +57,7 @@ class JobCreateSerializer(serializers.ModelSerializer):
 
 
 class JobSerializer(serializers.ModelSerializer):
+    is_favorited = serializers.SerializerMethodField()
     services = ServiceSerializer(many=True)
     images = JobImageSerializer(many=True)
 
@@ -72,4 +74,16 @@ class JobSerializer(serializers.ModelSerializer):
             "created_at",
             "services",
             "images",
+            "is_favorited"
         ]
+
+    def get_is_favorited(self, obj):
+        user = self.context["request"].user
+        if not user.is_authenticated:
+            return False
+
+        try:
+            service_provider = ServiceProvider.objects.get(profile__user=user)
+            return obj in service_provider.favorited_jobs.all()
+        except ServiceProvider.DoesNotExist:
+            return False
