@@ -154,4 +154,18 @@ export const getMyJobs = () => {
 };
 
 
+export function toggleFavorite(jobId) {
+  return api.post(`/jobs/${jobId}/favorite/`);
+}
+
+
+export function getAllJobs() {
+  return api.get("/jobs/");
+}
+
+
+export function deleteJob(jobId) {
+  return api.delete(`/jobs/${jobId}/delete/`);
+}
+
 export default api;
