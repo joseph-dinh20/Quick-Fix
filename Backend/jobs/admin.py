@@ -1,7 +1,5 @@
 from django.contrib import admin
 from .models import Job, JobImage
-from django.contrib import admin
-from .models import Job, JobImage
 
 @admin.register(Job)
 class JobAdmin(admin.ModelAdmin):
