@@ -168,4 +168,9 @@ export function deleteJob(jobId) {
   return api.delete(`/jobs/${jobId}/delete/`);
 }
 
+
+export function fetchReviews(id) {
+  return api.get(`/reviews/${id}/reviews/`)
+}
+
 export default api;
