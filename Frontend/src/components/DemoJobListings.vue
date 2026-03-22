@@ -27,7 +27,7 @@
 </template>
 
 <script>
-import { getAllJobs, toggleFavorite } from "@/services/api";
+import { getAllJobs, toggleFavoriteJob } from "@/services/api";
 
 export default {
   name: "JobsList",

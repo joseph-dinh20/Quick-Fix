@@ -46,7 +46,7 @@ class JobCreateSerializer(serializers.ModelSerializer):
             **validated_data
         )
 
-        # set M2M
+        # set Many to Many
         job.services.set(services)
 
         # create images
@@ -87,3 +87,17 @@ class JobSerializer(serializers.ModelSerializer):
             return obj in service_provider.favorited_jobs.all()
         except ServiceProvider.DoesNotExist:
             return False
+
+          
+class JobUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Job
+        fields = [
+            "title",
+            "description",
+            "budget",
+            "deadline",
+            "is_open",
+            "request_type",
+            "services",
+        ]

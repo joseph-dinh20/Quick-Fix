@@ -1,6 +1,6 @@
 <script setup>
 import { ref, onMounted } from "vue"
-import { loadProviders } from "../services/api" // <-- new API
+import { loadProviders, toggleFavoriteProvider } from "../services/api" // <-- new API
 
 const providers = ref([])
 
@@ -58,6 +58,12 @@ onMounted(fetchProviders)
             :src="'http://localhost:8000' + img.image"
             width="200"
           />
+        </div>
+
+        <div class="provider-actions">
+          <button @click="toggleFavoriteProvider(provider.id)">
+            Toggle favoriting provider
+          </button>
         </div>
 
       </div>
