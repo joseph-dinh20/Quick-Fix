@@ -263,29 +263,25 @@ def update_provider_services(request):
 
 @api_view(["POST"])
 @permission_classes([IsAuthenticated])
-def favorite_provider(request, provider_id):
+def toggle_favorite_provider(request, provider_id):
     profile = request.user.profile
-    provider = ServiceProvider.objects.get(id=provider_id)
+    service_provider = ServiceProvider.objects.get(id=provider_id)
 
-    profile.favorites.add(provider)
+    if profile.favorites.filter(id=provider_id).exists():
+
+        profile.favorites.remove(service_provider)
+
+        return Response({
+            "message": "Provider unfavorited",
+            },
+            status=status.HTTP_200_OK
+            )
+    
+    
+    profile.favorites.add(service_provider)
 
     return Response({
         "message": "Provider favorited",
-        },
-        status=status.HTTP_200_OK
-        )
-
-
-@api_view(["DELETE"])
-@permission_classes([IsAuthenticated])
-def unfavorite_provider(request, provider_id):
-    profile = request.user.profile
-    provider = ServiceProvider.objects.get(id=provider_id)
-
-    profile.favorites.remove(provider)
-
-    return Response({
-        "message": "Provider unfavorited",
         },
         status=status.HTTP_200_OK
         )

@@ -56,6 +56,12 @@ class ServiceProvider(models.Model):
     average_rating = models.DecimalField(max_digits=3, decimal_places=2, default=0,
                                          validators=[MinValueValidator(0), MaxValueValidator(5)]
                                          )
+    
+    favorited_jobs = models.ManyToManyField(
+        "jobs.Job",
+        related_name="favorited_by",
+        blank=True
+    )
 
     def __str__(self):
         return f"{self.profile.name} (Provider)"

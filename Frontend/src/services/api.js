@@ -121,5 +121,56 @@ export const getNearbyProviders = (userLat=33.7816133, userLng=-118.1084064, mil
   })
 }
 
+export const createJob = (data) => {
+  const formData = new FormData();
+
+  formData.append("title", data.title);
+  formData.append("description", data.description);
+  formData.append("budget", data.budget || "");
+  formData.append("deadline", data.deadline);
+  formData.append("request_type", data.request_type);
+
+  // services (IDs)
+  data.services.forEach(id => {
+    formData.append("services", id);
+  });
+
+  // images
+  if (data.images) {
+    data.images.forEach(file => {
+      formData.append("images", file);
+    });
+  }
+
+  return api.post("/jobs/create/", formData, {
+    headers: {
+      "Content-Type": "multipart/form-data"
+    }
+  });
+};
+
+export const getMyJobs = () => {
+  return api.get("/jobs/mine/");
+};
+
+
+export function toggleFavoriteJob(jobId) {
+  return api.post(`/jobs/${jobId}/favorite/`);
+}
+
+
+export function getAllJobs() {
+  return api.get("/jobs/");
+}
+
+
+export function deleteJob(jobId) {
+  return api.delete(`/jobs/${jobId}/delete/`);
+}
+
+
+export function toggleFavoriteProvider(providerId) {
+  return api.post(`/accounts/providers/${providerId}/favorite/`);
+}
 
 export default api;
