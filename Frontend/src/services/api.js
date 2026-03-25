@@ -174,8 +174,13 @@ export function toggleFavoriteProvider(providerId) {
 }
 
 
-
 export function fetchReviews(id) {
   return api.get(`/reviews/${id}/reviews/`)
-  
+}
+
+
+export function deleteReview(id) {
+  return api.delete(`/reviews/delete/${id}/`)
+}
+
 export default api;
