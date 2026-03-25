@@ -167,10 +167,15 @@ export function getAllJobs() {
 export function deleteJob(jobId) {
   return api.delete(`/jobs/${jobId}/delete/`);
 }
-
-
+  
+  
 export function toggleFavoriteProvider(providerId) {
   return api.post(`/accounts/providers/${providerId}/favorite/`);
 }
 
+
+
+export function fetchReviews(id) {
+  return api.get(`/reviews/${id}/reviews/`)
+  
 export default api;

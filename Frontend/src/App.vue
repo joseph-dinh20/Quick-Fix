@@ -25,6 +25,7 @@ import DemoCreateJob from './components/DemoCreateJob.vue'
 import DemoMyJobs from './components/DemoMyJobs.vue'
 import DemoJobListings from './components/DemoJobListings.vue'
 import FavoriteProvider from '@/components/FavoriteProvider.vue'
+import DemoProvider from './components/DemoProvider.vue'
 
 import { me, initCsrf, logout as apiLogout } from "@/services/api.js"
 import { Toaster } from "@/components/ui/sonner"
@@ -87,7 +88,7 @@ const routes = {
   "/DemoMyJobs": DemoMyJobs,
   "/DemoJobListings": DemoJobListings,
   "/FavoriteProvider": FavoriteProvider,
-
+  "/DemoProvider": DemoProvider,
 }
 
 const currentPath = ref(window.location.hash)
