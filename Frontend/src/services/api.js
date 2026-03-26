@@ -111,7 +111,7 @@ export const isFavoriteProvider = (id) => {
   return api.get(`/accounts/providers/${id}/is-favorite/`)
 }
 
-export const getNearbyProviders = (userLat=33.7816133, userLng=-118.1084064, milesRadius=5) => {
+export const getNearbyProviders = (userLat = 33.7816133, userLng = -118.1084064, milesRadius = 5) => {
   return api.get("accounts/providers/nearby/", {
     params: {
       lat: userLat,
@@ -167,8 +167,8 @@ export function getAllJobs() {
 export function deleteJob(jobId) {
   return api.delete(`/jobs/${jobId}/delete/`);
 }
-  
-  
+
+
 export function toggleFavoriteProvider(providerId) {
   return api.post(`/accounts/providers/${providerId}/favorite/`);
 }
