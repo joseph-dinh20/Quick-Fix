@@ -1,7 +1,7 @@
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from .models import Review
+from .models import Review, ReviewImage
 from accounts.models import ServiceProvider
 from .serializers import ReviewSerializer
 from accounts.models import Profile
@@ -24,7 +24,12 @@ def create_review(request, service_provider_id):
 
     serializer = ReviewSerializer(data=data)
     if serializer.is_valid():
-        serializer.save(reviewer=profile)
+        review = serializer.save(reviewer=profile)
+
+        images = request.FILES.getlist("images")
+        for img in images:
+            ReviewImage.objects.create(review=review, image=img)
+
         return Response(serializer.data)
     return Response(serializer.errors, status=400)
 
