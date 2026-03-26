@@ -34,3 +34,19 @@ def get_reviews(request, service_provider_id):
     reviews = Review.objects.filter(service_provider_id=service_provider_id).order_by("-created_at")
     serializer = ReviewSerializer(reviews, many=True)
     return Response(serializer.data)
+
+
+@api_view(["DELETE"])
+@permission_classes([IsAuthenticated])
+def delete_review(request, review_id):
+    try:
+        review = Review.objects.get(id=review_id)
+    except Review.DoesNotExist:
+        return Response({"error": "Review not found"}, status=404)
+
+    if review.reviewer.user != request.user:
+        print(review.reviewer.user.id, request.user.id)
+        return Response({"error": "Not allowed"}, status=403)
+
+    review.delete()
+    return Response({"message": "Review deleted"}, status=204)
