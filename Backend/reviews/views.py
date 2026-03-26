@@ -5,6 +5,7 @@ from .models import Review, ReviewImage
 from accounts.models import ServiceProvider
 from .serializers import ReviewSerializer
 from accounts.models import Profile
+from django.db.models import Avg
 
 
 @api_view(["POST"])
@@ -52,5 +53,15 @@ def delete_review(request, review_id):
     if review.reviewer.user != request.user:
         return Response({"error": "Not allowed"}, status=403)
 
+    provider = review.service_provider
     review.delete()
+
+    agg = provider.reviews.aggregate(avg=Avg("rating"))
+    avg_rating = agg["avg"] or 0
+    total = provider.reviews.count()
+
+    provider.average_rating = avg_rating
+    provider.total_rating = total
+    provider.save()
+
     return Response({"message": "Review deleted"}, status=204)
