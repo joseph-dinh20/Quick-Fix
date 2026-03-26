@@ -27,7 +27,6 @@
         <p><strong>{{ review.reviewer_name }}</strong></p>
         <p>Rating: {{ review.rating }}/5</p>
         <p>{{ review.comment }}</p>
-
         <button @click="handleDelete(review.id)">Delete</button>
       </div>
     </div>
@@ -66,7 +65,6 @@ async function handleDelete(id) {
   await deleteReview(id)
   reviews.value = reviews.value.filter(r => r.id !== id)
 }
-
 
 onMounted(async () => {
   loading.value = true
