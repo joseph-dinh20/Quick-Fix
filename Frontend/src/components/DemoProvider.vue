@@ -27,6 +27,8 @@
         <p><strong>{{ review.reviewer_name }}</strong></p>
         <p>Rating: {{ review.rating }}/5</p>
         <p>{{ review.comment }}</p>
+
+        <button @click="handleDelete(review.id)">Delete</button>
       </div>
     </div>
     <div v-else>No reviews yet.</div>
@@ -35,7 +37,7 @@
 
 <script setup>
 import { ref, onMounted } from "vue"
-import { fetchReviews, loadProvider } from "../services/api"
+import { fetchReviews, loadProvider, deleteReview } from "../services/api"
 
 const provider = ref(null)
 const reviews = ref([])
@@ -59,6 +61,12 @@ async function fetchProviderReviews() {
     console.error(err)
   }
 }
+
+async function handleDelete(id) {
+  await deleteReview(id)
+  reviews.value = reviews.value.filter(r => r.id !== id)
+}
+
 
 onMounted(async () => {
   loading.value = true
