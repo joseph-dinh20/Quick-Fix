@@ -183,4 +183,13 @@ export function deleteReview(id) {
   return api.delete(`/reviews/delete/${id}/`)
 }
 
+
+export function updateReview(id, formData) {
+  return api.put(`/reviews/update/${id}/`, formData)
+}
+
+export function deleteReviewImage(id) {
+  return api.delete(`/reviews/images/${id}/delete/`)
+}
+
 export default api;
