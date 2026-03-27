@@ -137,7 +137,8 @@ def search_jobs(request):
     services = request.GET.get("services")
     if services:
         service_ids = services.split(",")
-        jobs = jobs.filter(services__id__in=service_ids).distinct()
+        for service_id in service_ids:
+            jobs = jobs.filter(services__id=service_id)
 
     # Filter by budget
     min_budget = request.GET.get("budget")
