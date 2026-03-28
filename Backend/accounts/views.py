@@ -341,3 +341,70 @@ def get_nearby_providers(request):
     serializer = ServiceProviderSerializer(nearby_providers, many=True)
     return Response(serializer.data)
 
+
+@api_view(["GET"])
+def search_providers(request):
+    providers = ServiceProvider.objects.all()
+
+    # Filter by Rating
+    min_rating = request.GET.get("rating")
+    if min_rating:
+        try:
+            providers = providers.filter(average_rating__gte=float(min_rating))
+        except ValueError:
+            return Response({"error": "Invalid rating"}, status=400)
+    
+
+    # Filter by services
+    services = request.GET.get("services")
+    if services:
+        service_ids = [int(s) for s in services.split(",") if s.isdigit()]
+        for service_id in service_ids:
+            providers = providers.filter(services__id=service_id)
+
+    # Filter by Budget
+    max_budget = request.GET.get("budget")
+    if max_budget:
+        try:
+            providers = providers.filter(price_per_hour__lte=float(max_budget))
+        except ValueError:
+            return Response({"error": "Invalid budget"}, status=400)
+
+    # Filter location
+    max_distance = request.GET.get("max_distance")
+    if max_distance:
+        try:
+            max_distance = float(max_distance)
+        except ValueError:
+            return Response({"error": "Invalid distance"}, status=400)
+        
+        if request.user.is_authenticated:
+            try:
+                profile = Profile.objects.get(user=request.user)
+            except Profile.DoesNotExist:
+                return Response({"error": "Profile not found"}, status=404)
+
+            if profile.latitude is not None and profile.longitude is not None:
+                user_coord = (profile.latitude, profile.longitude)
+
+                filtered = []
+                for provider in providers:
+                    p = provider.profile
+
+                    if p.latitude is None or p.longitude is None:
+                        continue
+
+                    distance = haversine(
+                        user_coord,
+                        (p.latitude, p.longitude),
+                        unit=Unit.MILES
+                    )
+
+                    if distance <= max_distance:
+                        filtered.append(provider)
+
+                providers = filtered
+
+
+    serializer = ServiceProviderSerializer(providers, many=True, context={"request":request})
+    return Response(serializer.data)
