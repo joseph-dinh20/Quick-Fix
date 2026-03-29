@@ -4,6 +4,7 @@ from .models import Profile, ServiceProvider, WorkImage
 from services.models import Service
 from geopy.exc import GeocoderTimedOut, GeocoderServiceError
 from .utils import geolocator
+from django.db.models import Avg
 
 
 
@@ -32,6 +33,8 @@ class ServiceProviderSerializer(serializers.ModelSerializer):
     latitude = serializers.FloatField(source="profile.latitude")
     longitude = serializers.FloatField(source="profile.longitude")
 
+    average_rating = serializers.SerializerMethodField()
+
     class Meta:
         model = ServiceProvider
         fields = [
@@ -49,6 +52,11 @@ class ServiceProviderSerializer(serializers.ModelSerializer):
             "latitude",
             "longitude"
         ]
+
+    
+    def get_average_rating(self, obj):
+        avg = obj.reviews.aggregate(Avg("rating"))["rating__avg"]
+        return round(avg, 2) if avg else 0
 
 
 class ProfileUpdateSerializer(serializers.ModelSerializer):

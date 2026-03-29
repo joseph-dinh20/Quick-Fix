@@ -51,8 +51,7 @@ class ServiceProvider(models.Model):
     price_per_hour = models.DecimalField(max_digits=10, decimal_places=2)
     about_me = models.TextField(blank=True)
 
-    total_rating = models.IntegerField(default=0, 
-                                       validators=[MinValueValidator(0), MaxValueValidator(5)])
+    total_rating = models.IntegerField(default=0)
     average_rating = models.DecimalField(max_digits=3, decimal_places=2, default=0,
                                          validators=[MinValueValidator(0), MaxValueValidator(5)]
                                          )

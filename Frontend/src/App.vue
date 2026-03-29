@@ -24,6 +24,8 @@ import DemoLocation from './components/DemoLocation.vue'
 import DemoCreateJob from './components/DemoCreateJob.vue'
 import DemoMyJobs from './components/DemoMyJobs.vue'
 import DemoJobListings from './components/DemoJobListings.vue'
+import FavoriteProvider from '@/components/FavoriteProvider.vue'
+import DemoProvider from './components/DemoProvider.vue'
 
 import { me, initCsrf, logout as apiLogout } from "@/services/api.js"
 import { Toaster } from "@/components/ui/sonner"
@@ -84,8 +86,9 @@ const routes = {
   "/DemoLocation": DemoLocation,
   "/DemoCreateJob": DemoCreateJob,
   "/DemoMyJobs": DemoMyJobs,
-  "/DemoJobListings": DemoJobListings
-
+  "/DemoJobListings": DemoJobListings,
+  "/FavoriteProvider": FavoriteProvider,
+  "/DemoProvider": DemoProvider,
 }
 
 const currentPath = ref(window.location.hash)
@@ -107,10 +110,10 @@ async function handleLoginSuccess() {
 </script>
 
 <template>
-  <div class="flex flex-col items-center min-h-screen m-[30px] w-full">
+  <div class="flex flex-col items-center min-h-screen w-full">
     <div v-if="loadingUser">Loading...</div>
 
-    <div v-else class="flex flex-col items-center m-[30px] w-full">
+    <div v-else class="flex flex-col items-center w-full">
       <Header :user="user" @logout="logout" />
 
       <div v-if="!isLoggedIn" class="mb-6 flex gap-3">
@@ -118,14 +121,11 @@ async function handleLoginSuccess() {
         <a class="underline" href="#/Signup">Signup</a>
       </div>
 
-      <div class="mt-8 mb-20">
-        <component
-            :is="currentView"
-            @login-success="handleLoginSuccess"
-        />
+      <div class="mt-8 mb-10">
+        <component :is="currentView" @login-success="handleLoginSuccess" />
       </div>
     </div>
 
-    <Toaster/>
+    <Toaster />
   </div>
 </template>
