@@ -121,7 +121,7 @@ async function handleLoginSuccess() {
         <a class="underline" href="#/Signup">Signup</a>
       </div>
 
-      <div class="mt-8 mb-20">
+      <div class="mt-8 mb-10">
         <component :is="currentView" @login-success="handleLoginSuccess" />
       </div>
     </div>

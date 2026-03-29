@@ -13,6 +13,7 @@
     "@vee-validate/zod": "^4.15.1",
     "@vueuse/core": "^14.2.0",
     "add": "^2.0.6",
+    "animate.css": "^4.1.1",
     "axios": "^1.13.5",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",

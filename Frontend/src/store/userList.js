@@ -33,10 +33,12 @@ import usFlag from '@/assets/flags/US.svg'
 
 // NOTE: generatesProvider() generates a list of providers with random data,
 // calls it and return object list of providers
-export const userList = defineStore('users', () => {
+export const userListStore = defineStore('users', () => {
+
   const generateProvider = () => {
     const randomNumber = faker.number.int(150)
     return {
+      userID: faker.number.int(randomNumber * 100),
       name: faker.person.fullName(),
       avatar: faker.image.avatar(),
       price: randomNumber,
@@ -58,4 +60,24 @@ export const userList = defineStore('users', () => {
   }
   const providers = ref(Array.from({ length: 15 }, generateProvider))
   return { providers }
+})
+
+export const favoriteListStore = defineStore('favoriteProviderStore', () => {
+
+  const generateFavoriteList = () => {
+    const randomNum = faker.number.int(100)
+    return {
+      userID: faker.number.int(randomNum * 100),
+      name: faker.person.fullName(),
+      avatar: faker.image.avatar(),
+      hiredFor: ['Plumming', 'Grass Cutting', 'Pet Walking', 'Face Painting'][faker.number.int({ min: 0, max: 3 })],
+      dateRecentlyHired: faker.date.anytime(),
+      userRated: Math.floor(Math.random() * 5) + 1,
+    }
+  }
+  const favoriteProviders = ref(Array.from({ length: 10 }, generateFavoriteList))
+  //WARN: the array name here MATTERS. favoriteProviders will be passed
+  //down to be destructured. 
+  //example in FavoriteProvider.vue: const { favoriteProviders } = storeToRefs(store)
+  return { favoriteProviders }
 })

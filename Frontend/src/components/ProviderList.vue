@@ -57,11 +57,12 @@ import { ScrollArea } from "@/components/ui/scroll-area"
 import { faker } from '@faker-js/faker';
 import { Badge } from '@/components/ui/badge'
 import Provider from '@/components/Provider.vue'
-import { userList } from '@/store/userList'
 
+import { userListStore } from '@/store/userList'
 import { storeToRefs } from 'pinia'
+
 // NOTE: grabbing data from pinia from store.js in the /store directory.
-const store = userList()
+const store = userListStore()
 const { providers } = storeToRefs(store)
 
 </script>

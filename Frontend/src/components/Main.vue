@@ -15,11 +15,17 @@ const value = ref('')
 const jobs = [
   { name: 'Home Repair' },
   { name: 'Gardening' },
-  { name: 'Honeydew' },
-  { name: 'Grapes' },
-  { name: 'Watermelon' },
-  { name: 'Cantaloupe' },
-  { name: 'Pear' },
+  // { name: 'Honeydew' },
+  // { name: 'Grapes' },
+  // { name: 'Watermelon' },
+  // { name: 'Cantaloupe' },
+  // { name: 'Pear' },
+]
+
+const pageOneText = [
+  { text: "Problems around the house?", class: 'text-5xl font-bold text-green-700' },
+  { text: 'Find local professionals near you!', class: 'text-4xl font-bold text-green-700' },
+  { text: 'Schedule an appointment today.', class: 'text-3xl font-semibold text-center text-green-700' },
 ]
 
 // computed() is a vue function that updates
@@ -39,16 +45,20 @@ function selectjob(item) {
   // console.log(item.name)
   value.value = item.name
 }
+
 </script>
 
 <template>
   <div class="flex flex-col items-center">
-    <main class="min-h-screen w-full flex flex-col items-center gap-16 text-green-800">
-      <h1 class="text-5xl font-bold">Get the job done today.</h1>
-      <h1 class="text-5xl font-bold">No hassle.</h1>
-      <h2 class="text-xl text-center max-w-xl">
-        Schedule an appointment now and lets get your problems fixed!
-      </h2>
+    <main class="min-h-screen w-full flex flex-col items-center gap-16">
+      <!-- NOTE: PageOneText -->
+      <div v-for="(text, i) in pageOneText"
+        :key="i"
+        :class="['animate__animated animate__fadeInUp', text.class]"
+        :style="{ animationDelay: `${i * 0.3}s`}"
+      >
+        {{text.text}}
+      </div>
 
       <!-- NOTE: Search Box -->
       <div class="w-full max-w-sm relative">
@@ -56,7 +66,9 @@ function selectjob(item) {
         <div class="flex items-center gap-2">
           <Input type="text" v-model="value" @focus="showScrollState" @blur="showScrollState"
             placeholder="Looking for something else?" />
-          <Button type="submit"> Search </Button>
+          <!-- <a href="#/Form"> -->
+            <Button type="submit"> Search </Button>
+          <!-- </a> -->
         </div>
 
         <!-- NOTE: Floating Dropdown Wrapper -->
