@@ -32,6 +32,8 @@ class JobCreateSerializer(serializers.ModelSerializer):
             "deadline",
             "request_type",
             "services",
+            "latitude",
+            "longitude",
             "images",
         ]
 
