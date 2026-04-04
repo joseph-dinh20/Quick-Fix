@@ -153,7 +153,7 @@ console.log('showReadMoreButton state = ' + showReadMoreButton.value)
               <Badge variant="outline">
                 <img class="w-4 inline-block align-top" :src="starIcon">
                 {{ provider.averageRating }}
-                ({{ totalRating }})
+                ({{ reviews.length }})
                 reviews
               </Badge>
             </CardDescription>
@@ -272,7 +272,7 @@ console.log('showReadMoreButton state = ' + showReadMoreButton.value)
         </div> -->
 
         <div class="self-start mt-6 w-full">
-          <CardTitle><img class="w-8 inline-block" :src="reviewIcon"> Customer Reviews</CardTitle>
+          <CardTitle><img class="w-8 inline-block" :src="reviewIcon"> Customer Reviews ({{ reviews.length }})</CardTitle>
           <div v-if="reviewsLoading" class="text-sm text-slate-500 mt-2">Loading reviews...</div>
           <div v-else-if="reviews.length">
             <div v-for="review in paginatedReviews" :key="review.id" class="border rounded-lg p-4 mt-3">
