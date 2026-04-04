@@ -43,6 +43,10 @@ export const loadProvider = (id) => {
   return api.get(`/accounts/providers/${id}/`);
 };
 
+export const loadProviders = () => {
+  return api.get(`/accounts/providers/`);
+};
+
 function getCSRFToken() {
   const value = `; ${document.cookie}`;
   const parts = value.split(`; csrftoken=`);
@@ -90,5 +94,102 @@ export const updateProviderServices = (services) => {
     services,
   });
 };
+
+export const favoriteProvider = (id) => {
+  return api.post(`/accounts/providers/${id}/favorite/`)
+}
+
+export const unfavoriteProvider = (id) => {
+  return api.delete(`/accounts/providers/${id}/favorite/remove/`)
+}
+
+export const getFavorites = () => {
+  return api.get(`/accounts/providers/favorites/`)
+}
+
+export const isFavoriteProvider = (id) => {
+  return api.get(`/accounts/providers/${id}/is-favorite/`)
+}
+
+export const getNearbyProviders = (userLat = 33.7816133, userLng = -118.1084064, milesRadius = 5) => {
+  return api.get("accounts/providers/nearby/", {
+    params: {
+      lat: userLat,
+      lng: userLng,
+      max_distance: milesRadius
+    }
+  })
+}
+
+export const createJob = (data) => {
+  const formData = new FormData();
+
+  formData.append("title", data.title);
+  formData.append("description", data.description);
+  formData.append("budget", data.budget || "");
+  formData.append("deadline", data.deadline);
+  formData.append("request_type", data.request_type);
+
+  // services (IDs)
+  data.services.forEach(id => {
+    formData.append("services", id);
+  });
+
+  // images
+  if (data.images) {
+    data.images.forEach(file => {
+      formData.append("images", file);
+    });
+  }
+
+  return api.post("/jobs/create/", formData, {
+    headers: {
+      "Content-Type": "multipart/form-data"
+    }
+  });
+};
+
+export const getMyJobs = () => {
+  return api.get("/jobs/mine/");
+};
+
+
+export function toggleFavoriteJob(jobId) {
+  return api.post(`/jobs/${jobId}/favorite/`);
+}
+
+
+export function getAllJobs() {
+  return api.get("/jobs/");
+}
+
+
+export function deleteJob(jobId) {
+  return api.delete(`/jobs/${jobId}/delete/`);
+}
+
+
+export function toggleFavoriteProvider(providerId) {
+  return api.post(`/accounts/providers/${providerId}/favorite/`);
+}
+
+
+export function fetchReviews(id) {
+  return api.get(`/reviews/${id}/reviews/`)
+}
+
+
+export function deleteReview(id) {
+  return api.delete(`/reviews/delete/${id}/`)
+}
+
+
+export function updateReview(id, formData) {
+  return api.put(`/reviews/update/${id}/`, formData)
+}
+
+export function deleteReviewImage(id) {
+  return api.delete(`/reviews/images/${id}/delete/`)
+}
 
 export default api;

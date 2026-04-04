@@ -6,6 +6,7 @@ class ProfileAdmin(admin.ModelAdmin):
     list_display = ("name", "user", "role")  # user is fine here
     search_fields = ("name", "user__username", "user__email")
     list_filter = ("role",)
+    filter_horizontal = ("favorites",)
 
 class WorkImageInline(admin.TabularInline):
     model = WorkImage
@@ -15,7 +16,7 @@ class WorkImageInline(admin.TabularInline):
 class ServiceProviderAdmin(admin.ModelAdmin):
     list_display = ("profile_name", "profile_email", "price_per_hour", "average_rating", "total_rating")
     search_fields = ("profile__name", "profile__user__username", "profile__user__email")
-    filter_horizontal = ("services",)
+    filter_horizontal = ("services", "favorited_jobs")
     inlines = [WorkImageInline]
     
     def profile_name(self, obj):

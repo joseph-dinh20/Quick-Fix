@@ -15,7 +15,7 @@ For the backend, `uv` is the python package manager.
 ## Backend Stuff
 - When making changes to the backend and especially the database, it is recommended to run `uv run python manage.py makemigrations` and `uv run python manage.py migrate`.
 - To load the services list, run the command: `uv run python manage.py load_services_data`. This should load in a csv of services we can use for now.
-- To create an admin user for database managerment, `uv run python manage.py createsuperuser`. It will prompt for username, email, and password but they can be throwaway. You can then log into the admin backend with http://127.0.0.1:8000/admin and view users and profiles.
+- To create an admin user for database managerment, `uv run python manage.py createsuperuser`. It will prompt for username, email, and password but they can be throwaway. You can then log into the admin backend with http://127.0.0.1:8000/admin and view users and profiles after deploying the server.
 - The frontend url that is being used to test stuff is http://localhost:5173/#/Hello. Right now, it is the user sign up page.
 
 ## Deployment

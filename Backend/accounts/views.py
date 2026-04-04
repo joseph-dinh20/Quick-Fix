@@ -12,8 +12,9 @@ from rest_framework.decorators import permission_classes
 import re
 
 from services.models import Service
-from .serializers import ServiceProviderSerializer, ProfileUpdateSerializer, ServiceProviderUpdateSerializer
+from .serializers import ServiceProviderSerializer, ProfileUpdateSerializer, ServiceProviderUpdateSerializer, MeSerializer
 
+from haversine import haversine, Unit
 
 User = get_user_model()
 
@@ -110,8 +111,7 @@ def csrf(request):
 @api_view(["GET"])
 @permission_classes([IsAuthenticated])
 def me(request):
-    u = request.user
-    return Response({"id": u.id, "username": u.username, "email": u.email})
+    return Response(MeSerializer(request.user).data)
 
 
 @api_view(["GET"])
@@ -219,6 +219,7 @@ def provider_me(request):
     serializer = ServiceProviderSerializer(provider)
     return Response(serializer.data)
 
+
 @api_view(["GET"])
 @permission_classes([IsAuthenticated])
 def get_services(request):
@@ -260,3 +261,150 @@ def update_provider_services(request):
     )
 
 
+@api_view(["POST"])
+@permission_classes([IsAuthenticated])
+def toggle_favorite_provider(request, provider_id):
+    profile = request.user.profile
+    service_provider = ServiceProvider.objects.get(id=provider_id)
+
+    if profile.favorites.filter(id=provider_id).exists():
+
+        profile.favorites.remove(service_provider)
+
+        return Response({
+            "message": "Provider unfavorited",
+            },
+            status=status.HTTP_200_OK
+            )
+    
+    
+    profile.favorites.add(service_provider)
+
+    return Response({
+        "message": "Provider favorited",
+        },
+        status=status.HTTP_200_OK
+        )
+
+
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
+def get_favorites(request):
+
+    profile = request.user.profile
+    providers = profile.favorites.all()
+
+    serializer = ServiceProviderSerializer(providers, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
+def is_favorite_provider(request, provider_id):
+
+    profile = request.user.profile
+
+    is_favorite = profile.favorites.filter(id=provider_id).exists()
+
+    return Response({
+        "provider_id": provider_id,
+        "is_favorite": is_favorite
+    },
+    status=status.HTTP_200_OK
+    )
+
+
+@api_view(["GET"])
+def get_nearby_providers(request):
+
+    lat = float(request.GET.get("lat"))
+    lng = float(request.GET.get("lng"))
+    max_distance = float(request.GET.get("max_distance", 25))  # default 25 miles
+
+    user_coord = (lat, lng)
+    nearby_providers = []
+    providers = ServiceProvider.objects.select_related("profile").all()
+
+    for provider in providers:
+
+        profile = provider.profile
+
+        if profile.latitude is None or profile.longitude is None:
+            continue
+
+        provider_coord = (profile.latitude, profile.longitude)
+        distance = haversine(user_coord, provider_coord, unit=Unit.MILES)
+
+        if distance <= max_distance:
+            nearby_providers.append(provider)
+
+    serializer = ServiceProviderSerializer(nearby_providers, many=True)
+    return Response(serializer.data)
+
+
+@api_view(["GET"])
+def search_providers(request):
+    providers = ServiceProvider.objects.all()
+
+    # Filter by Rating
+    min_rating = request.GET.get("rating")
+    if min_rating:
+        try:
+            providers = providers.filter(average_rating__gte=float(min_rating))
+        except ValueError:
+            return Response({"error": "Invalid rating"}, status=400)
+    
+
+    # Filter by services
+    services = request.GET.get("services")
+    if services:
+        service_ids = [int(s) for s in services.split(",") if s.isdigit()]
+        for service_id in service_ids:
+            providers = providers.filter(services__id=service_id)
+
+    # Filter by Budget
+    max_budget = request.GET.get("budget")
+    if max_budget:
+        try:
+            providers = providers.filter(price_per_hour__lte=float(max_budget))
+        except ValueError:
+            return Response({"error": "Invalid budget"}, status=400)
+
+    # Filter location
+    max_distance = request.GET.get("max_distance")
+    if max_distance:
+        try:
+            max_distance = float(max_distance)
+        except ValueError:
+            return Response({"error": "Invalid distance"}, status=400)
+        
+        if request.user.is_authenticated:
+            try:
+                profile = Profile.objects.get(user=request.user)
+            except Profile.DoesNotExist:
+                return Response({"error": "Profile not found"}, status=404)
+
+            if profile.latitude is not None and profile.longitude is not None:
+                user_coord = (profile.latitude, profile.longitude)
+
+                filtered = []
+                for provider in providers:
+                    p = provider.profile
+
+                    if p.latitude is None or p.longitude is None:
+                        continue
+
+                    distance = haversine(
+                        user_coord,
+                        (p.latitude, p.longitude),
+                        unit=Unit.MILES
+                    )
+
+                    if distance <= max_distance:
+                        filtered.append(provider)
+
+                providers = filtered
+
+
+    serializer = ServiceProviderSerializer(providers, many=True, context={"request":request})
+    return Response(serializer.data)

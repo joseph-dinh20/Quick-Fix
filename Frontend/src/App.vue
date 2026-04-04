@@ -13,11 +13,19 @@ import Hello from "@/components/Hello.vue"
 import Temp from "@/components/Temp.vue"
 import Provider from "@/components/Provider.vue"
 import ProviderList from '@/components/ProviderList.vue'
-  import ProviderTest from '@/components/ProviderTest.vue'
+import ProviderTest from '@/components/ProviderTest.vue'
+import Hello1 from '@/components/hello1.vue'
 import Hello2 from '@/components/hello2.vue'
 import Hello3 from '@/components/hello3.vue'
 import Hello4 from '@/components/hello4.vue'
-import Join from './components/Join.vue'
+import JoinUs from './components/JoinUs.vue'
+import Settings from './components/Settings.vue'
+import DemoLocation from './components/DemoLocation.vue'
+import DemoCreateJob from './components/DemoCreateJob.vue'
+import DemoMyJobs from './components/DemoMyJobs.vue'
+import DemoJobListings from './components/DemoJobListings.vue'
+import FavoriteProvider from '@/components/FavoriteProvider.vue'
+import DemoProvider from './components/DemoProvider.vue'
 
 import { me, initCsrf, logout as apiLogout } from "@/services/api.js"
 import { Toaster } from "@/components/ui/sonner"
@@ -61,7 +69,6 @@ const routes = {
   "/Payment": Payment,
   "/Login": Login,
   "/Signup": Signup,
-  "/Join": Join,
   "/Form": Form,
   "/Profile": Profile,
   "/Test": Test,
@@ -70,9 +77,18 @@ const routes = {
   "/ProviderList": ProviderList,
   "/ProviderTest": ProviderTest,
   "/Hello": Hello,
+  "/Hello1": Hello1,
   "/Hello2": Hello2,
   "/Hello3": Hello3,
   "/Hello4": Hello4,
+  "/JoinUs": JoinUs,
+  "/Settings": Settings,
+  "/DemoLocation": DemoLocation,
+  "/DemoCreateJob": DemoCreateJob,
+  "/DemoMyJobs": DemoMyJobs,
+  "/DemoJobListings": DemoJobListings,
+  "/FavoriteProvider": FavoriteProvider,
+  "/DemoProvider": DemoProvider,
 }
 
 const currentPath = ref(window.location.hash)
@@ -94,10 +110,10 @@ async function handleLoginSuccess() {
 </script>
 
 <template>
-  <div class="flex flex-col items-center m-[30px]">
+  <div class="flex flex-col items-center min-h-screen w-full">
     <div v-if="loadingUser">Loading...</div>
 
-    <div v-else class="flex flex-col items-center m-[30px] w-full">
+    <div v-else class="flex flex-col items-center w-full">
       <Header :user="user" @logout="logout" />
 
       <div v-if="!isLoggedIn" class="mb-6 flex gap-3">
@@ -105,14 +121,11 @@ async function handleLoginSuccess() {
         <a class="underline" href="#/Signup">Signup</a>
       </div>
 
-      <div class="mt-8 mb-20">
-        <component
-            :is="currentView"
-            @login-success="handleLoginSuccess"
-        />
+      <div class="mt-8 mb-10">
+        <component :is="currentView" @login-success="handleLoginSuccess" />
       </div>
     </div>
 
-    <Toaster/>
+    <Toaster />
   </div>
 </template>

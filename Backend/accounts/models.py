@@ -18,6 +18,19 @@ class Profile(models.Model):
     name = models.CharField(max_length=100)
     avatar = models.ImageField(upload_to="avatars/", blank=True, null=True)
 
+    city = models.CharField(max_length=50, default="Long Beach")
+    state = models.CharField(max_length=100, default="California")
+
+    latitude = models.FloatField(null=True, blank=True, default=33.7816133)
+    longitude = models.FloatField(null=True, blank=True, default=-118.1084064)
+
+    favorites = models.ManyToManyField(
+        "ServiceProvider",
+        related_name="favorited_by",
+        blank=True
+    )
+
+
     def __str__(self):
         return self.name or self.user.username
     
@@ -38,11 +51,16 @@ class ServiceProvider(models.Model):
     price_per_hour = models.DecimalField(max_digits=10, decimal_places=2)
     about_me = models.TextField(blank=True)
 
-    total_rating = models.IntegerField(default=0, 
-                                       validators=[MinValueValidator(0), MaxValueValidator(5)])
+    total_rating = models.IntegerField(default=0)
     average_rating = models.DecimalField(max_digits=3, decimal_places=2, default=0,
                                          validators=[MinValueValidator(0), MaxValueValidator(5)]
                                          )
+    
+    favorited_jobs = models.ManyToManyField(
+        "jobs.Job",
+        related_name="favorited_by",
+        blank=True
+    )
 
     def __str__(self):
         return f"{self.profile.name} (Provider)"
