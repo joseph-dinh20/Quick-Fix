@@ -1,4 +1,13 @@
 <script setup>
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardContent,
+} from '@/components/ui/card'
+
 const features = [
     {
         icon: "📅",
@@ -37,37 +46,33 @@ const steps = [
 </script>
 
 <template>
-    <div class="min-h-screen font-sans text-[#1a202c] bg-white">
-        <header class="py-20 px-6 bg-[#f9fafb] text-center">
-            <h1 class="text-5xl md:text-6xl font-black mb-6 tracking-tight">
+    <div class="min-h-screen font-sans text-foreground bg-background">
+        <header class="py-24 px-6 bg-muted/30 text-center border-b border-border">
+            <h1 class="text-5xl md:text-6xl font-black mb-6 tracking-tight text-balance">
                 Earn money your way
             </h1>
-            <p
-                class="max-w-2xl mx-auto text-gray-500 text-lg mb-10 leading-relaxed"
-            >
+            <p class="max-w-2xl mx-auto text-muted-foreground text-lg mb-10 leading-relaxed">
                 Be your own boss. Set your own rates. Help your community. Join
                 the Quick Fix team today.
             </p>
 
-            <div
-                class="flex flex-col sm:flex-row justify-center items-center gap-4 max-w-lg mx-auto"
-            >
-                <input
-                    type="email"
-                    placeholder="Enter your email"
-                    class="w-full px-6 py-4 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-orange-500 shadow-sm"
+            <div class="flex flex-col sm:flex-row justify-center items-center gap-4 max-w-lg mx-auto">
+                <Input 
+                    type="email" 
+                    placeholder="Enter your email" 
+                    class="h-14 px-6 rounded-xl border-input focus-visible:ring-orange-500 shadow-sm"
                 />
-                <button
-                    class="w-full sm:w-auto bg-[#FF7D1F] hover:bg-orange-600 text-white font-bold px-8 py-4 rounded-xl transition-all whitespace-nowrap"
+                <Button 
+                    class="w-full sm:w-auto h-14 bg-[#FF7D1F] hover:bg-orange-600 text-white font-bold px-8 rounded-xl transition-all"
                 >
                     Get Started
-                </button>
+                </Button>
             </div>
-            <p class="mt-6 text-sm text-gray-400">
+            <p class="mt-6 text-sm text-muted-foreground">
                 Already have an account?
-                <a href="#/Signup" class="text-orange-500 font-bold hover:underline"
-                    >Sign In</a
-                >
+                <router-link to="/Signup" class="text-orange-500 font-bold hover:underline">
+                    Sign In
+                </router-link>
             </p>
         </header>
 
@@ -76,19 +81,25 @@ const steps = [
                 Why join Quick Fix?
             </h2>
             <div class="grid md:grid-cols-3 gap-8">
-                <div
-                    v-for="item in features"
+                <Card 
+                    v-for="item in features" 
                     :key="item.title"
-                    class="p-10 border border-gray-400 rounded-[2rem] hover:shadow-2xl transition-shadow duration-300"
+                    class="border-border rounded-[2rem] hover:shadow-xl transition-all duration-300 group"
                 >
-                    <div class="text-3xl mb-6">{{ item.icon }}</div>
-                    <h3 class="text-xl font-bold mb-4">{{ item.title }}</h3>
-                    <p class="text-gray-500 leading-relaxed">{{ item.desc }}</p>
-                </div>
+                    <CardHeader class="p-10 pb-4">
+                        <div class="text-4xl mb-6 group-hover:scale-110 transition-transform duration-300 origin-left">
+                            {{ item.icon }}
+                        </div>
+                        <CardTitle class="text-xl font-bold">{{ item.title }}</CardTitle>
+                    </CardHeader>
+                    <CardContent class="px-10 pb-10">
+                        <p class="text-muted-foreground leading-relaxed">{{ item.desc }}</p>
+                    </CardContent>
+                </Card>
             </div>
         </section>
 
-        <section class="relative left-[50%] right-[50%] ml-[-50vw] mr-[-50vw] w-[99vw] py-24 px-6 bg-[#0f172a] text-white overflow-hidden">
+        <section class="w-full py-24 px-6 bg-slate-950 text-white">
             <div class="max-w-7xl mx-auto">
                 <h2 class="text-3xl font-extrabold text-center mb-20">
                     How to get started
@@ -99,13 +110,11 @@ const steps = [
                         :key="step.number"
                         class="flex flex-col items-center"
                     >
-                        <div
-                            class="w-12 h-12 bg-orange-500 rounded-full flex items-center justify-center font-bold mb-6 text-lg"
-                        >
+                        <div class="w-12 h-12 bg-orange-500 rounded-full flex items-center justify-center font-bold mb-6 text-lg ring-4 ring-orange-500/20">
                             {{ step.number }}
                         </div>
                         <h3 class="text-xl font-bold mb-4">{{ step.title }}</h3>
-                        <p class="text-gray-400 text-sm leading-relaxed">
+                        <p class="text-slate-400 text-sm leading-relaxed max-w-[250px]">
                             {{ step.desc }}
                         </p>
                     </div>
@@ -114,25 +123,22 @@ const steps = [
         </section>
 
         <section class="py-24 px-6">
-            <div
-                class="max-w-4xl mx-auto bg-[#fff0e5] rounded-[2.5rem] p-12 md:p-20 text-center"
-            >
+            <div class="max-w-4xl mx-auto bg-orange-50 rounded-[2.5rem] p-12 md:p-20 text-center border border-orange-100/50">
                 <h2 class="text-3xl font-extrabold mb-6">Ready to earn?</h2>
-                <p class="text-gray-600 mb-10 max-w-md mx-auto">
+                <p class="text-muted-foreground mb-10 max-w-md mx-auto">
                     Join thousands of Fixers across the country helping people
                     get things done.
                 </p>
-                <button
-                    class="bg-[#1a1a1a] hover:bg-black text-white font-bold px-12 py-4 rounded-xl transition-transform active:scale-95 shadow-lg hover:shadow-xl"
+                <Button 
+                    size="lg"
+                    class="bg-slate-900 hover:bg-black text-white font-bold h-14 px-12 rounded-xl transition-transform active:scale-95 shadow-lg"
                 >
                     Apply Now
-                </button>
+                </Button>
             </div>
         </section>
 
-        <footer
-            class="py-12 text-center text-xs text-gray-400 border-t border-gray-100"
-        >
+        <footer class="py-12 text-center text-xs text-muted-foreground border-t border-border/50">
             © 2026 Quick Fix Inc. All rights reserved.
         </footer>
     </div>
