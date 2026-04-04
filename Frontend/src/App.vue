@@ -22,6 +22,7 @@ import JoinUs from './components/JoinUs.vue'
 import Settings from './components/Settings.vue'
 import DemoLocation from './components/DemoLocation.vue'
 import DemoCreateJob from './components/DemoCreateJob.vue'
+import DemoCreateJob2 from './components/DemoCreateJob2.vue'
 import DemoMyJobs from './components/DemoMyJobs.vue'
 import DemoJobListings from './components/DemoJobListings.vue'
 import FavoriteProvider from '@/components/FavoriteProvider.vue'
@@ -85,6 +86,7 @@ const routes = {
   "/Settings": Settings,
   "/DemoLocation": DemoLocation,
   "/DemoCreateJob": DemoCreateJob,
+  "/DemoCreateJob2": DemoCreateJob2,
   "/DemoMyJobs": DemoMyJobs,
   "/DemoJobListings": DemoJobListings,
   "/FavoriteProvider": FavoriteProvider,
@@ -114,12 +116,18 @@ async function handleLoginSuccess() {
     <div v-if="loadingUser">Loading...</div>
 
     <div v-else class="flex flex-col items-center w-full">
-      <Header :user="user" @logout="logout" />
+      <Header />
 
       <div v-if="!isLoggedIn" class="mb-6 flex gap-3">
         <a class="underline" href="#/Login">Login</a>
         <a class="underline" href="#/Signup">Signup</a>
       </div>
+
+      <div v-else class="mb-6 flex gap-3 items-center">
+        <span class="text-sm">{{ user.email }}</span>
+        <a class="underline cursor-pointer" @click="logout">Logout</a>
+      </div>
+      
 
       <div class="mt-8 mb-10">
         <component :is="currentView" @login-success="handleLoginSuccess" />
