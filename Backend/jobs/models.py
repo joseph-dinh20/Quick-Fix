@@ -30,6 +30,9 @@ class Job(models.Model):
         validators=[MinValueValidator(0)]
     )
 
+    latitude = models.FloatField(blank=True, default=33.7816133)
+    longitude = models.FloatField(blank=True, default=-118.1084064)
+
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     deadline = models.DateTimeField()
