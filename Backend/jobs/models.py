@@ -19,6 +19,9 @@ class Job(models.Model):
     title = models.CharField(max_length=200)
     description = models.TextField()
 
+    latitude = models.FloatField(blank=True, default=33.7816133)
+    longitude = models.FloatField(blank=True, default=-118.1084064)
+
     budget = models.DecimalField(
         max_digits=10,
         decimal_places=2,
