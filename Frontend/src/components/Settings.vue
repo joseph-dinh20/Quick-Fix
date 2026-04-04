@@ -11,13 +11,14 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Switch } from '@/components/ui/switch'
 import { Separator } from '@/components/ui/separator'
-import { Search, PlusCircle, ChevronRight, User, PencilLine } from 'lucide-vue-next'
+import { Search, PlusCircle, ChevronRight, User, PencilLine, Settings, Shield, Lock } from 'lucide-vue-next'
 
 // Mock data based on your template
 const navLinks = ref([
-  { name: 'Profile', hasArrow: true },
-  { name: 'Settings', hasArrow: false },
-  { name: 'Billing', hasArrow: true }
+  { name: 'Settings', target: 'settings', icon: Settings },
+  { name: 'Profile', target: 'profile', icon: User },
+  { name: 'Security & sign-in', target: 'security', icon: Shield },
+  { name: 'Data & Privacy', target: 'privacy', icon: Lock }
 ])
 
 const personalData = ref([
@@ -38,6 +39,13 @@ const cancelChanges = () => {
   editedData.value = [...personalData.value]
   isEditing.value = false
 }
+
+const scrollToSection = (id) => {
+  const el = document.getElementById(id)
+  if (el) {
+    el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  }
+}
 </script>
 
 <template>
@@ -47,25 +55,28 @@ const cancelChanges = () => {
             <aside class="space-y-8">
                 <nav class="space-y-1">
                     <Button
-                        v-for="link in navLinks"
-                        :key="link.name"
-                        variant="ghost"
-                        class="w-full justify-between hover:bg-muted"
+                    v-for="link in navLinks"
+                    :key="link.name"
+                    variant="ghost"
+                    class="w-full justify-between hover:bg-muted"
+                    @click="scrollToSection(link.target)"
                     >
-                        <div class="flex items-center gap-3">
-                            <div class="w-5 h-5 bg-muted-foreground/20 rounded-sm"></div>
-                            {{ link.name }}
-                        </div>
-                        <ChevronRight v-if="link.hasArrow" class="w-4 h-4 text-muted-foreground" />
+                    <div class="flex items-center gap-3">
+                        <component
+                            :is="link.icon"
+                            class="w-5 h-5 text-muted-foreground"
+                        />
+                        {{ link.name }}
+                    </div>
                     </Button>
                 </nav>
 
                 <div class="space-y-3">
-                    <Button class="w-full bg-orange-500 hover:bg-orange-600 text-white font-bold h-12">
+                    <Button class="w-full  text-white font-bold h-12">
                         <Search class="w-4 h-4 mr-2" />
                         FIND WORK
                     </Button>
-                    <Button variant="outline" class="w-full border-orange-500 text-orange-500 hover:bg-orange-50 hover:text-orange-600 font-bold h-12">
+                    <Button variant="outline" class="w-full font-bold h-12 border-primary text-primary hover:bg-primary hover:text-primary-foreground border-2">
                         <PlusCircle class="w-4 h-4 mr-2" />
                         MAKE A JOB
                     </Button>
@@ -73,7 +84,7 @@ const cancelChanges = () => {
             </aside>
 
             <main class="space-y-10 w-full">
-                <h1 class="text-5xl font-extrabold mb-10 tracking-tight">
+                <h1 class="text-5xl font-extrabold mb-10 tracking-tight" id="settings">
                     Your Account
                 </h1>
 
@@ -89,7 +100,7 @@ const cancelChanges = () => {
                     </CardContent>
                 </Card>
 
-                <Card class="rounded-3xl shadow-sm bg-card">
+                <Card class="rounded-3xl shadow-sm bg-card" id="profile">
                     <CardHeader class="flex flex-row justify-between items-start space-y-0">
                         <div>
                             <CardTitle class="text-2xl mb-1">Personal Information</CardTitle>
@@ -141,7 +152,7 @@ const cancelChanges = () => {
                     </CardContent>
                 </Card>
 
-                <Card class="rounded-3xl shadow-sm">
+                <Card class="rounded-3xl shadow-sm" id="security">
                     <CardHeader>
                         <CardTitle class="text-2xl">Security & sign-in</CardTitle>
                     </CardHeader>
@@ -152,7 +163,7 @@ const cancelChanges = () => {
                     </CardContent>
                 </Card>
 
-                <Card class="rounded-3xl shadow-sm">
+                <Card class="rounded-3xl shadow-sm" id="privacy">
                     <CardHeader>
                         <CardTitle class="text-2xl">Data & Privacy</CardTitle>
                     </CardHeader>
