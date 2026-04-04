@@ -13,6 +13,7 @@ import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { AspectRatio } from '@/components/ui/aspect-ratio'
 import { Label } from '@/components/ui/label'
+import { Bookmark } from 'lucide-vue-next'
 
 import {
   Popover, PopoverContent, PopoverTrigger,
@@ -34,7 +35,7 @@ import {
   PaginationItem, PaginationNext, PaginationPrevious,
 } from '@/components/ui/pagination'
 
-import { ref, computed } from 'vue'
+import { onMounted } from 'vue'
 import workPhoto1 from '@/assets/workPhotos/bathroom.jpg'
 import workPhoto2 from '@/assets/workPhotos/garden.jpg'
 import workPhoto3 from '@/assets/workPhotos/kitchen.jpg'
@@ -58,17 +59,76 @@ import { faker } from '@faker-js/faker';
 import { Badge } from '@/components/ui/badge'
 import Provider from '@/components/Provider.vue'
 
+import { loadProviders, toggleFavoriteProvider, getFavorites } from "../services/api"
 import { userListStore } from '@/store/userList'
 import { storeToRefs } from 'pinia'
+
+const BASE_URL = 'http://localhost:8000'
+
+function absoluteUrl(path) {
+  if (!path) return ''
+  return path.startsWith('http') ? path : `${BASE_URL}${path}`
+}
+
+function normalizeProvider(provider) {
+  return {
+    ...provider,
+    avatar: absoluteUrl(provider.avatar),
+    price: provider.price_per_hour,
+    aboutMe: provider.about_me,
+    averageRating: provider.average_rating,
+    jobsCompleted: provider.total_rating || 0,
+    ratings: provider.ratings || [],
+    services: provider.services || [],
+    city: provider.city || '',
+    state: provider.state || '',
+    isBookmarked: false,
+    workPhotos: (provider.work_images || []).map(img => absoluteUrl(img.image)),
+  }
+}
+
+async function fetchProviders() {
+  try {
+    const response = await loadProviders()
+    providers.value = response.data.map(normalizeProvider)
+    await markBookmarkedProviders()
+  } catch (error) {
+    console.error("Failed to load providers", error)
+  }
+}
+
+async function markBookmarkedProviders() {
+  try {
+    const response = await getFavorites()
+    const favoriteIds = new Set(response.data.map(provider => provider.id))
+    providers.value.forEach(provider => {
+      provider.isBookmarked = favoriteIds.has(provider.id)
+    })
+  } catch (error) {
+    // Ignore if user is not authenticated or favorites cannot be loaded
+    console.warn('Could not load favorite providers', error)
+  }
+}
+
+async function handleToggleFavorite(provider) {
+  try {
+    await toggleFavoriteProvider(provider.id)
+    provider.isBookmarked = !provider.isBookmarked
+  } catch (error) {
+    console.error('Failed to toggle favorite provider', error)
+  }
+}
 
 // NOTE: grabbing data from pinia from store.js in the /store directory.
 const store = userListStore()
 const { providers } = storeToRefs(store)
 
+onMounted(fetchProviders)
+
 </script>
 
 <template>
-  <div v-for="(provider, index) in providers" :key="index" class="m-5">
+  <div v-for="provider in providers" :key="provider.id" class="m-5">
     <Card class="flex flex-col max-w-150 min-w-120">
       <CardHeader class="justify-between flex-row">
         <div class="flex flex-row gap-20 m-2 pl-10">
@@ -78,22 +138,44 @@ const { providers } = storeToRefs(store)
           </Avatar>
           <div>
             <CardTitle>{{ provider.name }}</CardTitle>
-            <CardDescription class="mt-1">
-              <!-- WARN: unsure whether to make provider reviews also a badge. -->
+            <CardDescription class="mt-1 text-sm text-slate-500">
+              {{ provider.city || 'Location unknown' }}, {{ provider.state || '' }}
+            </CardDescription>
+            <CardDescription class="mt-2">
               <Badge variant="outline" size="sm">
                 <img class="w-4 inline-block align-top" :src="starIcon">
                 {{ provider.averageRating }}
-                ({{ provider.ratings.length }})
+                ({{ provider.jobsCompleted }})
                 reviews
               </Badge>
             </CardDescription>
 
-            <CardDescription class="flex flex-col">
+            <CardDescription class="flex flex-col mt-2">
               <Badge variant="outline">
                 <img class="w-4 inline-block" :src="checkMarkIcon">
                 Completed {{ provider.jobsCompleted }} Jobs
               </Badge>
             </CardDescription>
+            <div class="flex flex-wrap gap-2 mt-2">
+              <template v-for="service in provider.services" :key="service.id">
+                <Badge variant="secondary" size="sm">{{ service.name }}</Badge>
+              </template>
+            </div>
+            <div class="mt-3 flex gap-2">
+              <Button
+                variant="ghost"
+                size="sm"
+                class="border-transparent bg-transparent text-primary hover:bg-transparent hover:text-primary"
+                @click="handleToggleFavorite(provider)"
+                aria-label="Toggle bookmark"
+              >
+                <Bookmark
+                  :fill="provider.isBookmarked ? 'currentColor' : 'none'"
+                  :class="provider.isBookmarked ? 'text-primary' : 'text-primary'"
+                  class="w-5 h-5"
+                />
+              </Button>
+            </div>
             <Dialog>
               <DialogTrigger as-child>
                 <Button variant="default" class="mt-3">View Profile</Button>
