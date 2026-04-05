@@ -6,5 +6,5 @@ urlpatterns = [
     path("<int:service_provider_id>/reviews/create/", create_review),
     path("delete/<int:review_id>/", delete_review),
     path("update/<int:review_id>/", update_review),
-    path("images/<int:image_id>/delete/", delete_review_image)
+    path("images/<int:image_id>/delete/", delete_review_image),
 ]
