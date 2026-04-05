@@ -36,7 +36,7 @@ import {
   HoverCard, HoverCardContent, HoverCardTrigger,
 } from '@/components/ui/hover-card'
 
-import { ref, computed, watch } from 'vue'
+import { ref, computed, watch, onMounted } from 'vue'
 // import workPhoto1 from '@/assets/workPhotos/bathroom.jpg'
 // import workPhoto2 from '@/assets/workPhotos/garden.jpg'
 // import workPhoto3 from '@/assets/workPhotos/kitchen.jpg'
@@ -51,6 +51,7 @@ import { Badge } from '@/components/ui/badge'
 import { Separator } from '@/components/ui/separator'
 import { faker } from '@faker-js/faker';
 import checkMarkIcon from '@/assets/icons/checkMark.png'
+import { fetchReviews } from '@/services/api'
 
 //NOTE: grabs data from ProviderList.vue component
 const { provider } = defineProps(['provider'])
@@ -67,6 +68,32 @@ const chunkUserRating = computed(() => {
   }
   return chunks
 })
+
+const reviews = ref([])
+const reviewsLoading = ref(false)
+const reviewsPerPage = 3
+const currentReviewPage = ref(1)
+
+const paginatedReviews = computed(() => {
+  const start = (currentReviewPage.value - 1) * reviewsPerPage
+  const end = start + reviewsPerPage
+  return reviews.value.slice(start, end)
+})
+
+const totalReviewPages = computed(() => Math.ceil(reviews.value.length / reviewsPerPage))
+
+async function loadProviderReviews() {
+  if (!provider?.id) return
+  reviewsLoading.value = true
+  try {
+    const res = await fetchReviews(provider.id)
+    reviews.value = res.data
+  } catch (err) {
+    console.error(err)
+  } finally {
+    reviewsLoading.value = false
+  }
+}
 
 // format date to human readable format
 function formatDate(date) {
@@ -101,6 +128,8 @@ watch(api, (api) => {
   })
 })
 
+onMounted(loadProviderReviews)
+
 //BUG: Debugging Area
 console.log('length of user aboutMe description = ' + provider.aboutMe.split(' ').length)
 console.log('showReadMoreButton state = ' + showReadMoreButton.value)
@@ -117,11 +146,14 @@ console.log('showReadMoreButton state = ' + showReadMoreButton.value)
           </Avatar>
           <div class="flex flex-col h-10">
             <CardTitle>{{ provider.name }}</CardTitle>
+            <CardDescription class="mt-1 text-sm text-slate-500">
+              {{ provider.city || 'Location unknown' }}, {{ provider.state || '' }}
+            </CardDescription>
             <CardDescription class="mt-1">
               <Badge variant="outline">
                 <img class="w-4 inline-block align-top" :src="starIcon">
                 {{ provider.averageRating }}
-                ({{ totalRating }})
+                ({{ reviews.length }})
                 reviews
               </Badge>
             </CardDescription>
@@ -206,7 +238,7 @@ console.log('showReadMoreButton state = ' + showReadMoreButton.value)
 
       <!-- NOTE: Provider Ratings Section -->
       <CardFooter class="flex flex-col">
-        <div class="items-start self-start w-full h-auto">
+        <div v-if="provider.ratings.length > 0" class="items-start self-start w-full h-auto">
           <CardTitle><img class="w-8 inline-block" :src="reviewIcon"> Ratings</CardTitle>
 
           <Card v-for="rating in chunkUserRating[currentPage - 1]" :key="rating.userName" class="my-4 p-4">
@@ -235,26 +267,66 @@ console.log('showReadMoreButton state = ' + showReadMoreButton.value)
             </div>
           </Card>
         </div>
-        <div v-if="provider.ratings.length > 0">
-          <Pagination :items-per-page="ratingsPerPage" :total="provider.ratings.length" :default-page="1"
-            @update:page="currentPage = $event">
-            <PaginationContent v-slot="{ items }">
-              <div class="flex mt-5">
-                <PaginationPrevious />
-                <div v-for="(item, index) in items" :key="index">
-                  <PaginationItem v-if="item.type === 'page'" :value="item.value"
-                    :is-active="item.value === currentPage">
-                    {{ item.value }}
-                  </PaginationItem>
-                </div>
-                <PaginationEllipsis :index="4" />
-                <PaginationNext />
-              </div>
-            </PaginationContent>
-          </Pagination>
-        </div>
-        <div v-else class="self-start">
+        <!-- <div v-else-if="reviews.length === 0" class="self-start">
           no user ratings yet.
+        </div> -->
+
+        <div class="self-start mt-6 w-full">
+          <CardTitle><img class="w-8 inline-block" :src="reviewIcon"> Customer Reviews ({{ reviews.length }})</CardTitle>
+          <div v-if="reviewsLoading" class="text-sm text-slate-500 mt-2">Loading reviews...</div>
+          <div v-else-if="reviews.length">
+            <div v-for="review in paginatedReviews" :key="review.id" class="border rounded-lg p-4 mt-3">
+              <div class="flex items-center justify-between gap-3">
+                <div>
+                  <p class="font-semibold">{{ review.reviewer_name }}</p>
+                  <div class="flex items-center gap-1 mt-1">
+                    <img
+                      v-for="star in 5"
+                      :key="star"
+                      :src="starIcon"
+                      class="w-4 h-4"
+                      :class="{ 'opacity-30': star > review.rating }"
+                    />
+                  </div>
+                </div>
+                <span class="text-xs uppercase tracking-wide text-slate-500">{{ new Date(review.created_at).toLocaleDateString() }}</span>
+              </div>
+              <p class="mt-3 text-sm text-slate-700">{{ review.comment }}</p>
+              <div v-if="review.images && review.images.length" class="mt-3 flex gap-2 flex-wrap">
+                <div v-for="image in review.images" :key="image.id" class="w-16">
+                  <HoverCard :open-delay="50" :close-delay="0">
+                    <HoverCardTrigger as-child>
+                      <AspectRatio :ratio="1 / 1">
+                        <img :src="'http://localhost:8000' + image.image" class="object-cover h-full rounded-lg cursor-pointer" alt="Review image" />
+                      </AspectRatio>
+                    </HoverCardTrigger>
+                    <HoverCardContent class="w-80 border-0">
+                      <AspectRatio :ratio="3 / 2">
+                        <img :src="'http://localhost:8000' + image.image" class="w-full h-full rounded-lg" alt="Review image enlarged" />
+                      </AspectRatio>
+                    </HoverCardContent>
+                  </HoverCard>
+                </div>
+              </div>
+            </div>
+            <div v-if="totalReviewPages > 1" class="mt-4">
+              <Pagination :total="reviews.length" :items-per-page="reviewsPerPage" :default-page="1" @update:page="currentReviewPage = $event">
+                <PaginationContent>
+                  <PaginationPrevious />
+                  <PaginationItem
+                    v-for="page in totalReviewPages"
+                    :key="page"
+                    :value="page"
+                    :is-active="page === currentReviewPage"
+                  >
+                    {{ page }}
+                  </PaginationItem>
+                  <PaginationNext />
+                </PaginationContent>
+              </Pagination>
+            </div>
+          </div>
+          <div v-else class="text-sm text-slate-500 mt-2">No reviews yet.</div>
         </div>
       </CardFooter>
     </Card>
