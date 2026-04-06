@@ -1,6 +1,7 @@
 from decimal import Decimal
 
 from django.db import models
+from django.db.models import Sum
 from django.core.validators import MinValueValidator, MaxValueValidator
 from jobs.models import Job
 
@@ -20,7 +21,7 @@ class Review(models.Model):
 
     job = models.ForeignKey(
         Job,
-        on_delete=models.CASCADE,
+        on_delete=models.SET_NULL,
         related_name="reviews",
         null=True,
         blank=True
@@ -52,7 +53,7 @@ class Review(models.Model):
     def update_provider_rating(provider):
         reviews = provider.reviews.all()
         count = reviews.count()
-        total = sum(review.rating for review in reviews)
+        total = reviews.aggregate(total=Sum("rating"))["total"] or 0
 
         provider.total_rating = total
 

@@ -2,7 +2,13 @@ from rest_framework import serializers
 from .models import Job, JobImage
 from services.models import Service
 from services.serializers import ServiceSerializer
-from accounts.models import ServiceProvider
+from accounts.models import ServiceProvider, Profile
+
+
+class ProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Profile
+        fields = ["id", "name", "avatar"] 
 
 
 class JobImageSerializer(serializers.ModelSerializer):
@@ -62,6 +68,7 @@ class JobSerializer(serializers.ModelSerializer):
     is_favorited = serializers.SerializerMethodField()
     services = ServiceSerializer(many=True)
     images = JobImageSerializer(many=True)
+    customer = ProfileSerializer(read_only=True)
 
     class Meta:
         model = Job
@@ -76,7 +83,8 @@ class JobSerializer(serializers.ModelSerializer):
             "created_at",
             "services",
             "images",
-            "is_favorited"
+            "is_favorited",
+            "customer"
         ]
 
     def get_is_favorited(self, obj):
