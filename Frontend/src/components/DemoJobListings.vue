@@ -204,16 +204,33 @@ Your garden's gonna thrive if you protect!` }}</p>
 </template>
 
 <script>
+// Your existing API imports
 import { getAllJobs, toggleFavoriteJob } from "@/services/api";
+
+// Shadcn-Vue component imports
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
 
 export default {
   name: "JobsList",
+  
+  // Register the components so they can be used in the template
+  components: {
+    Button,
+    Card,
+    Input,
+    Skeleton,
+    Dialog,
+    DialogContent,
+  },
 
   data() {
     return {
       jobs: [],
       loading: false,
-      // --- NEW: State for managing the Overlay Modal ---
       selectedJob: null,
       isDialogOpen: false,
     };
@@ -228,7 +245,7 @@ export default {
       this.loading = true;
       try {
         const res = await getAllJobs();
-        this.jobs = res.data.results || res.data; // handles pagination or not
+        this.jobs = res.data.results || res.data; 
       } catch (err) {
         console.error(err);
       } finally {
@@ -245,7 +262,6 @@ export default {
       }
     },
 
-    // --- NEW: Method to trigger the Overlay Modal ---
     openJobModal(job) {
       this.selectedJob = job;
       this.isDialogOpen = true;
