@@ -27,7 +27,7 @@
             class="border-0 focus-visible:ring-0 shadow-none h-10 px-0 w-full" 
           />
         </div>
-        <Button class="w-full md:w-auto bg-orange-500 hover:bg-orange-600 text-white rounded-full px-8 py-2.5">
+        <Button class="w-full md:w-auto text-white rounded-full px-8 py-2.5">
           Search
         </Button>
       </Card>
@@ -87,7 +87,7 @@
           </div>
 
           <div class="flex flex-col sm:items-end w-full sm:w-auto gap-3 mt-4 sm:mt-0">
-            <Button @click="openJobModal(job)" class="w-full sm:w-auto bg-orange-500 hover:bg-orange-600 text-white font-semibold">
+            <Button @click="openJobModal(job)" class="w-full sm:w-auto text-white font-semibold">
               View Job
             </Button>
             
@@ -137,7 +137,7 @@
                 <div v-else class="w-full h-full bg-green-200"></div>
               </div>
               <div class="snap-center shrink-0 w-48 h-48 bg-green-300 rounded-xl overflow-hidden"></div>
-              <div class="snap-center shrink-0 w-48 h-48 bg-orange-500 rounded-xl overflow-hidden"></div>
+              <div class="snap-center shrink-0 w-48 h-48 ounded-xl overflow-hidden"></div>
             </div>
 
             <Button variant="ghost" size="icon" class="absolute -right-4 z-10 bg-white/80 hover:bg-white rounded-full shadow-sm h-8 w-8">
