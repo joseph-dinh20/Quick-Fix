@@ -5,6 +5,8 @@ from services.models import Service
 from geopy.exc import GeocoderTimedOut, GeocoderServiceError
 from .utils import geolocator
 from django.db.models import Avg
+from reviews.models import Review
+from jobs.models import Job
 
 
 
@@ -146,3 +148,43 @@ class MeSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ["id", "username", "email", "avatar", "city", "state", "latitude", "longitude"]
+
+
+class FavoriteProviderSerializer(ServiceProviderSerializer):
+    rating = serializers.SerializerMethodField()
+    last_hired_date = serializers.SerializerMethodField()
+    service_type = serializers.SerializerMethodField()
+
+    class Meta(ServiceProviderSerializer.Meta):
+        fields = ServiceProviderSerializer.Meta.fields + [
+            "rating",
+            "last_hired_date",
+            "service_type"
+        ]
+
+    def get_service_type(self, obj):
+        review = self._get_user_review(obj)
+
+        if not review:
+            return None
+
+        service = obj.services.first()
+        return service.name if service else None
+
+    def get_rating(self, obj):
+        review = self._get_user_review(obj)
+        return review.rating if review else None
+
+    def get_last_hired_date(self, obj):
+        review = self._get_user_review(obj)
+        return review.created_at if review else None
+
+    def _get_user_review(self, obj):
+        user = self.context["request"].user.profile
+
+        # optimized path (if prefetched)
+        if hasattr(obj, "user_reviews"):
+            return obj.user_reviews[0] if obj.user_reviews else None
+
+        # fallback
+        return obj.reviews.filter(reviewer=user).first()
