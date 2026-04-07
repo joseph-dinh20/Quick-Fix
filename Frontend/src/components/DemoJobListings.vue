@@ -12,19 +12,19 @@
       <Card class="flex flex-col md:flex-row items-center rounded-full p-2 mb-8 shadow-sm border-slate-200 gap-2 md:gap-0">
         <div class="flex items-center flex-1 px-4 w-full">
           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-slate-400 mr-3"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg>
-          <Input 
-            variant="ghost" 
-            placeholder="What do you need done?" 
-            class="border-0 focus-visible:ring-0 shadow-none h-10 px-0 w-full" 
+          <Input
+            variant="ghost"
+            placeholder="What do you need done?"
+            class="border-0 focus-visible:ring-0 shadow-none h-10 px-0 w-full"
           />
         </div>
         <div class="hidden md:block w-[1px] h-8 bg-slate-200"></div>
         <div class="flex items-center flex-1 px-4 w-full border-t md:border-none border-slate-100 pt-2 md:pt-0 mt-2 md:mt-0">
           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-slate-400 mr-3"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"></path><circle cx="12" cy="10" r="3"></circle></svg>
-          <Input 
-            variant="ghost" 
-            placeholder="City, State, Zip Code" 
-            class="border-0 focus-visible:ring-0 shadow-none h-10 px-0 w-full" 
+          <Input
+            variant="ghost"
+            placeholder="City, State, Zip Code"
+            class="border-0 focus-visible:ring-0 shadow-none h-10 px-0 w-full"
           />
         </div>
         <Button class="w-full md:w-auto bg-orange-500 hover:bg-orange-600 text-white rounded-full px-8 py-2.5">
@@ -33,10 +33,10 @@
       </Card>
 
       <div class="flex flex-wrap gap-3 mb-10">
-        <Button 
-          v-for="filter in ['Pay', 'Language', 'Urgency', 'Type', 'Credentials']" 
-          :key="filter" 
-          variant="outline" 
+        <Button
+          v-for="filter in ['Pay', 'Language', 'Urgency', 'Type', 'Credentials']"
+          :key="filter"
+          variant="outline"
           class="bg-white border-slate-200 text-slate-700 hover:bg-slate-50 flex items-center"
         >
           {{ filter }}
@@ -57,13 +57,13 @@
       </div>
 
       <div v-else class="flex flex-col gap-5">
-        <Card 
-          v-for="job in jobs.slice(0, 20)" 
-          :key="job.id" 
+        <Card
+          v-for="job in jobs.slice(0, 20)"
+          :key="job.id"
           class="flex flex-col sm:flex-row items-start sm:items-center p-4 shadow-sm hover:shadow-md transition-shadow border-slate-200 gap-6"
         >
           <div class="w-full sm:w-48 h-32 flex-shrink-0 bg-slate-100 rounded-lg overflow-hidden">
-            <img 
+            <img
               v-if="job.images && job.images.length"
               :src="job.images[0].image"
               alt="Job preview"
@@ -87,12 +87,11 @@
               <span class="text-sm text-slate-500"> budget</span>
             </div>
 
-            <!-- THIS IS NEW -->
             <div class="flex flex-wrap gap-2 mt-2">
               <span
-                  v-for="service in job.services"
-                  :key="service.id"
-                  class="text-xs bg-slate-100 px-2 py-1 rounded-md text-slate-600"
+                v-for="service in job.services"
+                :key="service.id"
+                class="text-xs bg-slate-100 px-2 py-1 rounded-md text-slate-600"
               >
                 {{ service.name }}
               </span>
@@ -138,23 +137,29 @@
               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
             </Button>
           </div>
-
-          <div class="relative flex items-center mb-10">
+          <div v-if="selectedJob.images && selectedJob.images.length" class="relative flex items-center mb-10">
             <Button variant="ghost" size="icon" class="absolute -left-4 z-10 bg-white/80 hover:bg-white rounded-full shadow-sm h-8 w-8">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"></path></svg>
             </Button>
 
             <div class="flex gap-4 overflow-x-auto snap-x snap-mandatory hide-scrollbar w-full px-4">
-              <div class="snap-center shrink-0 w-48 h-48 bg-slate-200 rounded-xl overflow-hidden">
+              <div
+                v-for="img in selectedJob.images"
+                :key="img.id"
+                class="snap-center shrink-0 w-48 h-48 bg-slate-200 rounded-xl overflow-hidden"
+              >
                 <img
-                  v-if="selectedJob.images && selectedJob.images.length"
-                  :src="selectedJob.images[0].image"
+                  :src="img.image"
                   class="w-full h-full object-cover"
                 />
-                <div v-else class="w-full h-full bg-green-200"></div>
               </div>
-              <div class="snap-center shrink-0 w-48 h-48 bg-green-300 rounded-xl overflow-hidden"></div>
-              <div class="snap-center shrink-0 w-48 h-48 bg-orange-500 rounded-xl overflow-hidden"></div>
+
+              <div
+                v-if="!selectedJob.images || selectedJob.images.length === 0"
+                class="snap-center shrink-0 w-48 h-48 bg-slate-200 rounded-xl flex items-center justify-center"
+              >
+                No Images
+              </div>
             </div>
 
             <Button variant="ghost" size="icon" class="absolute -right-4 z-10 bg-white/80 hover:bg-white rounded-full shadow-sm h-8 w-8">
@@ -277,8 +282,8 @@ export default {
           images: (job.images || []).map((img) => ({
             ...img,
             image: img.image?.startsWith("http")
-                ? img.image
-                : `http://localhost:8000${img.image}`,
+              ? img.image
+              : `http://localhost:8000${img.image}`,
           })),
         }));
       } catch (err) {
