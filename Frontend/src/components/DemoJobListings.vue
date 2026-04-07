@@ -64,10 +64,10 @@
         >
           <div class="w-full sm:w-48 h-32 flex-shrink-0 bg-slate-100 rounded-lg overflow-hidden">
             <img 
-              v-if="job.image_url" 
-              :src="job.image_url" 
-              alt="Job preview" 
-              class="w-full h-full object-cover" 
+              v-if="job.images && job.images.length"
+              :src="job.images[0].image"
+              alt="Job preview"
+              class="w-full h-full object-cover"
             />
             <div v-else class="w-full h-full flex items-center justify-center text-slate-300">
               <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"></rect><circle cx="9" cy="9" r="2"></circle><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"></path></svg>
@@ -77,12 +77,25 @@
           <div class="flex-1 min-w-0">
             <h3 class="text-lg font-bold text-slate-900 truncate">{{ job.title }}</h3>
             <div class="mt-1 flex flex-col gap-1">
-              <p class="text-sm text-slate-500">{{ job.author || 'Joseph F.' }}</p>
-              <p class="text-sm text-slate-500">{{ job.location || 'Los Angeles, CA' }}</p>
+              <p class="text-sm text-slate-500">{{ job.customer?.name || 'Unknown customer' }}</p>
+              <p class="text-sm text-slate-500">{{ job.request_type || 'Request type not provided' }}</p>
             </div>
             <div class="mt-3">
-              <span class="text-sm font-bold text-slate-900">{{ job.pay || '$45' }}</span>
-              <span class="text-sm text-slate-500"> an hour</span>
+              <span class="text-sm font-bold text-slate-900">
+                {{ job.budget ? `$${job.budget}` : 'Budget not provided' }}
+              </span>
+              <span class="text-sm text-slate-500"> budget</span>
+            </div>
+
+            <!-- THIS IS NEW -->
+            <div class="flex flex-wrap gap-2 mt-2">
+              <span
+                  v-for="service in job.services"
+                  :key="service.id"
+                  class="text-xs bg-slate-100 px-2 py-1 rounded-md text-slate-600"
+              >
+                {{ service.name }}
+              </span>
             </div>
           </div>
 
@@ -90,10 +103,10 @@
             <Button @click="openJobModal(job)" class="w-full sm:w-auto bg-orange-500 hover:bg-orange-600 text-white font-semibold">
               View Job
             </Button>
-            
-            <Button 
-              variant="link" 
-              @click="toggle(job)" 
+
+            <Button
+              variant="link"
+              @click="toggle(job)"
               class="h-auto p-0 text-xs font-medium decoration-1 underline-offset-4"
               :class="job.is_favorited ? 'text-orange-500' : 'text-slate-500 hover:text-slate-800'"
             >
@@ -118,7 +131,7 @@
     <Dialog :open="isDialogOpen" @update:open="isDialogOpen = $event">
       <DialogContent class="max-w-2xl p-0 bg-white border-0 shadow-2xl overflow-hidden rounded-xl">
         <div v-if="selectedJob" class="p-8 max-h-[85vh] overflow-y-auto">
-          
+
           <div class="flex justify-between items-center mb-6">
             <h2 class="text-2xl md:text-3xl font-extrabold text-[#1a202c]">{{ selectedJob.title || 'Pest Control Help' }}</h2>
             <Button variant="ghost" size="icon" class="text-slate-700 hover:bg-slate-100">
@@ -130,10 +143,14 @@
             <Button variant="ghost" size="icon" class="absolute -left-4 z-10 bg-white/80 hover:bg-white rounded-full shadow-sm h-8 w-8">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"></path></svg>
             </Button>
-            
+
             <div class="flex gap-4 overflow-x-auto snap-x snap-mandatory hide-scrollbar w-full px-4">
               <div class="snap-center shrink-0 w-48 h-48 bg-slate-200 rounded-xl overflow-hidden">
-                <img v-if="selectedJob.image_url" :src="selectedJob.image_url" class="w-full h-full object-cover" />
+                <img
+                  v-if="selectedJob.images && selectedJob.images.length"
+                  :src="selectedJob.images[0].image"
+                  class="w-full h-full object-cover"
+                />
                 <div v-else class="w-full h-full bg-green-200"></div>
               </div>
               <div class="snap-center shrink-0 w-48 h-48 bg-green-300 rounded-xl overflow-hidden"></div>
@@ -150,32 +167,44 @@
           <div class="mb-8">
             <h3 class="font-bold text-[#1a202c] text-lg mb-6">Quick Details</h3>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-y-6 gap-x-4">
-              
+
               <div class="flex items-center text-slate-600 font-medium">
                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-3"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-                {{ selectedJob.author || 'Joseph F.' }}
+                {{ selectedJob.customer?.name || 'Unknown customer' }}
               </div>
-              
+
               <div class="flex items-center text-slate-600 font-medium">
                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-3"><circle cx="12" cy="12" r="10"></circle><line x1="2" x2="22" y1="12" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
-                {{ selectedJob.language || 'English' }}
+                {{ selectedJob.languages || 'Not specified' }}
               </div>
 
               <div class="flex items-center text-slate-600 font-medium">
                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-3"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"></path><circle cx="12" cy="10" r="3"></circle></svg>
-                {{ selectedJob.location || 'Los Angeles, CA' }}
+                {{ selectedJob.request_type || 'Request type not provided' }}
               </div>
 
               <div class="flex items-center text-slate-600 font-medium">
                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-3"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-                {{ selectedJob.urgency || 'Urgent' }}
+                {{ selectedJob.urgency || 'Urgency not provided' }}
+              </div>
+
+              <div class="flex items-center text-slate-600 font-medium">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-3">
+                  <path d="M8 2v4"></path>
+                  <path d="M16 2v4"></path>
+                  <rect width="18" height="18" x="3" y="4" rx="2"></rect>
+                  <path d="M3 10h18"></path>
+                </svg>
+                {{ selectedJob.deadline || 'No deadline provided' }}
               </div>
 
             </div>
-            
+
             <div class="mt-6 pt-2">
-              <span class="text-lg font-bold text-[#1a202c]">{{ selectedJob.pay || '$45' }}</span>
-              <span class="text-base text-slate-500 font-medium"> an hour</span>
+              <span class="text-lg font-bold text-[#1a202c]">
+                {{ selectedJob.budget ? `$${selectedJob.budget}` : 'Budget not provided' }}
+              </span>
+              <span class="text-base text-slate-500 font-medium"> budget</span>
             </div>
           </div>
 
@@ -195,7 +224,7 @@ So, what's wrong with clearing them away?
 You'll never know if you don't check (check)
 Your garden's gonna thrive if you protect!` }}</p>
           </div>
-          
+
         </div>
       </DialogContent>
     </Dialog>
@@ -204,10 +233,7 @@ Your garden's gonna thrive if you protect!` }}</p>
 </template>
 
 <script>
-// Your existing API imports
 import { getAllJobs, toggleFavoriteJob } from "@/services/api";
-
-// Shadcn-Vue component imports
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -216,8 +242,7 @@ import { Dialog, DialogContent } from "@/components/ui/dialog";
 
 export default {
   name: "JobsList",
-  
-  // Register the components so they can be used in the template
+
   components: {
     Button,
     Card,
@@ -245,7 +270,17 @@ export default {
       this.loading = true;
       try {
         const res = await getAllJobs();
-        this.jobs = res.data.results || res.data; 
+        const jobs = res.data.results || res.data;
+
+        this.jobs = jobs.map((job) => ({
+          ...job,
+          images: (job.images || []).map((img) => ({
+            ...img,
+            image: img.image?.startsWith("http")
+                ? img.image
+                : `http://localhost:8000${img.image}`,
+          })),
+        }));
       } catch (err) {
         console.error(err);
       } finally {
@@ -271,7 +306,6 @@ export default {
 </script>
 
 <style scoped>
-/* Utility to hide the scrollbar in the image carousel while keeping it functional */
 .hide-scrollbar::-webkit-scrollbar {
   display: none;
 }
