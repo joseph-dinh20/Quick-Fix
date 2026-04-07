@@ -147,73 +147,116 @@ onMounted(fetchJobs)
         </Card>
       </div>
 
-      <Dialog v-model:open="isDialogOpen">
-        <DialogContent class="sm:max-w-[550px] p-0 overflow-hidden border-none shadow-2xl">
-          <div class="bg-white p-6">
-            <DialogHeader class="mb-4">
-              <div class="flex items-center gap-2 mb-1">
-                <Info class="w-4 h-4 text-orange-500" />
-                <Label class="text-[10px] uppercase tracking-widest text-slate-400 font-bold">Posting Details</Label>
-              </div>
-              <DialogTitle class="text-2xl font-extrabold text-slate-900 leading-tight">
-                {{ selectedJob?.title }}
-              </DialogTitle>
-            </DialogHeader>
+      <Dialog :open="isDialogOpen" @update:open="isDialogOpen = $event">
+      <DialogContent class="max-w-2xl p-0 bg-white border-0 shadow-2xl overflow-hidden rounded-xl">
+        <div v-if="selectedJob" class="p-8 max-h-[85vh] overflow-y-auto">
 
-            <ScrollArea class="h-[350px] pr-4">
-              <div class="space-y-4">
-                <p class="text-slate-600 leading-relaxed text-[15px]">
-                  {{ selectedJob?.description }}
-                </p>
-
-                <Separator class="bg-slate-100" />
-
-                <div class="grid grid-cols-2 gap-6">
-                  <div class="space-y-1">
-                    <Label class="text-slate-400 text-xs font-semibold">Budget Estimate</Label>
-                    <div class="flex items-center font-bold text-slate-900">
-                      <DollarSign class="w-4 h-4 mr-1 text-green-500" />
-                      {{ selectedJob?.budget || 'TBD' }}
-                    </div>
-                  </div>
-                  <div class="space-y-1">
-                    <Label class="text-slate-400 text-xs font-semibold">Project Deadline</Label>
-                    <div class="flex items-center font-bold text-slate-900">
-                      <Calendar class="w-4 h-4 mr-1.5 text-blue-500" />
-                      {{ selectedJob?.deadline || 'Flexible' }}
-                    </div>
-                  </div>
-                </div>
-
-                <Separator class="bg-slate-100" />
-
-                <div v-if="selectedJob?.images?.length">
-                  <div class="flex items-center gap-2 mb-3">
-                    <ImageIcon class="w-4 h-4 text-slate-400" />
-                    <Label class="text-slate-900 font-bold">Attached Gallery</Label>
-                  </div>
-                  <div class="grid grid-cols-3 gap-3">
-                    <div v-for="img in selectedJob.images" :key="img.id" class="group relative">
-                      <AspectRatio :ratio="1 / 1" class="bg-slate-100 rounded-lg overflow-hidden border border-slate-200">
-                        <img
-                          :src="'http://localhost:8000' + img.image"
-                          class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
-                        />
-                      </AspectRatio>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </ScrollArea>
-          </div>
-
-          <div class="bg-slate-50 p-4 border-t border-slate-100 flex justify-end">
-            <Button @click="isDialogOpen = false" class="bg-slate-900 hover:bg-slate-800 text-white font-bold rounded-lg px-8">
-              Close Preview
+          <div class="flex justify-between items-center mb-6">
+            <h2 class="text-2xl md:text-3xl font-extrabold text-[#1a202c]">{{ selectedJob.title || 'Pest Control Help' }}</h2>
+            <Button variant="ghost" size="icon" class="text-slate-700 hover:bg-slate-100">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
             </Button>
           </div>
-        </DialogContent>
-      </Dialog>
+
+          <div v-if="selectedJob.images && selectedJob.images.length" class="relative flex items-center mb-10">
+            <Button
+              variant="ghost"
+              size="icon"
+              @click="scrollLeft"
+              class="absolute -left-4 z-10 bg-white/80 hover:bg-white rounded-full shadow-sm h-8 w-8"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"></path></svg>
+            </Button>
+
+            <div ref="carousel" class="flex gap-4 overflow-x-auto snap-x snap-mandatory hide-scrollbar w-full px-4">
+              <div
+                v-for="img in selectedJob.images"
+                :key="img.id"
+                class="snap-center shrink-0 w-48 h-48 bg-slate-200 rounded-xl overflow-hidden"
+              >
+                <img
+                  :src="img.image"
+                  class="w-full h-full object-cover"
+                />
+              </div>
+            </div>
+
+            <Button
+              variant="ghost"
+              size="icon"
+              @click="scrollRight"
+              class="absolute -right-4 z-10 bg-white/80 hover:bg-white rounded-full shadow-sm h-8 w-8"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"></path></svg>
+            </Button>
+          </div>
+
+          <hr class="border-slate-100 mb-8" />
+
+          <div class="mb-8">
+            <h3 class="font-bold text-[#1a202c] text-lg mb-6">Quick Details</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-y-6 gap-x-4">
+
+              <div class="flex items-center text-slate-600 font-medium">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-3"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                {{ selectedJob.customer?.name || 'Unknown customer' }}
+              </div>
+
+              <div class="flex items-center text-slate-600 font-medium">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-3"><circle cx="12" cy="12" r="10"></circle><line x1="2" x2="22" y1="12" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+                {{ selectedJob.languages || 'Not specified' }}
+              </div>
+
+              <div class="flex items-center text-slate-600 font-medium">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-3"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                {{ selectedJob.request_type || 'Request type not provided' }}
+              </div>
+
+              <div class="flex items-center text-slate-600 font-medium">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-3"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                {{ selectedJob.urgency || 'Urgency not provided' }}
+              </div>
+
+              <div class="flex items-center text-slate-600 font-medium">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-3">
+                  <path d="M8 2v4"></path>
+                  <path d="M16 2v4"></path>
+                  <rect width="18" height="18" x="3" y="4" rx="2"></rect>
+                  <path d="M3 10h18"></path>
+                </svg>
+                {{ selectedJob.deadline || 'No deadline provided' }}
+              </div>
+
+            </div>
+
+            <div class="mt-6 pt-2">
+              <span class="text-lg font-bold text-[#1a202c]">
+                {{ selectedJob.budget ? `$${selectedJob.budget}` : 'Budget not provided' }}
+              </span>
+              <span class="text-base text-slate-500 font-medium"> budget</span>
+            </div>
+          </div>
+
+          <hr class="border-slate-100 mb-8" />
+
+          <div>
+            <h3 class="font-bold text-[#1a202c] text-lg mb-4">About the Job</h3>
+            <p class="text-slate-600 leading-relaxed whitespace-pre-wrap">{{ selectedJob.description || `Well, the bugs start comin' and they don't stop comin'
+Fed to the plants and they just keep munchin'
+
+Didn't make sense not to spray for fun
+Your brain gets smart, but the pests just come
+
+So much to do, so much to spray
+So, what's wrong with clearing them away?
+
+You'll never know if you don't check (check)
+Your garden's gonna thrive if you protect!` }}</p>
+          </div>
+
+        </div>
+      </DialogContent>
+    </Dialog>
 
     </div>
   </div>
