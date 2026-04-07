@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
-from .models import Profile, ServiceProvider, WorkImage
+from .models import Profile, ServiceProvider, WorkImage, Language
 from services.models import Service
 from geopy.exc import GeocoderTimedOut, GeocoderServiceError
 from .utils import geolocator
@@ -9,6 +9,10 @@ from reviews.models import Review
 from jobs.models import Job
 
 
+class LanguageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Language
+        fields = ["id", "name"]
 
 class WorkImageSerializer(serializers.ModelSerializer):
     class Meta:
@@ -37,6 +41,8 @@ class ServiceProviderSerializer(serializers.ModelSerializer):
 
     average_rating = serializers.SerializerMethodField()
 
+    languages = LanguageSerializer(source="profile.languages", many=True)
+
     class Meta:
         model = ServiceProvider
         fields = [
@@ -52,7 +58,8 @@ class ServiceProviderSerializer(serializers.ModelSerializer):
             "city",
             "state",
             "latitude",
-            "longitude"
+            "longitude",
+            "languages"
         ]
 
     
@@ -145,9 +152,15 @@ class MeSerializer(serializers.ModelSerializer):
     latitude = serializers.FloatField(source="profile.latitude")
     longitude = serializers.FloatField(source="profile.longitude")
 
+    languages = serializers.PrimaryKeyRelatedField(
+        source="profile.languages",   
+        queryset=Language.objects.all(),
+        many=True
+    )
+
     class Meta:
         model = User
-        fields = ["id", "username", "email", "avatar", "city", "state", "latitude", "longitude"]
+        fields = ["id", "username", "email", "avatar", "city", "state", "latitude", "longitude", "languages"]
 
 
 class FavoriteProviderSerializer(ServiceProviderSerializer):
