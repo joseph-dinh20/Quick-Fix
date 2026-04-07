@@ -54,8 +54,23 @@ class Job(models.Model):
         default=QUOTE
     )
 
+    language = models.ForeignKey(
+        "accounts.Language",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True
+    )
+
     def __str__(self):
         return self.title
+    
+
+    def save(self, *args, **kwargs):
+        if not self.language and self.customer:
+            first_language = self.customer.languages.first()
+            if first_language:
+                self.language = first_language
+        super().save(*args, **kwargs)
 
 
 class JobImage(models.Model):

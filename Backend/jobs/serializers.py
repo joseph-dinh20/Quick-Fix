@@ -69,6 +69,7 @@ class JobSerializer(serializers.ModelSerializer):
     services = ServiceSerializer(many=True)
     images = JobImageSerializer(many=True)
     customer = ProfileSerializer(read_only=True)
+    language = serializers.StringRelatedField()
 
     class Meta:
         model = Job
@@ -84,7 +85,8 @@ class JobSerializer(serializers.ModelSerializer):
             "services",
             "images",
             "is_favorited",
-            "customer"
+            "customer",
+            "languages"
         ]
 
     def get_is_favorited(self, obj):
