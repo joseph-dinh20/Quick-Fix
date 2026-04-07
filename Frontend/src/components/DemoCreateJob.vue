@@ -211,7 +211,7 @@ async function submitJob() {
               </div>
               <div class="space-y-2">
                 <Label for="payment" class="font-semibold">Payment</Label>
-                <div class="flex items-center border rounded-md overflow-hidden bg-white focus-within:ring-2 focus-within:ring-orange-500 focus-within:ring-offset-2">
+                <div class="flex items-center border rounded-md overflow-hidden bg-white focus-within:ring-2 focus-within focus-within:ring-offset-2">
                   <span class="px-3 text-slate-500 text-sm">$</span>
                   <input id="payment" v-model="budget" type="number" class="w-full py-2 bg-transparent outline-none text-sm" />
                   <span class="px-3 text-slate-500 text-sm">/hr</span>
@@ -294,7 +294,7 @@ async function submitJob() {
         <div class="mt-12 flex justify-center">
           <Button 
             type="submit" 
-            class="bg-orange-500 hover:bg-orange-600 text-white font-bold h-14 px-16 rounded-xl text-xl transition-all shadow-md active:scale-95"
+            class="text-white font-bold h-14 px-16 rounded-xl text-xl transition-all shadow-md active:scale-95"
           >
             Post
           </Button>
