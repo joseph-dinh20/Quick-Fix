@@ -53,9 +53,12 @@ function removeJobImage(index) {
 }
 
 async function submitJob() {
-  console.log(budget)
+  if (services.value.length === 0) {
+    message.value = "Error creating job: No services selected";
+    return;
+  }
   try {
-    console.log(urgency.value)
+    
     await createJob({
       title: title.value,
       city: city.value,
@@ -131,7 +134,9 @@ async function submitJob() {
             </div>
 
             <div class="space-y-2">
-              <Label for="description" class="font-semibold">Description</Label>
+              <Label for="description" class="font-semibold">Description
+                <span class="text-orange-500">*</span>
+              </Label>
               <Textarea 
                 id="description"
                 v-model="description" 
@@ -145,7 +150,9 @@ async function submitJob() {
         </div>
         <!-- Services Row -->
         <div class="mb-6 mt-6">
-          <Label class="mb-2 font-semibold">Services</Label>
+          <Label class="mb-2 font-semibold">Services
+            <span class="text-orange-500">*</span>
+          </Label>
           <ServiceSelect v-model="services" />
         </div>
 
@@ -184,7 +191,8 @@ async function submitJob() {
           <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div class="space-y-4">
               <div class="space-y-2">
-                <Label for="date" class="font-semibold">Date</Label>
+                <Label for="date" class="font-semibold">Date<span class="text-orange-500">*</span>
+                </Label>
                 <Input id="date" type="date" v-model="deadline" class="bg-white block w-full" />
               </div>
               <div class="space-y-2">
@@ -206,7 +214,7 @@ async function submitJob() {
 
             <div class="space-y-4">
               <div class="space-y-2">
-                <Label for="time" class="font-semibold">Time</Label>
+                <Label for="time" class="font-semibold">Time<span class="text-orange-500">*</span></Label>
                 <Input id="time" type="time" class="bg-white block w-full" />
               </div>
               <div class="space-y-2">
