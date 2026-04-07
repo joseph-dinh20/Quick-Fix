@@ -16,6 +16,7 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
+import ServiceSelect  from "@/components/ServiceSelect.vue"
 
 const title = ref("")
 const city = ref("") // Added missing ref
@@ -24,26 +25,47 @@ const description = ref("")
 const budget = ref("")
 const deadline = ref("")
 const requestType = ref("quote")
+const urgency = ref("flexible")
 const services = ref([])   // array of IDs
-const images = ref([])
 
 const message = ref("")
 const fileInput = ref(null) // Template ref for the file input
 
-function handleImageUpload(e) {
-  images.value = Array.from(e.target.files)
+const jobImages = ref([])        // stores selected image files
+const jobImagePreviews = ref([]) // stores preview URLs
+
+function handleJobImageUpload(event) {
+  const files = Array.from(event.target.files)
+  files.forEach(file => {
+    if (!jobImages.value.some(f => f.name === file.name)) {
+      jobImages.value.push(file)
+      jobImagePreviews.value.push(URL.createObjectURL(file))
+    }
+  })
+  event.target.value = ""
+}
+
+function removeJobImage(index) {
+  URL.revokeObjectURL(jobImagePreviews.value[index])
+  jobImages.value.splice(index, 1)
+  jobImagePreviews.value.splice(index, 1)
 }
 
 async function submitJob() {
+  console.log(budget)
   try {
+    console.log(urgency.value)
     await createJob({
       title: title.value,
+      city: city.value,
+      zip: zip.value,
       description: description.value,
-      budget: budget.value,
+      budget: budget.value || "0",
       deadline: deadline.value,
       request_type: requestType.value,
+      urgency: urgency.value,
       services: services.value,
-      images: images.value
+      images: jobImages.value
     })
 
     message.value = "Job created successfully"
@@ -56,6 +78,7 @@ async function submitJob() {
     budget.value = ""
     deadline.value = ""
     requestType.value = "quote"
+    urgency.value = "flexible"
     services.value = []
     images.value = []
 
@@ -102,6 +125,8 @@ async function submitJob() {
                   <Input id="zip" v-model="zip" placeholder="ZIP Code" class="bg-slate-50" />
                 </div>
               </div>
+
+              <ServiceSelect v-model="services"></ServiceSelect>
             </div>
 
             <div class="space-y-2">
@@ -178,34 +203,72 @@ async function submitJob() {
 
             <div class="space-y-4">
               <Label class="font-semibold block">Job Type</Label>
-              <div class="space-y-3">
-                <div class="flex items-center space-x-3">
-                  <Checkbox id="type-quote" default-checked class="data-[state=checked]:bg-orange-500 data-[state=checked]:border-orange-500" />
-                  <Label for="type-quote" class="text-sm font-normal cursor-pointer">Get a quote</Label>
+                <div class="space-y-3">
+                  <div class="flex items-center space-x-3">
+                    <input
+                      type="radio"
+                      id="type-quote"
+                      value="quote"
+                      v-model="requestType"
+                    />
+                    <Label for="type-quote">Get a quote</Label>
+                  </div>
+
+                  <div class="flex items-center space-x-3">
+                    <input
+                      type="radio"
+                      id="type-fixed"
+                      value="service"
+                      v-model="requestType"
+                    />
+                    <Label for="type-fixed">Get fixed</Label>
+                  </div>
+
+                  <div class="flex items-center space-x-3">
+                    <input
+                      type="radio"
+                      id="type-both"
+                      value="both"
+                      v-model="requestType"
+                    />
+                    <Label for="type-both">Get both</Label>
+                  </div>
                 </div>
-                <div class="flex items-center space-x-3">
-                  <Checkbox id="type-fixed" default-checked class="data-[state=checked]:bg-orange-500 data-[state=checked]:border-orange-500" />
-                  <Label for="type-fixed" class="text-sm font-normal cursor-pointer">Get fixed</Label>
-                </div>
-              </div>
             </div>
 
             <div class="space-y-4">
               <Label class="font-semibold block">Urgency</Label>
-              <RadioGroup v-model="requestType" class="space-y-1">
+              <div class="space-y-3">
                 <div class="flex items-center space-x-3">
-                  <RadioGroupItem id="urgency-flexible" value="quote" class="text-orange-500 border-slate-300 focus:ring-orange-500" />
-                  <Label for="urgency-flexible" class="text-sm font-normal cursor-pointer">Flexible</Label>
+                  <input
+                    type="radio"
+                    id="urgency-flexible"
+                    value="flexible"
+                    v-model="urgency"
+                  />
+                  <Label for="urgency-flexible">Flexible</Label>
                 </div>
+
                 <div class="flex items-center space-x-3">
-                  <RadioGroupItem id="urgency-soon" value="soon" class="text-orange-500 border-slate-300 focus:ring-orange-500" />
-                  <Label for="urgency-soon" class="text-sm font-normal cursor-pointer">Soon</Label>
+                  <input
+                    type="radio"
+                    id="urgency-soon"
+                    value="soon"
+                    v-model="urgency"
+                  />
+                  <Label for="urgency-soon">Soon</Label>
                 </div>
+
                 <div class="flex items-center space-x-3">
-                  <RadioGroupItem id="urgency-asap" value="asap" class="text-orange-500 border-slate-300 focus:ring-orange-500" />
-                  <Label for="urgency-asap" class="text-sm font-normal cursor-pointer">ASAP</Label>
+                  <input
+                    type="radio"
+                    id="urgency-urgent"
+                    value="urgent"
+                    v-model="urgency"
+                  />
+                  <Label for="urgency-urgent">Urgent</Label>
                 </div>
-              </RadioGroup>
+              </div>
             </div>
           </div>
         </div>
