@@ -126,9 +126,13 @@ export const createJob = (data) => {
 
   formData.append("title", data.title);
   formData.append("description", data.description);
+  formData.append("city", data.city);
+  formData.append("zip", data.zip);
   formData.append("budget", data.budget || "");
   formData.append("deadline", data.deadline);
   formData.append("request_type", data.request_type);
+  formData.append("urgency", data.urgency);
+  formData.append("language", data.language);
 
   // services (IDs)
   data.services.forEach(id => {

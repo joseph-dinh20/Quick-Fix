@@ -54,6 +54,22 @@ class Job(models.Model):
         default=QUOTE
     )
 
+    FLEXIBLE = "flexible"
+    SOON = "soon"
+    URGENT = "urgent"
+
+    URGENCY_CHOICES = [
+        (FLEXIBLE, "Flexible"),
+        (SOON, "Soon"),
+        (URGENT, "Urgent"),
+    ]
+
+    urgency = models.CharField(
+        max_length=20,
+        choices=URGENCY_CHOICES,
+        default=FLEXIBLE
+    )
+
     language = models.ForeignKey(
         "accounts.Language",
         on_delete=models.SET_NULL,
