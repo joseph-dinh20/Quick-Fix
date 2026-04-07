@@ -178,7 +178,7 @@ onMounted(fetchProviders);
               </Badge>
             </CardDescription>
 
-            <CardDescription class="flex flex-col mt-2">
+            <CardDescription class="flex flex-col mt-2 items-start">
               <Badge variant="outline">
                 <img class="w-4 inline-block" :src="checkMarkIcon" />
                 Completed {{ provider.jobsCompleted }} Jobs

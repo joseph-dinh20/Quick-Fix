@@ -168,6 +168,11 @@ console.log('showReadMoreButton state = ' + showReadMoreButton.value)
           <Button class="mt-2">Select Me</Button>
         </div>
       </CardHeader>
+        <div class="flex flex-wrap gap-2 mt-2 px-4 py-2">
+          <div v-for="service in provider.services" :key="service.id">
+            <Badge variant="secondary" size="sm">{{ service.name }}</Badge>
+          </div>
+        </div>
       <CardContent class="flex flex-col gap-2">
         <Separator class="my-4" />
         <CardTitle><img class="w-8 inline-block" :src="aboutMeIcon"> About Me</CardTitle>
@@ -231,6 +236,9 @@ console.log('showReadMoreButton state = ' + showReadMoreButton.value)
                 </DialogHeader>
               </DialogContent>
             </Dialog>
+          </div>
+          <div v-else-if="provider.workPhotos.length === 0" class="text-sm text-slate-500 mt-2">
+            No images yet.
           </div>
         </div>
         <Separator class="my-2" />
