@@ -137,12 +137,18 @@
               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
             </Button>
           </div>
+
           <div v-if="selectedJob.images && selectedJob.images.length" class="relative flex items-center mb-10">
-            <Button variant="ghost" size="icon" class="absolute -left-4 z-10 bg-white/80 hover:bg-white rounded-full shadow-sm h-8 w-8">
+            <Button
+              variant="ghost"
+              size="icon"
+              @click="scrollLeft"
+              class="absolute -left-4 z-10 bg-white/80 hover:bg-white rounded-full shadow-sm h-8 w-8"
+            >
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"></path></svg>
             </Button>
 
-            <div class="flex gap-4 overflow-x-auto snap-x snap-mandatory hide-scrollbar w-full px-4">
+            <div ref="carousel" class="flex gap-4 overflow-x-auto snap-x snap-mandatory hide-scrollbar w-full px-4">
               <div
                 v-for="img in selectedJob.images"
                 :key="img.id"
@@ -153,16 +159,14 @@
                   class="w-full h-full object-cover"
                 />
               </div>
-
-              <div
-                v-if="!selectedJob.images || selectedJob.images.length === 0"
-                class="snap-center shrink-0 w-48 h-48 bg-slate-200 rounded-xl flex items-center justify-center"
-              >
-                No Images
-              </div>
             </div>
 
-            <Button variant="ghost" size="icon" class="absolute -right-4 z-10 bg-white/80 hover:bg-white rounded-full shadow-sm h-8 w-8">
+            <Button
+              variant="ghost"
+              size="icon"
+              @click="scrollRight"
+              class="absolute -right-4 z-10 bg-white/80 hover:bg-white rounded-full shadow-sm h-8 w-8"
+            >
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"></path></svg>
             </Button>
           </div>
@@ -305,7 +309,21 @@ export default {
     openJobModal(job) {
       this.selectedJob = job;
       this.isDialogOpen = true;
-    }
+    },
+
+    scrollLeft() {
+      this.$refs.carousel?.scrollBy({
+        left: -250,
+        behavior: "smooth",
+      });
+    },
+
+    scrollRight() {
+      this.$refs.carousel?.scrollBy({
+        left: 250,
+        behavior: "smooth",
+      });
+    },
   },
 };
 </script>
