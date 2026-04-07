@@ -2,7 +2,6 @@
 import { ref } from "vue"
 import { createJob } from "../services/api"
 
-// shadcn-ui components (adjust import paths to match your project structure, typically '@/components/ui/...')
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
