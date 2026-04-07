@@ -149,6 +149,9 @@ onMounted(fetchProviders);
 </script>
 
 <template>
+  <div v-if="!providers.length" class="text-sm text-muted-foreground text-center mt-4">
+    No results
+  </div>
   <div
     v-for="provider in providers"
     :key="provider.id"
