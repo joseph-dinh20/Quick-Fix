@@ -56,7 +56,7 @@ onMounted(fetchServices)
     </div>
 
     <details class="border rounded-md p-3 w-full max-w-full overflow-hidden">
-      <summary class="cursor-pointer font-medium select-none">Edit Services</summary>
+      <summary class="cursor-pointer font-medium select-none">Select Services</summary>
       <div v-if="loading" class="text-sm text-gray-500 mt-3">Loading...</div>
       <div v-else class="flex flex-wrap gap-2 mt-3">
         <button

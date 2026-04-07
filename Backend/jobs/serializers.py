@@ -2,7 +2,7 @@ from rest_framework import serializers
 from .models import Job, JobImage
 from services.models import Service
 from services.serializers import ServiceSerializer
-from accounts.models import ServiceProvider, Profile
+from accounts.models import ServiceProvider, Profile, Language
 from geopy.geocoders import Nominatim
 
 class ProfileSerializer(serializers.ModelSerializer):
@@ -32,6 +32,12 @@ class JobCreateSerializer(serializers.ModelSerializer):
     city = serializers.CharField(write_only=True, required=False)
     zip = serializers.CharField(write_only=True, required=False)
 
+    language = serializers.PrimaryKeyRelatedField(
+        queryset=Language.objects.all(),
+        required=False,  # optional field
+        allow_null=True
+    )
+
     class Meta:
         model = Job
         fields = [
@@ -47,6 +53,7 @@ class JobCreateSerializer(serializers.ModelSerializer):
             "urgency",
             "city",
             "zip",
+            "language"
         ]
 
     def create(self, validated_data):
@@ -63,15 +70,18 @@ class JobCreateSerializer(serializers.ModelSerializer):
                 validated_data["longitude"] = location.longitude
             print(validated_data["latitude"])
             print(validated_data["longitude"])
-        else:
-            print("No location changing")
 
         images = validated_data.pop("images", [])
         services = validated_data.pop("services", [])
 
         profile = self.context["request"].user.profile
 
-        job = Job.objects.create(customer=profile, **validated_data)
+        language = validated_data.pop("language", None)
+        if language is None:
+            language = Language.objects.filter(name__iexact="English").first()
+        
+
+        job = Job.objects.create(customer=profile, language=language, **validated_data)
         job.services.set(services)
 
         for img in images:

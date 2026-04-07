@@ -27,6 +27,7 @@ const deadline = ref("")
 const requestType = ref("quote")
 const urgency = ref("flexible")
 const services = ref([])   // array of IDs
+const language = ref("")
 
 const message = ref("")
 const fileInput = ref(null) // Template ref for the file input
@@ -65,7 +66,8 @@ async function submitJob() {
       request_type: requestType.value,
       urgency: urgency.value,
       services: services.value,
-      images: jobImages.value
+      images: jobImages.value,
+      language: language.value,
     })
 
     message.value = "Job created successfully"
@@ -80,8 +82,8 @@ async function submitJob() {
     requestType.value = "quote"
     urgency.value = "flexible"
     services.value = []
-    images.value = []
-
+    jobImages.value = []
+    language.value = "English"
   } catch (err) {
     console.error(err)
     message.value = "Error creating job"
@@ -126,7 +128,6 @@ async function submitJob() {
                 </div>
               </div>
 
-              <ServiceSelect v-model="services"></ServiceSelect>
             </div>
 
             <div class="space-y-2">
@@ -141,22 +142,38 @@ async function submitJob() {
             </div>
           </div>
 
-          <div class="flex flex-col justify-end">
-            <div 
-              class="border-2 border-dashed border-slate-200 rounded-xl p-8 flex flex-col items-center justify-center text-slate-400 hover:bg-slate-50 cursor-pointer transition-colors min-h-[150px]"
-              @click="fileInput?.click()"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
-              </svg>
-              <span class="text-sm">Upload images</span>
-              <input 
-                type="file" 
-                ref="fileInput" 
-                multiple 
-                class="hidden" 
-                @change="handleImageUpload" 
-              />
+        </div>
+        <!-- Services Row -->
+        <div class="mb-6 mt-6">
+          <Label class="mb-2 font-semibold">Services</Label>
+          <ServiceSelect v-model="services" />
+        </div>
+
+        <!-- Images Row -->
+        <div class="mb-6">
+          <Label class="mb-2 font-semibold">Job Images</Label>
+          <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+            <!-- Selected images previews -->
+            <div v-for="(src, i) in jobImagePreviews" :key="i" class="relative">
+              <div class="w-full aspect-square">
+                <img :src="src" class="w-full h-full object-cover rounded-md" />
+              </div>
+              <button
+                @click="removeJobImage(i)"
+                class="absolute top-1 right-1 bg-red-500 text-white rounded-full px-2 opacity-0 hover:opacity-100 transition"
+              >
+                ✕
+              </button>
+            </div>
+
+            <!-- Upload box -->
+            <div class="w-full aspect-square">
+              <label
+                class="flex items-center justify-center border-2 border-dashed rounded-md cursor-pointer hover:bg-gray-100 w-full h-full"
+              >
+                + Upload
+                <input type="file" multiple class="hidden" @change="handleJobImageUpload" />
+              </label>
             </div>
           </div>
         </div>
@@ -172,14 +189,15 @@ async function submitJob() {
               </div>
               <div class="space-y-2">
                 <Label class="font-semibold">Language</Label>
-                <Select default-value="english">
+                <Select default-value="english" v-model="language">
                   <SelectTrigger class="w-full bg-white">
                     <SelectValue placeholder="Select Language" />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectGroup>
-                      <SelectItem value="english">English</SelectItem>
-                      <SelectItem value="spanish">Spanish</SelectItem>
+                      <SelectItem value="English">English</SelectItem>
+                      <SelectItem value="Spanish">Spanish</SelectItem>
+                      <SelectItem value="Korean">Korean</SelectItem>
                     </SelectGroup>
                   </SelectContent>
                 </Select>
