@@ -136,7 +136,7 @@ console.log('showReadMoreButton state = ' + showReadMoreButton.value)
 </script>
 
 <template>
-  <div class="flex justify-center">
+  <div class="flex justify-center items-center pt-[10vh]">
     <Card>
       <CardHeader class="justify-between flex-row">
         <div class="flex flex-row gap-10 m-2">
