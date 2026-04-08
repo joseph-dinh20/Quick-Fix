@@ -305,8 +305,8 @@ export default {
       selectedJob: null,
       isDialogOpen: false,
 
-      titleSearch: "",
-      locationSearch: "",
+      searchTitle: "",
+      searchLocation: "",
 
       selectedCategory: "",
       selectedLocation: "",
@@ -326,13 +326,13 @@ export default {
 
         // title
         const matchesTitle =
-          !this.titleSearch ||
-          job.title.toLowerCase().includes(this.titleSearch.toLowerCase());
+          !this.searchTitle ||
+          job.title.toLowerCase().includes(this.searchTitle.toLowerCase());
 
         // location
         const matchesLocationSearch =
-          !this.locationSearch ||
-          (job.location || "").toLowerCase().includes(this.locationSearch.toLowerCase());
+          !this.searchLocation ||
+          (job.location || "").toLowerCase().includes(this.searchLocation.toLowerCase());
 
         // category
         const matchesCategory =
@@ -450,6 +450,11 @@ export default {
         left: 250,
         behavior: "smooth",
       });
+    },
+
+    searchJobs() {
+      this.searchTitle = this.titleSearch;
+      this.searchLocation = this.locationSearch;
     },
   },
 };
