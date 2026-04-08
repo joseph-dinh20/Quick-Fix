@@ -178,9 +178,16 @@ export function deleteJob(jobId) {
   return api.delete(`/jobs/${jobId}/delete/`);
 }
 
+export function updateJob(jobId, data) {
+    return api.patch(`/jobs/${jobId}/edit/`, data);
+}
 
 export function toggleFavoriteProvider(providerId) {
   return api.post(`/accounts/providers/${providerId}/favorite/`);
+}
+
+export function getFavoriteJobs() {
+    return api.get(`/jobs/favorites`);
 }
 
 

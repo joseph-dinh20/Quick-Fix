@@ -7,6 +7,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 // Importing Images
 import drillImage from "@/assets/icons/drill.png";
 import garden from "@/assets/icons/garden.png";
+import aboutMe from "@/assets/icons/aboutMe.png";
 
 const showScroll = ref(false);
 const searchBarInput = ref("");
