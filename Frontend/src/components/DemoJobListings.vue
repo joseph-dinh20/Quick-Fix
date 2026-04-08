@@ -13,35 +13,71 @@
         <div class="flex items-center flex-1 px-4 w-full">
           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-slate-400 mr-3"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg>
           <Input
-            variant="ghost"
-            placeholder="What do you need done?"
-            class="border-0 focus-visible:ring-0 shadow-none h-10 px-0 w-full"
+            v-model="titleSearch" placeholder="What do you need done?"
           />
         </div>
         <div class="hidden md:block w-[1px] h-8 bg-slate-200"></div>
         <div class="flex items-center flex-1 px-4 w-full border-t md:border-none border-slate-100 pt-2 md:pt-0 mt-2 md:mt-0">
           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-slate-400 mr-3"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"></path><circle cx="12" cy="10" r="3"></circle></svg>
           <Input
-            variant="ghost"
-            placeholder="City, State, Zip Code"
-            class="border-0 focus-visible:ring-0 shadow-none h-10 px-0 w-full"
+            v-model="locationSearch" placeholder="City, State, Zip Code"
           />
         </div>
-        <Button class="w-full md:w-auto bg-orange-500 hover:bg-orange-600 text-white rounded-full px-8 py-2.5">
+        <Button @click="searchJobs" class="w-full md:w-auto bg-orange-500 hover:bg-orange-600 text-white rounded-full px-8 py-2.5">
           Search
         </Button>
       </Card>
 
-      <div class="flex flex-wrap gap-3 mb-10">
+      <!--<div class="flex flex-wrap gap-3 mb-10">
         <Button
           v-for="filter in ['Pay', 'Language', 'Urgency', 'Type', 'Credentials']"
           :key="filter"
           variant="outline"
-          class="bg-white border-slate-200 text-slate-700 hover:bg-slate-50 flex items-center"
+          @click="activeFilter = filter"
+          :class="activeFilter === filter ? 'bg-orange-100 border-orange-400' : ''"
         >
           {{ filter }}
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="ml-2 text-slate-500"><path d="m6 9 6 6 6-6"></path></svg>
         </Button>
+      </div>-->
+
+      <div class="flex flex-wrap gap-3 mb-10">
+  
+        <!-- Category -->
+        <select v-model="selectedCategory" class="border p-2 rounded">
+          <option value="">All Categories</option>
+          <option
+            v-for="service in services"
+            :key="service.id"
+            :value="service.id"
+          >
+            {{ service.name }}
+          </option>
+        </select>
+
+        <!-- Location -->
+        <select v-model="selectedLocation" class="border p-2 rounded">
+          <option value="">All Locations</option>
+          <option value="long beach">Long Beach</option>
+          <option value="los angeles">Los Angeles</option>
+        </select>
+
+        <!-- Budget -->
+        <select v-model="selectedBudget" class="border p-2 rounded">
+          <option value="">Any Budget</option>
+          <option value="0-50">$0 - $50</option>
+          <option value="50-200">$50 - $200</option>
+          <option value="200+">$200+</option>
+        </select>
+
+        <!-- Job Type -->
+        <select v-model="selectedJobType" class="border p-2 rounded">
+          <option value="">All Types</option>
+          <option value="quote">Quote</option>
+          <option value="service">Service</option>
+          <option value="both">Both</option>
+        </select>
+
       </div>
 
       <div v-if="loading" class="flex flex-col gap-5">
@@ -58,7 +94,7 @@
 
       <div v-else class="flex flex-col gap-5">
         <Card
-          v-for="job in jobs.slice(0, 20)"
+          v-for="job in filteredJobs.slice(0, 20)"
           :key="job.id"
           class="flex flex-col sm:flex-row items-start sm:items-center p-4 shadow-sm hover:shadow-md transition-shadow border-slate-200 gap-6"
         >
@@ -263,18 +299,109 @@ export default {
 
   data() {
     return {
+      services: [],
       jobs: [],
       loading: false,
       selectedJob: null,
       isDialogOpen: false,
+
+      titleSearch: "",
+      locationSearch: "",
+
+      selectedCategory: "",
+      selectedLocation: "",
+      selectedBudget: "",
+      selectedJobType: "",
     };
   },
 
   async mounted() {
+    this.fetchServices();
     this.fetchJobs();
   },
 
+  computed: {
+    filteredJobs() {
+      return this.jobs.filter(job => {
+
+        // title
+        const matchesTitle =
+          !this.titleSearch ||
+          job.title.toLowerCase().includes(this.titleSearch.toLowerCase());
+
+        // location
+        const matchesLocationSearch =
+          !this.locationSearch ||
+          (job.location || "").toLowerCase().includes(this.locationSearch.toLowerCase());
+
+        // category
+        const matchesCategory =
+          !this.selectedCategory ||
+          job.services.some(service =>
+            service.id === Number(this.selectedCategory)
+          );
+        // location
+        const matchesLocationDropdown =
+          !this.selectedLocation ||
+          (job.location || "").toLowerCase().includes(this.selectedLocation);
+
+        // type
+        const matchesJobType =
+          !this.selectedJobType ||
+          job.request_type === this.selectedJobType;
+
+        //budget
+        let matchesBudget = true;
+
+        if (this.selectedBudget === "0-50") {
+          matchesBudget = job.budget <= 50;
+        } else if (this.selectedBudget === "50-200") {
+          matchesBudget = job.budget > 50 && job.budget <= 200;
+        } else if (this.selectedBudget === "200+") {
+          matchesBudget = job.budget > 200;
+        }
+
+        let matchesActiveFilter = true;
+
+        if (this.activeFilter === "Pay") {
+          matchesActiveFilter = job.budget > 0;
+        }
+
+        if (this.activeFilter === "Language") {
+          matchesActiveFilter = !!job.languages;
+        }
+
+        if (this.activeFilter === "Urgency") {
+          matchesActiveFilter = job.urgency === "urgent";
+        }
+
+        if (this.activeFilter === "Type") {
+          matchesActiveFilter = !!job.request_type;
+        }
+
+        if (this.activeFilter === "Credentials") {
+          matchesActiveFilter = !!job.credentials_required;
+        }
+
+        return (
+          matchesTitle &&
+          matchesLocationSearch &&
+          matchesLocationDropdown &&
+          matchesCategory &&
+          matchesJobType &&
+          matchesBudget &&
+          matchesActiveFilter
+        );
+      });
+    }
+  },
+
   methods: {
+    async fetchServices() {
+      const res = await fetch("http://localhost:8000/api/services/");
+      this.services = await res.json();
+    },
+
     async fetchJobs() {
       this.loading = true;
       try {
