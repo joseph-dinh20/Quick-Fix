@@ -3,45 +3,24 @@
     <div class="max-w-5xl mx-auto">
       
       <div class="flex justify-between items-center mb-8">
-        <h1 class="text-3xl font-extrabold tracking-tight">Find work</h1>
+        <h1 class="text-3xl font-extrabold tracking-tight">Favorite Jobs</h1>
         <Button variant="ghost" size="icon" class="text-slate-700">
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21"></polygon><line x1="9" x2="9" y1="3" y2="18"></line><line x1="15" x2="15" y1="6" y2="21"></line></svg>
         </Button>
       </div>
 
-      <Card class="flex flex-col md:flex-row items-center rounded-full p-2 mb-8 shadow-sm border-slate-200 gap-2 md:gap-0">
-        <div class="flex items-center flex-1 px-4 w-full">
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-slate-400 mr-3"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg>
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
+        <div class="relative w-full sm:w-[450px] flex items-center bg-white rounded-full border border-slate-200 shadow-sm p-1.5">
+          <Search class="w-5 h-5 text-slate-400 ml-3 absolute" />
           <Input
-            variant="ghost"
-            placeholder="What do you need done?"
-            class="border-0 focus-visible:ring-0 shadow-none h-10 px-0 w-full"
+            placeholder="Search postings"
+            class="border-0 focus-visible:ring-0 shadow-none pl-10 bg-transparent w-full"
           />
+          <Button class="bg-green-500 hover:bg-green-600 text-white rounded-full px-6 py-2 shrink-0 h-auto font-bold">
+            Search
+          </Button>
         </div>
-        <div class="hidden md:block w-[1px] h-8 bg-slate-200"></div>
-        <div class="flex items-center flex-1 px-4 w-full border-t md:border-none border-slate-100 pt-2 md:pt-0 mt-2 md:mt-0">
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-slate-400 mr-3"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"></path><circle cx="12" cy="10" r="3"></circle></svg>
-          <Input
-            variant="ghost"
-            placeholder="City, State, Zip Code"
-            class="border-0 focus-visible:ring-0 shadow-none h-10 px-0 w-full"
-          />
-        </div>
-        <Button class="w-full md:w-auto bg-green-500 hover:bg-green-600 text-white rounded-full px-8 py-2.5">
-          Search
-        </Button>
-      </Card>
 
-      <div class="flex flex-wrap gap-3 mb-10">
-        <Button
-          v-for="filter in ['Pay', 'Language', 'Urgency', 'Type', 'Credentials']"
-          :key="filter"
-          variant="outline"
-          class="bg-white border-slate-200 text-slate-700 hover:bg-slate-50 flex items-center"
-        >
-          {{ filter }}
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="ml-2 text-slate-500"><path d="m6 9 6 6 6-6"></path></svg>
-        </Button>
       </div>
 
       <div v-if="loading" class="flex flex-col gap-5">
@@ -232,12 +211,13 @@
 </template>
 
 <script>
-import { getAllJobs, toggleFavoriteJob } from "@/services/api";
+import { getFavoriteJobs, toggleFavoriteJob } from "@/services/api";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
+
 
 export default {
   name: "JobsList",
@@ -268,7 +248,7 @@ export default {
     async fetchJobs() {
       this.loading = true;
       try {
-        const res = await getAllJobs();
+        const res = await getFavoriteJobs();
         const jobs = res.data.results || res.data;
 
         this.jobs = jobs.map((job) => ({

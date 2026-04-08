@@ -1,6 +1,6 @@
 <script setup>
 import { ref, onMounted } from "vue"
-import { getMyJobs, deleteJob } from "../services/api"
+import { getMyJobs, deleteJob, updateJob } from "../services/api"
 
 // --- UI IMPORTS (Expanded for maximum shadcn usage) ---
 import { Button } from "@/components/ui/button"
@@ -11,6 +11,7 @@ import { Separator } from "@/components/ui/separator"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { AspectRatio } from "@/components/ui/aspect-ratio"
 import { Label } from "@/components/ui/label"
+import { Textarea } from "@/components/ui/textarea"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -39,6 +40,7 @@ const jobs = ref([])
 const currentSort = ref("Sort by")
 const isDialogOpen = ref(false)
 const selectedJob = ref(null)
+const isEditDialogOpen = ref(false)
 
 async function fetchJobs() {
   try {
@@ -68,15 +70,54 @@ function openJobDetails(job) {
   isDialogOpen.value = true
 }
 
+
 function editJob(job) {
-  console.log("Edit job:", job.title)
+  // Use spread syntax to clone the job so we don't mutate the UI before saving
+  editForm.value = { ...job }
+  isEditDialogOpen.value = true
+}
+
+const editForm = ref({
+  title: "",
+  description: "",
+  budget: "",
+  deadline: "",
+  status: "",
+})
+// Handle saving the edited job
+async function saveJobChanges() {
+  try {
+    // Package the specific fields that JobUpdateSerializer expects
+    const payload = {
+      title: editForm.value.title,
+      description: editForm.value.description,
+      budget: editForm.value.budget,
+      deadline: editForm.value.deadline,
+    }
+
+    // Call the updated API route
+    const res = await updateJob(editForm.value.id, payload)
+
+    // Update the local state so the UI updates instantly without refreshing
+    const index = jobs.value.findIndex(j => j.id === editForm.value.id)
+    if (index !== -1) {
+      // Merge the returned updated job data into our local list
+      jobs.value[index] = { ...jobs.value[index], ...res.data.job }
+    }
+
+    // Close the modal
+    isEditDialogOpen.value = false
+  } catch (err) {
+    console.error("Failed to save changes", err.response?.data || err)
+    alert("Failed to update job. Check console for details.")
+  }
 }
 
 onMounted(fetchJobs)
 </script>
 
 <template>
-  <div class="min-h-screen bg-slate-50 p-6 md:p-12 font-sans text-slate-900">
+  <div class="min-h-screen bg-slate-0 p-6 md:p-12 font-sans text-slate-900">
     <div class="max-w-4xl mx-auto">
       
       <h1 class="text-3xl font-extrabold tracking-tight mb-8 text-[#1a202c]">Manage Postings</h1>
@@ -88,7 +129,7 @@ onMounted(fetchJobs)
             placeholder="Search postings"
             class="border-0 focus-visible:ring-0 shadow-none pl-10 bg-transparent w-full"
           />
-          <Button class="bg-orange-500 hover:bg-orange-600 text-white rounded-full px-6 py-2 shrink-0 h-auto font-bold">
+          <Button class="bg-green-500 hover:bg-green-600 text-white rounded-full px-6 py-2 shrink-0 h-auto font-bold">
             Search
           </Button>
         </div>
@@ -113,7 +154,7 @@ onMounted(fetchJobs)
           v-for="job in jobs" 
           :key="job.id" 
           @click="openJobDetails(job)"
-          class="overflow-hidden border-slate-200 shadow-sm rounded-xl hover:shadow-md hover:border-orange-200 transition-all cursor-pointer"
+          class="overflow-hidden border-slate-200 shadow-sm rounded-xl hover:shadow-md hover:border-green-200 transition-all cursor-pointer"
         >
           <CardContent class="p-5 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
             <div>
@@ -241,22 +282,87 @@ onMounted(fetchJobs)
 
           <div>
             <h3 class="font-bold text-[#1a202c] text-lg mb-4">About the Job</h3>
-            <p class="text-slate-600 leading-relaxed whitespace-pre-wrap">{{ selectedJob.description || `Well, the bugs start comin' and they don't stop comin'
-Fed to the plants and they just keep munchin'
-
-Didn't make sense not to spray for fun
-Your brain gets smart, but the pests just come
-
-So much to do, so much to spray
-So, what's wrong with clearing them away?
-
-You'll never know if you don't check (check)
-Your garden's gonna thrive if you protect!` }}</p>
+            <p class="text-slate-600 leading-relaxed whitespace-pre-wrap">{{ selectedJob.description || `No description` }}</p>
           </div>
 
         </div>
       </DialogContent>
     </Dialog>
+
+    <Dialog v-model:open="isEditDialogOpen">
+        <DialogContent class="sm:max-w-[600px]">
+          <DialogHeader>
+            <DialogTitle class="text-xl font-extrabold text-slate-900">Edit Posting</DialogTitle>
+            <DialogDescription class="text-slate-500">
+              Make changes to your job posting below. Click save when you're done.
+            </DialogDescription>
+          </DialogHeader>
+
+          <ScrollArea class="max-h-[60vh] pr-4 mt-2">
+            <div class="space-y-5 px-1 pb-2">
+              
+              <div class="space-y-2">
+                <Label for="title" class="font-semibold text-slate-700">Job Title</Label>
+                <Input id="title" v-model="editForm.title" placeholder="What do you need help with?" />
+              </div>
+
+              <div class="space-y-2">
+                <Label for="description" class="font-semibold text-slate-700">Description</Label>
+                <Textarea 
+                  id="description" 
+                  v-model="editForm.description" 
+                  placeholder="Provide details about the job..." 
+                  class="min-h-[120px] resize-none"
+                />
+              </div>
+
+              <div class="grid grid-cols-2 gap-4">
+                <div class="space-y-2">
+                  <Label for="budget" class="font-semibold text-slate-700">Budget Estimate</Label>
+                  <div class="relative">
+                    <DollarSign class="absolute left-3 top-2.5 h-4 w-4 text-slate-400" />
+                    <Input id="budget" v-model="editForm.budget" placeholder="0.00" class="pl-9" />
+                  </div>
+                </div>
+                <div class="space-y-2">
+                  <Label for="deadline" class="font-semibold text-slate-700">Deadline</Label>
+                  <div class="relative">
+                    <Input id="deadline" type="date" v-model="editForm.deadline" class="w-full text-slate-700" />
+                  </div>
+                </div>
+              </div>
+
+              <Separator class="bg-slate-100 my-2" />
+
+              <div class="space-y-2">
+                <Label class="font-semibold text-slate-700">Upload New Images</Label>
+                <div class="border-2 border-dashed border-slate-200 rounded-lg p-6 flex flex-col items-center justify-center text-center hover:bg-slate-50 transition-colors">
+                  <UploadCloud class="h-8 w-8 text-slate-400 mb-2" />
+                  <p class="text-sm font-medium text-slate-900 mb-1">Click to upload or drag and drop</p>
+                  <p class="text-xs text-slate-500 mb-4">SVG, PNG, JPG or GIF (max. 5MB)</p>
+                  <Input 
+                    id="images" 
+                    type="file" 
+                    multiple 
+                    accept="image/*" 
+                    class="cursor-pointer file:bg-green-50 file:text-green-600 file:border-0 file:rounded-md file:px-4 file:py-2 file:mr-4 file:font-semibold hover:file:bg-green-100" 
+                    @change="handleImageSelection"
+                  />
+                </div>
+              </div>
+            </div>
+          </ScrollArea>
+
+          <div class="flex justify-end gap-3 mt-4 pt-4 border-t border-slate-100">
+            <Button variant="outline" @click="isEditDialogOpen = false" class="font-bold">
+              Cancel
+            </Button>
+            <Button @click="saveJobChanges" class="bg-green-500 hover:bg-green-600 text-white font-bold">
+              Save Changes
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
 
     </div>
   </div>

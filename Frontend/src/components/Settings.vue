@@ -95,8 +95,9 @@ const scrollToSection = (id) => {
                     <Separator class="mb-6 mx-6 w-auto" />
                     <CardContent class="space-y-4">
                         <a href="#" class="block text-blue-500 font-medium hover:underline text-lg">Manage profile</a>
-                        <a href="#" class="block text-blue-500 font-medium hover:underline text-lg">Manage postings</a>
+                        <a href="#/DemoMyJobs" class="block text-blue-500 font-medium hover:underline text-lg">Manage postings</a>
                         <a href="#" class="block text-blue-500 font-medium hover:underline text-lg">View favorites</a>
+                        <a href="#/JoinUs" class="block text-blue-500 font-medium hover:underline text-lg">Join Us</a>
                     </CardContent>
                 </Card>
 
