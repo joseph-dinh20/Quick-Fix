@@ -1,6 +1,7 @@
 <script setup>
-import { ref, computed, onMounted } from "vue"
+import { ref, computed, onMounted } from "vue";
 
+<<<<<<< HEAD
 import Header from "@/components/Header.vue"
 import Payment from "@/components/Payment.vue"
 import Main from "@/components/Main.vue"
@@ -28,42 +29,71 @@ import DemoJobListings from './components/DemoJobListings.vue'
 import FavoriteProvider from '@/components/FavoriteProvider.vue'
 import DemoProvider from './components/DemoProvider.vue'
 import BecomeFixer from './components/BecomeFixer.vue'
+=======
+import Header from "@/components/Header.vue";
+import Payment from "@/components/Payment.vue";
+import Main from "@/components/Main.vue";
+import Login from "@/components/Login.vue";
+import Signup from "@/components/Signup.vue";
+import Form from "@/components/Form.vue";
+import Profile from "@/components/Profile.vue";
+import Test from "@/components/Test.vue";
+import Hello from "@/components/Hello.vue";
+import Temp from "@/components/Temp.vue";
+import Provider from "@/components/Provider.vue";
+import ProviderList from "@/components/ProviderList.vue";
+import ProviderTest from "@/components/ProviderTest.vue";
+import Hello1 from "@/components/Hello1.vue";
+import Hello2 from "@/components/Hello2.vue";
+import Hello3 from "@/components/Hello3.vue";
+import Hello4 from "@/components/Hello4.vue";
+import JoinUs from "./components/JoinUs.vue";
+import Settings from "./components/Settings.vue";
+import DemoLocation from "./components/DemoLocation.vue";
+import DemoCreateJob from "./components/DemoCreateJob.vue";
+import DemoCreateJob2 from "./components/DemoCreateJob2.vue";
+import DemoMyJobs from "./components/DemoMyJobs.vue";
+import DemoJobListings from "./components/DemoJobListings.vue";
+import FavoriteProvider from "@/components/FavoriteProvider.vue";
+import DemoProvider from "./components/DemoProvider.vue";
+import Scheduler from "./components/Scheduler.vue";
+>>>>>>> origin/main
 
-import { me, initCsrf, logout as apiLogout } from "@/services/api.js"
-import { Toaster } from "@/components/ui/sonner"
+import { me, initCsrf, logout as apiLogout } from "@/services/api.js";
+import { Toaster } from "@/components/ui/sonner";
 
-const user = ref(null)
-const loadingUser = ref(true)
+const user = ref(null);
+const loadingUser = ref(true);
 
 async function refreshUser() {
   try {
-    const res = await me()
-    user.value = res.data
+    const res = await me();
+    user.value = res.data;
   } catch (err) {
-    user.value = null
+    user.value = null;
   }
 }
 
 onMounted(async () => {
   try {
-    await initCsrf()
-    await refreshUser()
+    await initCsrf();
+    await refreshUser();
   } finally {
-    loadingUser.value = false
+    loadingUser.value = false;
   }
-})
+});
 
 async function logout() {
   try {
-    await initCsrf()
-    await apiLogout()
+    await initCsrf();
+    await apiLogout();
   } catch (err) {
-    console.error("Logout error:", err)
+    console.error("Logout error:", err);
   }
 
-  localStorage.clear()
-  user.value = null
-  window.location.hash = "/"
+  localStorage.clear();
+  user.value = null;
+  window.location.hash = "/";
 }
 
 const routes = {
@@ -92,24 +122,29 @@ const routes = {
   "/DemoJobListings": DemoJobListings,
   "/FavoriteProvider": FavoriteProvider,
   "/DemoProvider": DemoProvider,
+<<<<<<< HEAD
   "/BecomeFixer": BecomeFixer,
 }
+=======
+  "/Scheduler": Scheduler,
+};
+>>>>>>> origin/main
 
-const currentPath = ref(window.location.hash)
+const currentPath = ref(window.location.hash);
 
 window.addEventListener("hashchange", () => {
-  currentPath.value = window.location.hash
-})
+  currentPath.value = window.location.hash;
+});
 
 const currentView = computed(() => {
-  const path = currentPath.value.replace(/^#/, '').split('?')[0] || "/"
-  return routes[path] || Main
-})
+  const path = currentPath.value.replace(/^#/, "").split("?")[0] || "/";
+  return routes[path] || Main;
+});
 
-const isLoggedIn = computed(() => !!user.value)
+const isLoggedIn = computed(() => !!user.value);
 
 async function handleLoginSuccess() {
-  await refreshUser()
+  await refreshUser();
 }
 </script>
 
@@ -120,18 +155,17 @@ async function handleLoginSuccess() {
     <div v-else class="flex flex-col items-center w-full">
       <Header />
 
-      <div v-if="!isLoggedIn" class="mb-6 flex gap-3">
-        <a class="underline" href="#/Login">Login</a>
-        <a class="underline" href="#/Signup">Signup</a>
-      </div>
+      <!-- <div v-if="!isLoggedIn" class="mb-6 flex gap-3"> -->
+      <!--   <a class="underline" href="#/Login">Login</a> -->
+      <!--   <a class="underline" href="#/Signup">Signup</a> -->
+      <!-- </div> -->
+      <!---->
+      <!-- <div v-else class="mb-6 flex gap-3 items-center"> -->
+      <!--   <span class="text-sm">{{ user.email }}</span> -->
+      <!--   <a class="underline cursor-pointer" @click="logout">Logout</a> -->
+      <!-- </div> -->
 
-      <div v-else class="mb-6 flex gap-3 items-center">
-        <span class="text-sm">{{ user.email }}</span>
-        <a class="underline cursor-pointer" @click="logout">Logout</a>
-      </div>
-      
-
-      <div class="mt-8 mb-10">
+      <div class="w-full">
         <component :is="currentView" @login-success="handleLoginSuccess" />
       </div>
     </div>

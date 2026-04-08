@@ -12,7 +12,15 @@ from rest_framework.decorators import permission_classes
 import re
 
 from services.models import Service
+<<<<<<< HEAD
 from .serializers import ServiceProviderSerializer, ProfileUpdateSerializer, ServiceProviderUpdateSerializer, MeSerializer, ProviderApplicationSerializer
+=======
+from jobs.models import Job
+from reviews.models import Review
+from .serializers import ServiceProviderSerializer, ProfileUpdateSerializer, ServiceProviderUpdateSerializer, MeSerializer, FavoriteProviderSerializer
+from django.db.models import Prefetch
+
+>>>>>>> origin/main
 
 from haversine import haversine, Unit
 
@@ -297,15 +305,28 @@ def toggle_favorite_provider(request, provider_id):
         )
 
 
+
 @api_view(["GET"])
 @permission_classes([IsAuthenticated])
 def get_favorites(request):
-
     profile = request.user.profile
-    providers = profile.favorites.all()
 
-    serializer = ServiceProviderSerializer(providers, many=True)
-    return Response(serializer.data, status=status.HTTP_200_OK)
+    providers = profile.favorites.prefetch_related(
+        Prefetch(
+            "reviews",
+            queryset=Review.objects.filter(reviewer=profile),
+            to_attr="user_reviews"
+        ),
+        "services"
+    )
+
+    serializer = FavoriteProviderSerializer(
+        providers,
+        many=True,
+        context={"request": request}
+    )
+
+    return Response(serializer.data)
 
 
 @api_view(["GET"])

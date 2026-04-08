@@ -3,6 +3,14 @@ from services.models import Service
 from django.contrib.auth.models import User
 from django.core.validators import MinValueValidator, MaxValueValidator
 
+
+class Language(models.Model):
+    name = models.CharField(max_length=50, unique=True)
+
+    def __str__(self):
+        return self.name
+    
+
 class Profile(models.Model):
     provider_status = models.CharField(
         max_length=20,
@@ -40,6 +48,8 @@ class Profile(models.Model):
         related_name="favorited_by",
         blank=True
     )
+
+    languages = models.ManyToManyField(Language, blank=True)
 
 
     def __str__(self):
@@ -95,3 +105,4 @@ class ServiceProvider(models.Model):
 
     def __str__(self):
         return f"{self.profile.name} (Provider)"
+

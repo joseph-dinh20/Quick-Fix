@@ -1,28 +1,26 @@
 <script setup>
 // import type { HTMLAttributes } from "vue"
-import { cn } from "@/lib/utils"
+import { cn } from "@/lib/utils";
 import { initCsrf, login as apiLogin } from "@/services/api"
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
+} from "@/components/ui/card";
 import {
   Field,
   FieldDescription,
   FieldGroup,
   FieldLabel,
-} from "@/components/ui/field"
-import { Input } from "@/components/ui/input"
-import 'vue-toast-notification/dist/theme-sugar.css'
-import { useToast } from 'vue-toast-notification'
-import { ref } from 'vue'
-// const props = defineProps < {
-//   class?: HTMLAttributes["class"]
-// } > ()
+} from "@/components/ui/field";
+import { Input } from "@/components/ui/input";
+import "vue-toast-notification/dist/theme-sugar.css";
+import { useToast } from "vue-toast-notification";
+import { ref } from "vue";
+
 
 async function getData() {
   const $toast = useToast()
@@ -82,9 +80,9 @@ async function login() {
 </script>
 
 <template>
-  <!-- <div :class="cn('flex flex-col gap-6', props.class)"> -->
-  <div class="login-root flex flex-col gap-6">
-    <Card class="text-green-900 font-normal">
+  <div class="login-root flex flex-col items-center gap-6">
+    <!-- <Card class="text-green-900 font-normal"> -->
+    <Card class="">
       <CardHeader>
         <CardTitle>Login to your account</CardTitle>
         <CardDescription>
@@ -98,42 +96,46 @@ async function login() {
         <form @submit.prevent="login">
           <FieldGroup>
             <Field>
-              <FieldLabel for="email">
-                Email
-              </FieldLabel>
-              <Input id="email" type="email" v-model="email" placeholder="abc@abc.com" required />
+              <FieldLabel for="email"> Email </FieldLabel>
+              <Input
+                id="email"
+                type="email"
+                v-model="email"
+                placeholder="abc@abc.com"
+                required
+              />
             </Field>
             <Field>
               <div class="flex items-center">
-                <FieldLabel for="password">
-                  Password
-                </FieldLabel>
-                <a href="#" class="ml-auto inline-block text-sm underline-offset-4 hover:underline">
-                  Forgot your password?
-                </a>
+                <FieldLabel for="password"> Password </FieldLabel>
+                <!-- <a href="#" class="ml-auto inline-block text-sm underline-offset-4 hover:underline"> -->
+                <!--   Forgot your password? -->
+                <!-- </a> -->
               </div>
-              <Input id="password" type="password" v-model="password" placeholder="abc" required />
+              <Input
+                id="password"
+                type="password"
+                v-model="password"
+                placeholder="abc"
+                required
+              />
             </Field>
             <Field>
               <!-- <Button type="submit" @click="login"> -->
-              <Button type="submit">
-                Login
-              </Button>
-              <Button variant="outline" type="button">
-                Login with Google
-              </Button>
+              <Button type="submit"> Login </Button>
+              <!-- <Button variant="outline" type="button"> -->
+              <!--   Login with Google -->
+              <!-- </Button> -->
               <FieldDescription class="text-center">
                 Don't have an account?
-                <a href="#">
-                  Sign up
-                </a>
+                <a href="#/Signup"> Sign up </a>
               </FieldDescription>
             </Field>
           </FieldGroup>
         </form>
       </CardContent>
     </Card>
-    <Button @click="getData">get users login data</Button>
-    <Button @click="quickLogin">Bypass Login</Button>
+    <!-- <Button @click="quickLogin">Bypass Login</Button> -->
   </div>
 </template>
+

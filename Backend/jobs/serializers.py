@@ -2,7 +2,13 @@ from rest_framework import serializers
 from .models import Job, JobImage
 from services.models import Service
 from services.serializers import ServiceSerializer
-from accounts.models import ServiceProvider
+from accounts.models import ServiceProvider, Profile, Language
+from geopy.geocoders import Nominatim
+
+class ProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Profile
+        fields = ["id", "name", "avatar"] 
 
 
 class JobImageSerializer(serializers.ModelSerializer):
@@ -23,6 +29,15 @@ class JobCreateSerializer(serializers.ModelSerializer):
         required=False
     )
 
+    city = serializers.CharField(write_only=True, required=False)
+    zip = serializers.CharField(write_only=True, required=False)
+
+    language = serializers.PrimaryKeyRelatedField(
+        queryset=Language.objects.all(),
+        required=False,  # optional field
+        allow_null=True
+    )
+
     class Meta:
         model = Job
         fields = [
@@ -35,23 +50,40 @@ class JobCreateSerializer(serializers.ModelSerializer):
             "latitude",
             "longitude",
             "images",
+            "urgency",
+            "city",
+            "zip",
+            "language"
         ]
 
     def create(self, validated_data):
+        city = validated_data.pop("city", None)
+        zip_code = validated_data.pop("zip", None)
+
+        # convert city/zip to coordinates
+        if city or zip_code:
+            geolocator = Nominatim(user_agent="myapp")
+            query = f"{city or ''} {zip_code or ''}".strip()
+            location = geolocator.geocode(query)
+            if location:
+                validated_data["latitude"] = location.latitude
+                validated_data["longitude"] = location.longitude
+            print(validated_data["latitude"])
+            print(validated_data["longitude"])
+
         images = validated_data.pop("images", [])
         services = validated_data.pop("services", [])
 
         profile = self.context["request"].user.profile
 
-        job = Job.objects.create(
-            customer=profile,
-            **validated_data
-        )
+        language = validated_data.pop("language", None)
+        if language is None:
+            language = Language.objects.filter(name__iexact="English").first()
+        
 
-        # set Many to Many
+        job = Job.objects.create(customer=profile, language=language, **validated_data)
         job.services.set(services)
 
-        # create images
         for img in images:
             JobImage.objects.create(job=job, image=img)
 
@@ -62,6 +94,8 @@ class JobSerializer(serializers.ModelSerializer):
     is_favorited = serializers.SerializerMethodField()
     services = ServiceSerializer(many=True)
     images = JobImageSerializer(many=True)
+    customer = ProfileSerializer(read_only=True)
+    languages = serializers.StringRelatedField()
 
     class Meta:
         model = Job
@@ -76,7 +110,10 @@ class JobSerializer(serializers.ModelSerializer):
             "created_at",
             "services",
             "images",
-            "is_favorited"
+            "is_favorited",
+            "customer",
+            "languages",
+            "urgency"
         ]
 
     def get_is_favorited(self, obj):
@@ -102,4 +139,5 @@ class JobUpdateSerializer(serializers.ModelSerializer):
             "is_open",
             "request_type",
             "services",
+            "urgency"
         ]
