@@ -27,6 +27,7 @@ import DemoMyJobs from "./components/DemoMyJobs.vue";
 import DemoJobListings from "./components/DemoJobListings.vue";
 import FavoriteProvider from "@/components/FavoriteProvider.vue";
 import DemoProvider from "./components/DemoProvider.vue";
+import DemoFavoriteProvider from "./components/DemoFavoriteProvider.vue";
 import Scheduler from "./components/Scheduler.vue";
 
 import { me, initCsrf, logout as apiLogout } from "@/services/api.js";
@@ -91,6 +92,7 @@ const routes = {
   "/DemoMyJobs": DemoMyJobs,
   "/DemoJobListings": DemoJobListings,
   "/FavoriteProvider": FavoriteProvider,
+  "/DemoFavoriteProvider": DemoFavoriteProvider,
   "/DemoProvider": DemoProvider,
   "/Scheduler": Scheduler,
 };
