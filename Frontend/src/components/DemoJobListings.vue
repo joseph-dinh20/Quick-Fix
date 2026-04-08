@@ -23,7 +23,7 @@
             v-model="locationSearch" placeholder="City, State, Zip Code"
           />
         </div>
-        <Button @click="searchJobs" class="w-full md:w-auto bg-orange-500 hover:bg-orange-600 text-white rounded-full px-8 py-2.5">
+        <Button @click="searchJobs" class="w-full md:w-auto text-white rounded-full px-8 py-2.5">
           Search
         </Button>
       </Card>
@@ -135,7 +135,7 @@
           </div>
 
           <div class="flex flex-col sm:items-end w-full sm:w-auto gap-3 mt-4 sm:mt-0">
-            <Button @click="openJobModal(job)" class="w-full sm:w-auto bg-green-500 hover:bg-green-600 text-white font-semibold">
+            <Button @click="openJobModal(job)" class="w-full sm:w-auto  text-white font-semibold">
               View Job
             </Button>
 
