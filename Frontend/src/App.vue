@@ -16,7 +16,7 @@ import ProviderList from "@/components/ProviderList.vue";
 import ProviderTest from "@/components/ProviderTest.vue";
 import Hello1 from "@/components/Hello1.vue";
 import Hello2 from "@/components/Hello2.vue";
-import Hello3 from "@/components/Hello3.vue";
+import DemoProfile from "@/components/DemoProfile.vue";
 import Hello4 from "@/components/Hello4.vue";
 import JoinUs from "./components/JoinUs.vue";
 import Settings from "./components/Settings.vue";
@@ -85,7 +85,7 @@ const routes = {
   "/Hello": Hello,
   "/Hello1": Hello1,
   "/Hello2": Hello2,
-  "/Hello3": Hello3,
+  "/DemoProfile": DemoProfile,
   "/Hello4": Hello4,
   "/JoinUs": JoinUs,
   "/Settings": Settings,
