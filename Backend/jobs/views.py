@@ -78,7 +78,7 @@ def toggle_favorite(request, job_id):
 @api_view(["GET"])
 @permission_classes([AllowAny])
 def list_jobs(request):
-    jobs = Job.objects.all().order_by("-id")  # newest jobs first
+    jobs = Job.objects.filter(is_open=True).order_by("-id")  # only open jobs, newest first
 
     serializer = JobSerializer(
         jobs,
