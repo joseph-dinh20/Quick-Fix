@@ -12,13 +12,23 @@ from rest_framework.decorators import permission_classes
 import re
 
 from services.models import Service
+from .serializers import ServiceProviderSerializer, ProfileUpdateSerializer, ServiceProviderUpdateSerializer, MeSerializer, FavoriteProviderSerializer, ProviderApplicationSerializer
 from jobs.models import Job
 from reviews.models import Review
-from .serializers import ServiceProviderSerializer, ProfileUpdateSerializer, ServiceProviderUpdateSerializer, MeSerializer, FavoriteProviderSerializer
 from django.db.models import Prefetch
 
 
 from haversine import haversine, Unit
+
+from django.db.models import Q
+from .services import approve_application
+import json
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+
+from .models import ProviderApplication
+from services.models import Service
 
 User = get_user_model()
 
@@ -363,6 +373,16 @@ def get_nearby_providers(request):
 def search_providers(request):
     providers = ServiceProvider.objects.all()
 
+    query = request.GET.get("q")
+    if query:
+        providers = providers.filter(
+            Q(profile__name__icontains=query) |
+            Q(about_me__icontains=query) |
+            Q(services__name__icontains=query) |
+            Q(profile__city__icontains=query) |
+            Q(profile__state__icontains=query)
+        ).distinct()
+
     # Filter by Rating
     min_rating = request.GET.get("rating")
     if min_rating:
@@ -376,8 +396,7 @@ def search_providers(request):
     services = request.GET.get("services")
     if services:
         service_ids = [int(s) for s in services.split(",") if s.isdigit()]
-        for service_id in service_ids:
-            providers = providers.filter(services__id=service_id)
+        providers = providers.filter(services__id__in=service_id).distinct()
 
     # Filter by Budget
     max_budget = request.GET.get("budget")
@@ -396,9 +415,8 @@ def search_providers(request):
             return Response({"error": "Invalid distance"}, status=400)
         
         if request.user.is_authenticated:
-            try:
-                profile = Profile.objects.get(user=request.user)
-            except Profile.DoesNotExist:
+            profile = getattr(request.user, "profile", None)
+            if not profile:
                 return Response({"error": "Profile not found"}, status=404)
 
             if profile.latitude is not None and profile.longitude is not None:
@@ -425,3 +443,49 @@ def search_providers(request):
 
     serializer = ServiceProviderSerializer(providers, many=True, context={"request":request})
     return Response(serializer.data)
+
+
+@api_view(["PATCH"])
+@permission_classes([IsAuthenticated])
+def update_provider_status(request, user_id):
+    if not request.user.is_staff:
+        return Response({"error": "Unauthorized"}, status=403)
+
+    profile = Profile.objects.get(user_id=user_id)
+    status_value = request.data.get("status")
+
+    if status_value not in ["approved", "rejected"]:
+        return Response({"error": "Invalid status"}, status=400)
+
+    if status_value == "approved":
+        application = profile.providerapplication  # adjust to your relation name
+        approve_application(application)
+
+    return Response({"message": "Updated", "status": status_value})
+
+@api_view(["POST"])
+@permission_classes([IsAuthenticated])
+def apply_provider(request):
+    profile = request.user.profile
+
+    experience = request.POST.get("experience", "")
+    document = request.FILES.get("document")
+
+    # 2. parse services
+    skills = request.data.get("skills", "[]")
+
+    if isinstance(skills, str):
+        skills = json.loads(skills)
+
+    if not isinstance(skills, list):
+        skills = []
+
+    # 3. create application
+    application = ProviderApplication.objects.create(
+        profile=profile,
+        experience=experience,
+        document=document,
+        skills=skills  # (temporary fix OR replace with M2M later)
+    )
+
+    return Response({"message": "Application submitted"})

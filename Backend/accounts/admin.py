@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Profile, ServiceProvider, WorkImage, Language
+from .models import Profile, ServiceProvider, WorkImage, ProviderApplication, Language
 
 @admin.register(Profile)
 class ProfileAdmin(admin.ModelAdmin):
@@ -27,6 +27,7 @@ class ServiceProviderAdmin(admin.ModelAdmin):
         return obj.profile.user.email
     profile_email.short_description = "Email"
 
+admin.site.register(ProviderApplication)
 
 @admin.register(Language)
 class LanguageAdmin(admin.ModelAdmin):
