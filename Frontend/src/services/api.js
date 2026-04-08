@@ -44,7 +44,7 @@ export const loadProvider = (id) => {
 };
 
 export const loadProviders = () => {
-  return api.get(`/accounts/providers/`);
+  return api.get(`/accounts/providers/`, params);
 };
 
 function getCSRFToken() {
@@ -118,6 +118,12 @@ export const getNearbyProviders = (userLat = 33.7816133, userLng = -118.1084064,
       lng: userLng,
       max_distance: milesRadius
     }
+  })
+}
+
+export const searchProviders = (params) => {
+  return axios.get("/accounts/search_providers", {
+    params
   })
 }
 

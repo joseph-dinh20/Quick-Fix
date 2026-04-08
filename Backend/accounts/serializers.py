@@ -146,3 +146,20 @@ class MeSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ["id", "username", "email", "avatar", "city", "state", "latitude", "longitude"]
+
+class ProviderApplicationSerializer(serializers.ModelSerializer):
+    provider_document = serializers.FileField(required=True)
+
+    class Meta:
+        model = Profile
+        fields = ["provider_document"]
+
+    def update(self, instance, validated_data):
+        # file upload
+        instance.provider_document = validated_data["provider_document"]
+
+        # set application status
+        instance.provider_status = "pending"
+
+        instance.save()
+        return instance
