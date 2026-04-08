@@ -160,8 +160,7 @@ class MeSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-<<<<<<< HEAD
-        fields = ["id", "username", "email", "avatar", "city", "state", "latitude", "longitude"]
+        fields = ["id", "username", "email", "avatar", "city", "state", "latitude", "longitude", "languages"]
 
 class ProviderApplicationSerializer(serializers.ModelSerializer):
     provider_document = serializers.FileField(required=True)
@@ -179,8 +178,6 @@ class ProviderApplicationSerializer(serializers.ModelSerializer):
 
         instance.save()
         return instance
-=======
-        fields = ["id", "username", "email", "avatar", "city", "state", "latitude", "longitude", "languages"]
 
 
 class FavoriteProviderSerializer(ServiceProviderSerializer):
@@ -221,4 +218,3 @@ class FavoriteProviderSerializer(ServiceProviderSerializer):
 
         # fallback
         return obj.reviews.filter(reviewer=user).first()
->>>>>>> origin/main

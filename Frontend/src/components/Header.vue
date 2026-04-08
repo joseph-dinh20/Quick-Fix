@@ -23,24 +23,11 @@ const navigate = (hash) => {
         <!-- <button class="big-button" @click="navigate('#/Test')">Test</button> -->
         <!-- <button class="big-button" @click="navigate('#/Temp')">temp</button> -->
         <button class="big-button" @click="navigate('#/Signup')">Signup</button>
-<<<<<<< HEAD
         <button class="big-button" @click="navigate('#/BecomeFixer')">Become Fixer</button>
         <button class="big-button" @click="navigate('#/Form')">Form</button>
         <button class="big-button" @click="navigate('#/Profile')">Profile</button>
         <button class="big-button" @click="navigate('#/ProviderList')">ProviderList</button>
         <button class="big-button" @click="navigate('#/FavoriteProvider')">FavoriteProvider</button>
-=======
-        <!-- <button class="big-button" @click="navigate('#/Form')">Form</button> -->
-        <button class="big-button" @click="navigate('#/Profile')">
-          Profile
-        </button>
-        <!-- <button class="big-button" @click="navigate('#/ProviderList')"> -->
-        <!--   ProviderList -->
-        <!-- </button> -->
-        <button class="big-button" @click="navigate('#/FavoriteProvider')">
-          FavoriteProvider
-        </button>
->>>>>>> origin/main
       </div>
     </header>
     <Separator class="my-3" />

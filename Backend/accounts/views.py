@@ -12,15 +12,11 @@ from rest_framework.decorators import permission_classes
 import re
 
 from services.models import Service
-<<<<<<< HEAD
-from .serializers import ServiceProviderSerializer, ProfileUpdateSerializer, ServiceProviderUpdateSerializer, MeSerializer, ProviderApplicationSerializer
-=======
+from .serializers import ServiceProviderSerializer, ProfileUpdateSerializer, ServiceProviderUpdateSerializer, MeSerializer, FavoriteProviderSerializer, ProviderApplicationSerializer
 from jobs.models import Job
 from reviews.models import Review
-from .serializers import ServiceProviderSerializer, ProfileUpdateSerializer, ServiceProviderUpdateSerializer, MeSerializer, FavoriteProviderSerializer
 from django.db.models import Prefetch
 
->>>>>>> origin/main
 
 from haversine import haversine, Unit
 
@@ -472,19 +468,24 @@ def update_provider_status(request, user_id):
 def apply_provider(request):
     profile = request.user.profile
 
-    # 1. get form data
-    experience = request.POST.get("experience")
+    experience = request.POST.get("experience", "")
     document = request.FILES.get("document")
 
     # 2. parse services
-    services_ids = json.loads(request.POST.get("services", "[]"))
+    skills = request.data.get("skills", "[]")
+
+    if isinstance(skills, str):
+        skills = json.loads(skills)
+
+    if not isinstance(skills, list):
+        skills = []
 
     # 3. create application
     application = ProviderApplication.objects.create(
         profile=profile,
         experience=experience,
         document=document,
-        skills=services_ids  # (temporary fix OR replace with M2M later)
+        skills=skills  # (temporary fix OR replace with M2M later)
     )
 
     return Response({"message": "Application submitted"})

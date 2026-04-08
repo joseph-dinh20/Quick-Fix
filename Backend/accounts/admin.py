@@ -1,9 +1,5 @@
 from django.contrib import admin
-<<<<<<< HEAD
-from .models import Profile, ServiceProvider, WorkImage, ProviderApplication
-=======
-from .models import Profile, ServiceProvider, WorkImage, Language
->>>>>>> origin/main
+from .models import Profile, ServiceProvider, WorkImage, ProviderApplication, Language
 
 @admin.register(Profile)
 class ProfileAdmin(admin.ModelAdmin):
@@ -31,11 +27,8 @@ class ServiceProviderAdmin(admin.ModelAdmin):
         return obj.profile.user.email
     profile_email.short_description = "Email"
 
-<<<<<<< HEAD
 admin.site.register(ProviderApplication)
-=======
 
 @admin.register(Language)
 class LanguageAdmin(admin.ModelAdmin):
     list_display = ["id", "name"]
->>>>>>> origin/main

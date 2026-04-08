@@ -1,35 +1,6 @@
 <script setup>
 import { ref, computed, onMounted } from "vue";
 
-<<<<<<< HEAD
-import Header from "@/components/Header.vue"
-import Payment from "@/components/Payment.vue"
-import Main from "@/components/Main.vue"
-import Login from "@/components/Login.vue"
-import Signup from "@/components/Signup.vue"
-import Form from "@/components/Form.vue"
-import Profile from "@/components/Profile.vue"
-import Test from "@/components/Test.vue"
-import Hello from "@/components/Hello.vue"
-import Temp from "@/components/Temp.vue"
-import Provider from "@/components/Provider.vue"
-import ProviderList from '@/components/ProviderList.vue'
-import ProviderTest from '@/components/ProviderTest.vue'
-import Hello1 from '@/components/hello1.vue'
-import Hello2 from '@/components/hello2.vue'
-import Hello3 from '@/components/hello3.vue'
-import Hello4 from '@/components/hello4.vue'
-import JoinUs from './components/JoinUs.vue'
-import Settings from './components/Settings.vue'
-import DemoLocation from './components/DemoLocation.vue'
-import DemoCreateJob from './components/DemoCreateJob.vue'
-import DemoCreateJob2 from './components/DemoCreateJob2.vue'
-import DemoMyJobs from './components/DemoMyJobs.vue'
-import DemoJobListings from './components/DemoJobListings.vue'
-import FavoriteProvider from '@/components/FavoriteProvider.vue'
-import DemoProvider from './components/DemoProvider.vue'
-import BecomeFixer from './components/BecomeFixer.vue'
-=======
 import Header from "@/components/Header.vue";
 import Payment from "@/components/Payment.vue";
 import Main from "@/components/Main.vue";
@@ -57,7 +28,7 @@ import DemoJobListings from "./components/DemoJobListings.vue";
 import FavoriteProvider from "@/components/FavoriteProvider.vue";
 import DemoProvider from "./components/DemoProvider.vue";
 import Scheduler from "./components/Scheduler.vue";
->>>>>>> origin/main
+import BecomeFixer from './components/BecomeFixer.vue';
 
 import { me, initCsrf, logout as apiLogout } from "@/services/api.js";
 import { Toaster } from "@/components/ui/sonner";
@@ -122,13 +93,9 @@ const routes = {
   "/DemoJobListings": DemoJobListings,
   "/FavoriteProvider": FavoriteProvider,
   "/DemoProvider": DemoProvider,
-<<<<<<< HEAD
   "/BecomeFixer": BecomeFixer,
-}
-=======
   "/Scheduler": Scheduler,
 };
->>>>>>> origin/main
 
 const currentPath = ref(window.location.hash);
 
