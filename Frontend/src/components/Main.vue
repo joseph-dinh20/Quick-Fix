@@ -9,7 +9,7 @@ import drillImage from "@/assets/icons/drill.png";
 import garden from "@/assets/icons/garden.png";
 
 const showScroll = ref(false);
-const value = ref("");
+const searchBarInput = ref("");
 
 const jobs = [{ name: "Home Maintenance" }, { name: "Gardening" }];
 
@@ -68,7 +68,7 @@ onMounted(() => {
 });
 
 const filteredJobs = computed(() => {
-  const query = value.value.toLowerCase();
+  const query = searchBarInput.value.toLowerCase();
   return jobs.filter((job) => job.name.toLowerCase().includes(query));
 });
 
@@ -77,18 +77,20 @@ function showScrollState() {
 }
 
 function selectjob(item) {
-  value.value = item.name;
+  searchBarInput.value = item.name;
 }
 
 // WARN: quick and dirty way to re-route in the search bar
 function handleSearch() {
   const match = jobs.find(
-    (job) => job.name.toLowerCase() === value.value.toLowerCase(),
+    (job) => job.name.toLowerCase() === searchBarInput.value.toLowerCase(),
   );
   if (match) {
     window.location.hash = "#/Form";
+  } else {
+    console.log("job does not match");
   }
-  console.log("HandleSearhc() function called");
+  console.log("HandleSearch() function called");
 }
 </script>
 
@@ -110,15 +112,21 @@ function handleSearch() {
         <!-- NOTE: Search Box -->
         <div class="w-full max-w-sm relative">
           <div class="mt-10 flex items-center gap-2">
+            <!-- WARN: overriding Input component's text size with !text-lg -->
             <Input
               type="text"
-              v-model="value"
+              v-model="searchBarInput"
               @focus="showScrollState"
               @blur="showScrollState"
               placeholder="What do you need help with?"
-              class="border-2 border-stone-600 rounded-lg"
+              class="!text-lg text-lg pt-5 pb-5 placeholder:text-lg border-2 border-stone-600 rounded-4xl"
             />
-            <Button type="submit" @click="handleSearch">Search</Button>
+            <Button
+              type="submit"
+              class="cursor-pointer rounded-4xl"
+              @click="handleSearch"
+              >Search</Button
+            >
           </div>
           <div v-if="showScroll" class="absolute mt-1 w-full z-10">
             <ScrollArea class="h-50 w-full rounded-md bg-background shadow-lg">
@@ -127,7 +135,7 @@ function handleSearch() {
                   v-for="job in filteredJobs"
                   :key="job.name"
                   @mousedown="selectjob(job)"
-                  class="cursor-pointer rounded px-2 py-1 hover:bg-muted transition"
+                  class="text-lg cursor-pointer rounded px-2 py-1 hover:bg-muted transition"
                 >
                   {{ job.name }}
                 </div>
@@ -143,7 +151,7 @@ function handleSearch() {
           <div class="flex flex-col items-center">
             <a href="#/Form">
               <Button
-                class="p-1"
+                class="cursor-pointer p-1"
                 variant="outline"
                 size="icon"
                 aria-label="Submit"
@@ -156,7 +164,7 @@ function handleSearch() {
           <div class="flex flex-col items-center">
             <a href="#/Form">
               <Button
-                class="p-1"
+                class="cursor-pointer p-1"
                 variant="outline"
                 size="icon"
                 aria-label="Submit"

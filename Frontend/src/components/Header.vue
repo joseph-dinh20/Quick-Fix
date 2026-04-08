@@ -1,33 +1,38 @@
 <script setup>
-import { ref } from 'vue'
-import LogoImage from '@/assets/icons/logo.png'
-import { Separator } from '@/components/ui/separator';
+import { ref } from "vue";
+import LogoImage from "@/assets/icons/logo.png";
+import { Separator } from "@/components/ui/separator";
 
 const navigate = (hash) => {
-  window.location.hash = hash
-}
-
+  window.location.hash = hash;
+};
 </script>
 <template>
   <div>
     <header class="flex min-w-screen justify-evenly items-center p-2">
       <div class="w-25 items-center h-auto flex justify-center">
         <button @click="navigate('/')">
-          <img :src="LogoImage" class="scale-[3] pointer-events-none mt-5">
+          <img :src="LogoImage" class="scale-[3] pointer-events-none mt-5" />
         </button>
       </div>
       <div class="button-scope">
         <!-- <button class="big-button" @click="navigate('/')">Home</button> -->
         <!-- <button class="big-button" @click="navigate('/Payment')">Payment</button> -->
-        <!-- <button class="big-button" @click="navigate('#/Login')">Login</button> -->
+        <button class="big-button" @click="navigate('#/Login')">Login</button>
         <!-- <button class="big-button" @click="navigate('#/Provider')">Provider</button> -->
         <!-- <button class="big-button" @click="navigate('#/Test')">Test</button> -->
         <!-- <button class="big-button" @click="navigate('#/Temp')">temp</button> -->
         <button class="big-button" @click="navigate('#/Signup')">Signup</button>
-        <button class="big-button" @click="navigate('#/Form')">Form</button>
-        <button class="big-button" @click="navigate('#/Profile')">Profile</button>
-        <button class="big-button" @click="navigate('#/ProviderList')">ProviderList</button>
-        <button class="big-button" @click="navigate('#/FavoriteProvider')">FavoriteProvider</button>
+        <!-- <button class="big-button" @click="navigate('#/Form')">Form</button> -->
+        <button class="big-button" @click="navigate('#/Profile')">
+          Profile
+        </button>
+        <!-- <button class="big-button" @click="navigate('#/ProviderList')"> -->
+        <!--   ProviderList -->
+        <!-- </button> -->
+        <button class="big-button" @click="navigate('#/FavoriteProvider')">
+          FavoriteProvider
+        </button>
       </div>
     </header>
     <Separator class="my-3" />
@@ -52,7 +57,6 @@ const navigate = (hash) => {
 
 /* Keeping the header buttons aligned top to bottom */
 @media (max-width: 600px) {
-
   /* header adjustment is needed since logo is not part of the buttons */
   header {
     flex-direction: column;
