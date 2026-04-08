@@ -27,6 +27,7 @@ import DemoMyJobs from "./components/DemoMyJobs.vue";
 import DemoJobListings from "./components/DemoJobListings.vue";
 import FavoriteProvider from "@/components/FavoriteProvider.vue";
 import DemoProvider from "./components/DemoProvider.vue";
+import DemoSavedJobs from "./components/DemoSavedJobs.vue";
 import DemoProviderList from "./components/DemoProviderList.vue";
 import DemoFavoriteProvider from "./components/DemoFavoriteProvider.vue";
 import Scheduler from "./components/Scheduler.vue";
@@ -95,6 +96,7 @@ const routes = {
   "/FavoriteProvider": FavoriteProvider,
   "/DemoFavoriteProvider": DemoFavoriteProvider,
   "/DemoProvider": DemoProvider,
+  "/DemoSavedJobs": DemoSavedJobs,
   "/DemoProviderList": DemoProviderList,
   "/Scheduler": Scheduler,
 };
