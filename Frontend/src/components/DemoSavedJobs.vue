@@ -78,7 +78,7 @@
           </div>
 
           <div class="flex flex-col sm:items-end w-full sm:w-auto gap-3 mt-4 sm:mt-0">
-            <Button @click="openJobModal(job)" class="w-full sm:w-auto bg-green-500 hover:bg-green-600 text-white font-semibold">
+            <Button @click="openJobModal(job)" class="w-full sm:w-auto text-white font-semibold">
               View Job
             </Button>
 

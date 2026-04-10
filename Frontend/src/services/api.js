@@ -44,7 +44,7 @@ export const loadProvider = (id) => {
 };
 
 export const loadProviders = () => {
-  return api.get(`/accounts/providers/`, params);
+  return api.get(`/accounts/providers/`); // This had params for some reason
 };
 
 function getCSRFToken() {
