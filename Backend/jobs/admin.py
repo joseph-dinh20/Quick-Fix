@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Job, JobImage
+from .models import Job, JobImage, JobApplication
 
 class JobImageInline(admin.TabularInline):
     model = JobImage
@@ -16,3 +16,9 @@ class JobAdmin(admin.ModelAdmin):
     inlines = [JobImageInline]
     filter_horizontal = ('services',)  
 
+
+@admin.register(JobApplication)
+class JobApplicationAdmin(admin.ModelAdmin):
+    list_display = ('job', 'provider', 'status')
+    list_filter = ('status', 'created_at')
+    ordering = ('-created_at',)
