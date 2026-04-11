@@ -214,7 +214,7 @@ export function fetchAssignedJobs() {
 }
 
 export function completeJob(id) {
-  return api.get(`/jobs/${id}/complete/`)
+  return api.post(`/jobs/${id}/complete/`)
 }
 
 export default api;
