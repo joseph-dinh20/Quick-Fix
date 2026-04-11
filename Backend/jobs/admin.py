@@ -8,7 +8,7 @@ class JobImageInline(admin.TabularInline):
 
 @admin.register(Job)
 class JobAdmin(admin.ModelAdmin):
-    list_display = ('title', 'customer', 'budget', 'created_at', 'deadline', 'is_open', 'request_type')
+    list_display = ('title', 'customer', 'budget', 'created_at', 'deadline', 'is_open', 'request_type', 'status')
     list_filter = ('is_open', 'request_type', 'created_at')
     search_fields = ('title', 'description', 'customer__user__username') 
     date_hierarchy = 'created_at'

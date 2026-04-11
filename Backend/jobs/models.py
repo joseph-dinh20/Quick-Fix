@@ -85,6 +85,17 @@ class Job(models.Model):
         blank=True
     )
 
+    status = models.CharField(
+        max_length=20,
+        choices=[
+            ("open", "Open"),
+            ("in_progress", "In Progress"),
+            ("complete", "Complete"),
+            ("cancelled", "Cancelled"),
+        ],
+        default="open"
+    )
+
     def __str__(self):
         return self.title
     
