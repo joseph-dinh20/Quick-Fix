@@ -60,17 +60,17 @@ const steps = [
                 <Input 
                     type="email" 
                     placeholder="Enter your email" 
-                    class="h-14 px-6 rounded-xl border-input focus-visible:ring-green-500 shadow-sm"
+                    class="h-14 px-6 rounded-xl border-input focus-visible:ring-primary shadow-sm"
                 />
                 <Button 
-                    class="w-full sm:w-auto h-14 bg-[green] hover:bg-green-600 text-white font-bold px-8 rounded-xl transition-all"
+                    class="w-full sm:w-auto h-14 bg-primary hover:bg-green-600 text-white font-bold px-8 rounded-xl transition-all"
                 >
                     Get Started
                 </Button>
             </div>
             <p class="mt-6 text-sm text-muted-foreground">
                 Already have an account?
-                <router-link to="/Signup" class="text-green-500 font-bold hover:underline">
+                <router-link to="/Signup" class="text-primary font-bold hover:underline">
                     Sign In
                 </router-link>
             </p>
@@ -110,7 +110,7 @@ const steps = [
                         :key="step.number"
                         class="flex flex-col items-center"
                     >
-                        <div class="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center font-bold mb-6 text-lg ring-4 ring-green-500/20">
+                        <div class="w-12 h-12 bg-primary rounded-full flex items-center justify-center font-bold mb-6 text-lg ring-4 ring-green-500/20">
                             {{ step.number }}
                         </div>
                         <h3 class="text-xl font-bold mb-4">{{ step.title }}</h3>

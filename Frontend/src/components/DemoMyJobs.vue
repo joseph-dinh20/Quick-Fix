@@ -129,7 +129,7 @@ onMounted(fetchJobs)
             placeholder="Search postings"
             class="border-0 focus-visible:ring-0 shadow-none pl-10 bg-transparent w-full"
           />
-          <Button class="bg-green-500 hover:bg-green-600 text-white rounded-full px-6 py-2 shrink-0 h-auto font-bold">
+          <Button class="bg-primary hover:bg-primary text-white rounded-full px-6 py-2 shrink-0 h-auto font-bold">
             Search
           </Button>
         </div>
@@ -154,7 +154,7 @@ onMounted(fetchJobs)
           v-for="job in jobs" 
           :key="job.id" 
           @click="openJobDetails(job)"
-          class="overflow-hidden border-slate-200 shadow-sm rounded-xl hover:shadow-md hover:border-green-200 transition-all cursor-pointer"
+          class="overflow-hidden border-slate-200 shadow-sm rounded-xl hover:shadow-md hover:border-primary transition-all cursor-pointer"
         >
           <CardContent class="p-5 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
             <div>
@@ -345,7 +345,7 @@ onMounted(fetchJobs)
                     type="file" 
                     multiple 
                     accept="image/*" 
-                    class="cursor-pointer file:bg-green-50 file:text-green-600 file:border-0 file:rounded-md file:px-4 file:py-2 file:mr-4 file:font-semibold hover:file:bg-green-100" 
+                    class="cursor-pointer file:bg-primary file:text-primary file:border-0 file:rounded-md file:px-4 file:py-2 file:mr-4 file:font-semibold hover:file:bg-primary" 
                     @change="handleImageSelection"
                   />
                 </div>
@@ -357,7 +357,7 @@ onMounted(fetchJobs)
             <Button variant="outline" @click="isEditDialogOpen = false" class="font-bold">
               Cancel
             </Button>
-            <Button @click="saveJobChanges" class="bg-green-500 hover:bg-green-600 text-white font-bold">
+            <Button @click="saveJobChanges" class="bg-primary hover:bg-primary text-white font-bold">
               Save Changes
             </Button>
           </div>

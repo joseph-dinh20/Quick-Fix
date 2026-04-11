@@ -143,7 +143,7 @@
               variant="link"
               @click="toggle(job)"
               class="h-auto p-0 text-xs font-medium decoration-1 underline-offset-4"
-              :class="job.is_favorited ? 'text-green-500' : 'text-slate-500 hover:text-slate-800'"
+              :class="job.is_favorited ? 'text-primary' : 'text-slate-500 hover:text-slate-800'"
             >
               <svg v-if="job.is_favorited" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-1.5"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"></path></svg>
               {{ job.is_favorited ? "Favorite" : "Save to Favorites" }}
