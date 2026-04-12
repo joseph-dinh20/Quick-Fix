@@ -209,4 +209,12 @@ export function deleteReviewImage(id) {
   return api.delete(`/reviews/images/${id}/delete/`)
 }
 
+export function fetchAssignedJobs() {
+  return api.get(`/jobs/assigned/`)
+}
+
+export function completeJob(id) {
+  return api.post(`/jobs/${id}/complete/`)
+}
+
 export default api;

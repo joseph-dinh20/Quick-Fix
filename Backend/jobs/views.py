@@ -4,9 +4,10 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.exceptions import PermissionDenied, NotFound
 
-from .models import Job
-from .serializers import JobCreateSerializer, JobSerializer, JobUpdateSerializer
+from .models import Job, JobApplication
+from .serializers import JobCreateSerializer, JobSerializer, JobUpdateSerializer, JobApplicationSerializer
 from accounts.models import ServiceProvider, Profile
 from haversine import haversine, Unit
 
@@ -78,7 +79,7 @@ def toggle_favorite(request, job_id):
 @api_view(["GET"])
 @permission_classes([AllowAny])
 def list_jobs(request):
-    jobs = Job.objects.filter(is_open=True).order_by("-id")  # only open jobs, newest first
+    jobs = Job.objects.filter(is_open=True, assigned_provider__isnull=True).order_by("-id")  # only open jobs, newest first
 
     serializer = JobSerializer(
         jobs,
@@ -158,5 +159,150 @@ def search_jobs(request):
 
         jobs = [job for job in jobs if haversine(user_coord, (job.latitude, job.longitude), unit=Unit.MILES) <= float(max_distance)]
 
+    serializer = JobSerializer(jobs, many=True, context={"request": request})
+    return Response(serializer.data)
+
+
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
+def my_applications(request):
+    profile = request.user.profile
+
+    if not hasattr(profile, "serviceprovider"):
+        raise PermissionDenied("You are not a service provider")
+
+    provider = profile.serviceprovider
+
+    apps = JobApplication.objects.filter(provider=provider)
+
+    serializer = JobApplicationSerializer(apps, many=True)
+    return Response(serializer.data)
+
+
+@api_view(["POST"])
+@permission_classes([IsAuthenticated])
+def apply_to_job(request, job_id):
+    profile = request.user.profile
+
+    if not hasattr(profile, "serviceprovider"):
+        raise PermissionDenied("You are not a service provider")
+
+    provider = profile.serviceprovider
+
+    try:
+        job = Job.objects.get(id=job_id)
+    except Job.DoesNotExist:
+        raise NotFound("Job not found")
+
+    if job.assigned_provider is not None or job.status != "open":
+        return Response(
+            {"detail": "This job is no longer accepting applications"},
+            status=status.HTTP_400_BAD_REQUEST
+        )
+
+    if JobApplication.objects.filter(job=job, provider=provider).exists():
+        return Response(
+            {"detail": "You have already applied to this job"},
+            status=status.HTTP_400_BAD_REQUEST
+        )
+
+
+    application = JobApplication.objects.create(
+        job=job,
+        provider=provider,
+    )
+
+    return Response(
+        {"detail": "Application submitted", "application_id": application.id},
+        status=status.HTTP_201_CREATED
+    )
+
+
+@api_view(["POST"])
+@permission_classes([IsAuthenticated])
+def accept_application(request, application_id):
+    profile = request.user.profile
+
+    job_application = JobApplication.objects.select_related("job", "provider").filter(id=application_id).first()
+
+    if not job_application:
+        raise NotFound("Application not found")
+
+    job = job_application.job
+
+    if job.customer != profile:
+        raise PermissionDenied("You do not own this job")
+
+    if job.assigned_provider is not None or job.status != "open":
+        return Response(
+            {"detail": "Job is no longer available"},
+            status=status.HTTP_400_BAD_REQUEST
+        )
+
+    provider = job_application.provider
+
+    job.assigned_provider = provider
+    job.status = "in_progress"
+    job.save()
+
+    job_application.status = "accepted"
+    job_application.save()
+
+    JobApplication.objects.filter(job=job).exclude(id=job_application.id).update(
+        status="rejected"
+    )
+
+    return Response(
+        {"detail": "Application accepted and provider assigned"},
+        status=status.HTTP_200_OK
+    )
+
+
+@api_view(["POST"])
+@permission_classes([IsAuthenticated])
+def complete_job(request, job_id):
+    profile = request.user.profile
+
+    if not hasattr(profile, "serviceprovider"):
+        raise PermissionDenied("You are not a service provider")
+
+    provider = profile.serviceprovider
+
+    job = Job.objects.filter(id=job_id).select_related("assigned_provider").first()
+    if not job:
+        raise NotFound("Job not found")
+
+    if job.assigned_provider != provider:
+        raise PermissionDenied("You are not assigned to this job")
+
+    if job.status != "in_progress":
+        return Response(
+            {"detail": "Job is not in progress"},
+            status=status.HTTP_400_BAD_REQUEST
+        )
+
+    job.status = "complete"
+    job.is_open = False
+    job.save()
+
+    return Response(
+        {"detail": "Job marked as complete"},
+        status=status.HTTP_200_OK
+    )
+
+
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
+def get_assigned_jobs(request):
+    profile = request.user.profile
+
+    if not hasattr(profile, "serviceprovider"):
+        raise PermissionDenied("You are not a service provider")
+
+    provider = profile.serviceprovider
+
+    jobs = Job.objects.filter(
+        assigned_provider=provider
+    ).order_by("-created_at")
     serializer = JobSerializer(jobs, many=True, context={"request": request})
     return Response(serializer.data)

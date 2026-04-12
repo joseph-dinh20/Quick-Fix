@@ -32,6 +32,7 @@ import DemoProviderList from "./components/DemoProviderList.vue";
 import DemoFavoriteProvider from "./components/DemoFavoriteProvider.vue";
 import Scheduler from "./components/Scheduler.vue";
 import BecomeFixer from './components/BecomeFixer.vue';
+import DemoAssignedJobs from './components/DemoAssignedJobs.vue';
 
 import { me, initCsrf, logout as apiLogout } from "@/services/api.js";
 import { Toaster } from "@/components/ui/sonner";
@@ -101,6 +102,7 @@ const routes = {
   "/DemoSavedJobs": DemoSavedJobs,
   "/DemoProviderList": DemoProviderList,
   "/Scheduler": Scheduler,
+  "/DemoAssignedJobs": DemoAssignedJobs,
 };
 
 const currentPath = ref(window.location.hash);

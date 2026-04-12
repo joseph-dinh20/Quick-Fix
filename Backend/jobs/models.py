@@ -1,5 +1,5 @@
 from django.db import models
-from accounts.models import Profile
+from accounts.models import Profile, ServiceProvider
 from services.models import Service
 from django.core.validators import MinValueValidator
 
@@ -14,6 +14,14 @@ class Job(models.Model):
     services = models.ManyToManyField(
         Service,
         related_name="jobs"
+    )
+
+    assigned_provider = models.ForeignKey(
+        ServiceProvider,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="assigned_jobs"
     )
 
     title = models.CharField(max_length=200)
@@ -77,6 +85,17 @@ class Job(models.Model):
         blank=True
     )
 
+    status = models.CharField(
+        max_length=20,
+        choices=[
+            ("open", "Open"),
+            ("in_progress", "In Progress"),
+            ("complete", "Complete"),
+            ("cancelled", "Cancelled"),
+        ],
+        default="open"
+    )
+
     def __str__(self):
         return self.title
     
@@ -100,3 +119,32 @@ class JobImage(models.Model):
 
     def __str__(self):
         return f"Job {self.job.id} Image {self.id}"
+    
+
+class JobApplication(models.Model):
+    job = models.ForeignKey(
+        Job,
+        on_delete=models.CASCADE,
+        related_name="applications"
+    )
+
+    provider = models.ForeignKey(
+        ServiceProvider,
+        on_delete=models.CASCADE,
+        related_name="applications"
+    )
+
+    status = models.CharField(
+        max_length=20,
+        choices=[
+            ("pending", "Pending"),
+            ("accepted", "Accepted"),
+            ("rejected", "Rejected"),
+        ],
+        default="pending"
+    )
+
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ("job", "provider")
