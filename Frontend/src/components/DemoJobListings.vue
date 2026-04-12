@@ -1,4 +1,5 @@
 <template>
+
   <div class="min-h-screen bg-slate-0 text-slate-900 p-6 md:p-12 font-sans relative">
     <div class="max-w-5xl mx-auto">
       
@@ -10,12 +11,13 @@
       </div>
 
       <Card class="flex flex-col md:flex-row items-center rounded-full p-2 mb-8 shadow-sm border-slate-200 gap-2 md:gap-0">
-        <div class="flex items-center flex-1 px-4 w-full">
+        <ServiceSearchSelect class="flex-1 px-4 w-50" v-model="selectedService" placeholder="Enter your task..." />
+        <!-- <div class="flex items-center flex-1 px-4 w-full">
           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-slate-400 mr-3"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg>
           <Input
             v-model="titleSearch" placeholder="What do you need done?"
-          />
-        </div>
+          /> -->
+        <!-- </div> -->
         <div class="hidden md:block w-[1px] h-8 bg-slate-200"></div>
         <div class="flex items-center flex-1 px-4 w-full border-t md:border-none border-slate-100 pt-2 md:pt-0 mt-2 md:mt-0">
           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-slate-400 mr-3"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"></path><circle cx="12" cy="10" r="3"></circle></svg>
@@ -42,7 +44,6 @@
       </div>-->
 
       <div class="flex flex-wrap gap-3 mb-10">
-  
         <!-- Category -->
         <select v-model="selectedCategory" class="border p-2 rounded">
           <option value="">All Categories</option>
@@ -265,15 +266,22 @@
     </Dialog>
 
   </div>
+
+
 </template>
 
-<script>
+<script >
 import { getAllJobs, toggleFavoriteJob } from "@/services/api";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
+import ServiceSearchSelect from "@/components/ServiceSearchSelect.vue"
+import { ref } from "vue"
+
+
+const selectedService = ref(null)
 
 export default {
   name: "JobsList",
@@ -285,6 +293,7 @@ export default {
     Skeleton,
     Dialog,
     DialogContent,
+    ServiceSearchSelect,
   },
 
   data() {
@@ -302,6 +311,8 @@ export default {
       selectedLocation: "",
       selectedBudget: "",
       selectedJobType: "",
+
+      selectedService: null,
     };
   },
 
