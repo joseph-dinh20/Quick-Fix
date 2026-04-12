@@ -113,6 +113,13 @@ async function saveJobChanges() {
   }
 }
 
+function formatDate(date) {
+  if (!date) return '-'
+  return new Date(date).toLocaleDateString('en-US', {
+    year: 'numeric', month: 'short', day: 'numeric',
+  })
+}
+
 onMounted(fetchJobs)
 </script>
 
@@ -162,16 +169,24 @@ onMounted(fetchJobs)
               <div class="flex items-center gap-3 text-sm">
                 <Badge 
                   variant="outline" 
-                  :class="job.status === 'inactive' 
+                  :class="job.status === 'open' 
                     ? 'bg-red-50 text-red-600 border-red-200' 
-                    : 'bg-green-50 text-green-600 border-green-200'"
+                    : (
+                      job.status === 'complete' ?
+                      'bg-green-50 text-green-600 border-green-200'
+                      : (
+                        job.status === 'in_progress' ?
+                        'bg-yellow-50 text-yellow-600 border-yellow-200'
+                        : 'bg-blue-50 text-blue-600 border-blue-200'
+                      )
+                    )"
                   class="font-medium px-2.5 py-0.5 rounded-md capitalize"
                 >
-                  {{ job.status === 'inactive' ? 'Inactive' : 'Active' }}
+                  {{ job.status === 'in_progress' ? 'In Progress' : job.status }}
                 </Badge>
                 <div class="flex items-center text-slate-500 font-medium">
                   <Calendar class="w-4 h-4 mr-1.5 text-slate-400" />
-                  <span>{{ job.deadline || 'No date set' }}</span>
+                  <span>{{ formatDate(job.deadline) }}</span>
                 </div>
               </div>
             </div>
