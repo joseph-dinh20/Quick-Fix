@@ -81,7 +81,7 @@ function handleSelect(service) {
   searchQuery.value = service.name
   debouncedQuery.value = ''
   selectedService.value = service
-  emit('update:modelValue', service)
+  emit('update:modelValue', service.id)
 }
 </script>
 
