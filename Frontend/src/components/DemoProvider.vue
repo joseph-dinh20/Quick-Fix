@@ -7,6 +7,7 @@ import {
 import {
   Avatar, AvatarFallback, AvatarImage,
 } from '@/components/ui/avatar'
+import defaultAvatar from "@/assets/avatars/defaultAvatar.png";
 
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -142,7 +143,9 @@ console.log('showReadMoreButton state = ' + showReadMoreButton.value)
         <div class="flex flex-row gap-10 m-2">
           <Avatar class="scale-[2]">
             <AvatarImage :src="provider.avatar" alt="photo" />
-            <AvatarFallback>Avatar</AvatarFallback>
+            <AvatarFallback>
+              <img :src="defaultAvatar" />
+            </AvatarFallback>
           </Avatar>
           <div class="flex flex-col h-10">
             <CardTitle>{{ provider.name }}</CardTitle>

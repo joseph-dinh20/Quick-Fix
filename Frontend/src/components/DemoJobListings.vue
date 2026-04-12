@@ -1,4 +1,5 @@
 <template>
+
   <div class="min-h-screen bg-slate-0 text-slate-900 p-6 md:p-12 font-sans relative">
     <div class="max-w-5xl mx-auto">
       
@@ -9,18 +10,19 @@
         </Button>
       </div>
 
-      <Card class="flex flex-col md:flex-row items-center rounded-full p-2 mb-8 shadow-sm border-slate-200 gap-2 md:gap-0">
-        <div class="flex items-center flex-1 px-4 w-full">
+      <Card class="flex flex-col md:flex-row items-center rounded-full p-2 mb-3 shadow-sm border-slate-200 gap-2 md:gap-0">
+        <ServiceSearchSelect class="flex-1 px-4 w-50" v-model="pendingService" placeholder="Enter your task..." />
+        <!-- <div class="flex items-center flex-1 px-4 w-full">
           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-slate-400 mr-3"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg>
           <Input
             v-model="titleSearch" placeholder="What do you need done?"
-          />
-        </div>
+          /> -->
+        <!-- </div> -->
         <div class="hidden md:block w-[1px] h-8 bg-slate-200"></div>
         <div class="flex items-center flex-1 px-4 w-full border-t md:border-none border-slate-100 pt-2 md:pt-0 mt-2 md:mt-0">
           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-slate-400 mr-3"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"></path><circle cx="12" cy="10" r="3"></circle></svg>
           <Input
-            v-model="locationSearch" placeholder="City, State, Zip Code"
+            v-model="pendingLocation" placeholder="City, State, Zip Code"
           />
         </div>
         <Button @click="searchJobs" class="w-full md:w-auto text-white rounded-full px-8 py-2.5">
@@ -42,9 +44,8 @@
       </div>-->
 
       <div class="flex flex-wrap gap-3 mb-10">
-  
         <!-- Category -->
-        <select v-model="selectedCategory" class="border p-2 rounded">
+        <!-- <select v-model="selectedCategory" class="border p-2 rounded">
           <option value="">All Categories</option>
           <option
             v-for="service in services"
@@ -53,30 +54,53 @@
           >
             {{ service.name }}
           </option>
-        </select>
+        </select> -->
 
-        <!-- Location -->
-        <select v-model="selectedLocation" class="border p-2 rounded">
-          <option value="">All Locations</option>
-          <option value="long beach">Long Beach</option>
-          <option value="los angeles">Los Angeles</option>
-        </select>
+        <!-- Distance -->
+         <Select v-model="pendingDistance">
+          <SelectTrigger class="border p-2 rounded w-30">
+            <SelectValue placeholder="Distance" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="5">5 Miles</SelectItem>
+            <SelectItem value="10">10 Miles</SelectItem>
+            <SelectItem value="15">15 Miles</SelectItem>
+            <SelectItem value="20">20 Miles</SelectItem>
+            <SelectItem value="25">25 Miles</SelectItem>
+            <SelectItem value="30">30 Miles</SelectItem>
+          </SelectContent>
+        </Select>
 
         <!-- Budget -->
-        <select v-model="selectedBudget" class="border p-2 rounded">
-          <option value="">Any Budget</option>
-          <option value="0-50">$0 - $50</option>
-          <option value="50-200">$50 - $200</option>
-          <option value="200+">$200+</option>
-        </select>
+
+        <Select v-model="pendingBudget">
+          <SelectTrigger class="border p-2 rounded w-30">
+            <SelectValue placeholder="Budget" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value=".">Budget</SelectItem>
+            <SelectItem value="0-25">$0 - $25</SelectItem>
+            <SelectItem value="25-50">$25 - $50</SelectItem>
+            <SelectItem value="50-75">$50 - $75</SelectItem>
+            <SelectItem value="75-100">$75 - $100</SelectItem>
+            <SelectItem value="100-150">$100 - $150</SelectItem>
+            <SelectItem value="150-200">$150 - $200</SelectItem>
+            <SelectItem value="200+">$200+</SelectItem>
+          </SelectContent>
+        </Select>
 
         <!-- Job Type -->
-        <select v-model="selectedJobType" class="border p-2 rounded">
-          <option value="">All Types</option>
-          <option value="quote">Quote</option>
-          <option value="service">Service</option>
-          <option value="both">Both</option>
-        </select>
+
+        <Select v-model="pendingJobType">
+          <SelectTrigger class="border p-2 rounded w-30">
+            <SelectValue placeholder="All Types" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="quote">Quote</SelectItem>
+            <SelectItem value="service">Service</SelectItem>
+            <SelectItem value="both">Both</SelectItem>
+          </SelectContent>
+        </Select>
 
       </div>
 
@@ -120,7 +144,7 @@
               <span class="text-sm font-bold text-slate-900">
                 {{ job.budget ? `$${job.budget}` : 'Budget not provided' }}
               </span>
-              <span class="text-sm text-slate-500"> budget</span>
+              <!-- <span class="text-sm text-slate-500"> budget</span> -->
             </div>
 
             <div class="flex flex-wrap gap-2 mt-2">
@@ -143,7 +167,7 @@
               variant="link"
               @click="toggle(job)"
               class="h-auto p-0 text-xs font-medium decoration-1 underline-offset-4"
-              :class="job.is_favorited ? 'text-green-500' : 'text-slate-500 hover:text-slate-800'"
+              :class="job.is_favorited ? 'text-primary' : 'text-slate-500 hover:text-slate-800'"
             >
               <svg v-if="job.is_favorited" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-1.5"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"></path></svg>
               {{ job.is_favorited ? "Favorite" : "Save to Favorites" }}
@@ -240,7 +264,7 @@
                   <rect width="18" height="18" x="3" y="4" rx="2"></rect>
                   <path d="M3 10h18"></path>
                 </svg>
-                {{ selectedJob.deadline || 'No deadline provided' }}
+                {{ formatDate(selectedJob.deadline) }}
               </div>
 
             </div>
@@ -265,15 +289,23 @@
     </Dialog>
 
   </div>
+
+
 </template>
 
-<script>
+<script >
 import { getAllJobs, toggleFavoriteJob } from "@/services/api";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
+import ServiceSearchSelect from "@/components/ServiceSearchSelect.vue"
+import { ref } from "vue"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+
+
+const selectedService = ref(null)
 
 export default {
   name: "JobsList",
@@ -285,6 +317,12 @@ export default {
     Skeleton,
     Dialog,
     DialogContent,
+    ServiceSearchSelect,
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
   },
 
   data() {
@@ -295,13 +333,17 @@ export default {
       selectedJob: null,
       isDialogOpen: false,
 
-      searchTitle: "",
-      searchLocation: "",
+      pendingDistance: '10',
+      pendingLocation: '',
+      pendingBudget: '',
+      pendingJobType: 'service',
+      pendingService: '',
 
-      selectedCategory: "",
+      selectedDistance: "",
       selectedLocation: "",
       selectedBudget: "",
       selectedJobType: "",
+      selectedService: "",
     };
   },
 
@@ -326,10 +368,18 @@ export default {
 
         // category
         const matchesCategory =
-          !this.selectedCategory ||
+          !this.selectedService ||
           job.services.some(service =>
-            service.id === Number(this.selectedCategory)
+            service.id === Number(this.selectedService)
           );
+        try {
+          console.log(this.selectedCategory)
+        }
+        catch {}
+        try {
+          console.log(this.selectedService)
+        }
+        catch {}
         // location
         const matchesLocationDropdown =
           !this.selectedLocation ||
@@ -343,11 +393,25 @@ export default {
         //budget
         let matchesBudget = true;
 
-        if (this.selectedBudget === "0-50") {
-          matchesBudget = job.budget <= 50;
-        } else if (this.selectedBudget === "50-200") {
-          matchesBudget = job.budget > 50 && job.budget <= 200;
-        } else if (this.selectedBudget === "200+") {
+        if (this.selectedBudget === "0-25") {
+          matchesBudget = job.budget <= 25;
+        } 
+        else if (this.selectedBudget === "25-50") {
+          matchesBudget = job.budget > 25 && job.budget <= 50;
+        } 
+        else if (this.selectedBudget === "50-75") {
+          matchesBudget = job.budget > 50 && job.budget <= 75;
+        } 
+        else if (this.selectedBudget === "75-100") {
+          matchesBudget = job.budget > 75 && job.budget <= 100;
+        } 
+        else if (this.selectedBudget === "100-150") {
+          matchesBudget = job.budget > 100 && job.budget <= 150;
+        } 
+        else if (this.selectedBudget === "150-200") {
+          matchesBudget = job.budget > 150 && job.budget <= 200;
+        } 
+        else if (this.selectedBudget === "200+") {
           matchesBudget = job.budget > 200;
         }
 
@@ -387,6 +451,15 @@ export default {
   },
 
   methods: {
+    formatDate(dateStr) {
+      if (!dateStr) return 'No deadline provided'
+      return new Date(dateStr).toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      })
+    },
+
     async fetchServices() {
       const res = await fetch("http://localhost:8000/api/services/");
       this.services = await res.json();
@@ -443,8 +516,11 @@ export default {
     },
 
     searchJobs() {
-      this.searchTitle = this.titleSearch;
-      this.searchLocation = this.locationSearch;
+      this.searchLocation = this.locationSearch
+      this.selectedService = this.pendingService
+      this.selectedDistance = this.pendingDistance
+      this.selectedBudget = this.pendingBudget
+      this.selectedJobType = this.pendingJobType
     },
   },
 };

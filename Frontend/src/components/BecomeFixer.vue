@@ -113,7 +113,7 @@ async function submitForm() {
             :key="s.id"
             @click="toggleSkill(s)"
             class="p-2 rounded cursor-pointer hover:bg-gray-200"
-            :class="form.skills.includes(s) ? 'bg-green-200 font-bold' : ''"
+            :class="form.skills.includes(s) ? 'font-bold' : ''"
         >
          {{ s.name }}
     </div>
@@ -125,7 +125,7 @@ async function submitForm() {
       <span
         v-for="s in form.skills"
         :key="s.id"
-        class="bg-green-500 text-white px-3 py-1 rounded-full text-sm"
+        class="bg-primary text-white px-3 py-1 rounded-full text-sm"
       >
         {{ s.name }}
       </span>
