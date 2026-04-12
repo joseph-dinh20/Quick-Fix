@@ -345,7 +345,7 @@ onMounted(fetchJobs)
                     type="file" 
                     multiple 
                     accept="image/*" 
-                    class="cursor-pointer file:bg-primary file:text-primary file:border-0 file:rounded-md file:px-4 file:py-2 file:mr-4 file:font-semibold hover:file:bg-primary" 
+                    class="cursor-pointer file:bg-green-50 file:text-primary file:border-0 file:rounded-md file:px-4 file:py-2 file:mr-4 file:font-semibold hover:file:bg-green-100" 
                     @change="handleImageSelection"
                   />
                 </div>

@@ -120,7 +120,7 @@
               <span class="text-sm font-bold text-slate-900">
                 {{ job.budget ? `$${job.budget}` : 'Budget not provided' }}
               </span>
-              <span class="text-sm text-slate-500"> budget</span>
+              <!-- <span class="text-sm text-slate-500"> budget</span> -->
             </div>
 
             <div class="flex flex-wrap gap-2 mt-2">
