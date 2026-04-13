@@ -134,7 +134,7 @@ def update_job(request, job_id):
 
 @api_view(["GET"])
 def search_jobs(request):
-    jobs = Job.objects.filter(is_open=True).order_by("-id")
+    jobs = Job.objects.filter(is_open=True, status='open').order_by("-id")
 
     # Filter by services
     services = request.GET.get("services")

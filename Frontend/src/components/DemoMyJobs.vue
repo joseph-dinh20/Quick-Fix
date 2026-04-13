@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted } from "vue"
+import { ref, onMounted, computed } from "vue"
 import { getMyJobs, deleteJob, updateJob } from "../services/api"
 
 // --- UI IMPORTS (Expanded for maximum shadcn usage) ---
@@ -41,6 +41,32 @@ const currentSort = ref("Sort by")
 const isDialogOpen = ref(false)
 const selectedJob = ref(null)
 const isEditDialogOpen = ref(false)
+const searchQuery = ref('')
+const displayQuery = ref('')
+
+const filteredJobs = computed(() => {
+  const sorted = [...jobs.value]
+  if (currentSort.value === 'Newest') {
+    sorted.sort((a, b) => new Date(b.deadline) - new Date(a.deadline))
+  } else if (currentSort.value === 'Oldest') {
+    sorted.sort((a, b) => new Date(a.deadline) - new Date(b.deadline))
+  } else if (currentSort.value === 'Title (A-Z)') {
+    sorted.sort((a, b) => a.title.localeCompare(b.title))
+  }
+
+  if (!displayQuery.value.trim()) return sorted
+
+  const q = displayQuery.value.toLowerCase()
+  return sorted.filter(job =>
+    job.title.toLowerCase().includes(q) ||
+    (job.description || '').toLowerCase().includes(q)
+  )
+})
+
+function applySearch() {
+  displayQuery.value = searchQuery.value
+}
+
 
 async function fetchJobs() {
   try {
@@ -63,6 +89,13 @@ async function removeJob(jobId) {
 
 function updateSort(sortOption) {
   currentSort.value = sortOption
+  if (sortOption === 'Newest') {
+    jobs.value.sort((a, b) => new Date(b.deadline) - new Date(a.deadline))
+  } else if (sortOption === 'Oldest') {
+    jobs.value.sort((a, b) => new Date(a.deadline) - new Date(b.deadline))
+  } else if (sortOption === 'Title (A-Z)') {
+    jobs.value.sort((a, b) => a.title.localeCompare(b.title))
+  }
 }
 
 function openJobDetails(job) {
@@ -133,10 +166,14 @@ onMounted(fetchJobs)
         <div class="relative w-full sm:w-[450px] flex items-center bg-white rounded-full border border-slate-200 shadow-sm p-1.5">
           <Search class="w-5 h-5 text-slate-400 ml-3 absolute" />
           <Input
+            v-model="searchQuery"
             placeholder="Search postings"
             class="border-0 focus-visible:ring-0 shadow-none pl-10 bg-transparent w-full"
           />
-          <Button class="bg-primary hover:bg-primary text-white rounded-full px-6 py-2 shrink-0 h-auto font-bold">
+          <Button 
+            class="bg-primary hover:bg-primary text-white rounded-full px-6 py-2 shrink-0 h-auto font-bold"
+            @click="applySearch"
+          >
             Search
           </Button>
         </div>
@@ -158,7 +195,7 @@ onMounted(fetchJobs)
 
       <div v-if="jobs.length" class="space-y-4">
         <Card 
-          v-for="job in jobs" 
+          v-for="job in filteredJobs" 
           :key="job.id" 
           @click="openJobDetails(job)"
           class="overflow-hidden border-slate-200 shadow-sm rounded-xl hover:shadow-md hover:border-primary transition-all cursor-pointer"
