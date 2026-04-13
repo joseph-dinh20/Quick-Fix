@@ -13,13 +13,28 @@
         <div class="relative w-full sm:w-[450px] flex items-center bg-white rounded-full border border-slate-200 shadow-sm p-1.5">
           <Search class="w-5 h-5 text-slate-400 ml-3 absolute" />
           <Input
+            v-model="searchQuery"
             placeholder="Search postings"
             class="border-0 focus-visible:ring-0 shadow-none pl-10 bg-transparent w-full"
           />
-          <Button class="text-white rounded-full px-6 py-2 shrink-0 h-auto font-bold">
+          <Button @click="applySearch" class="text-white rounded-full px-6 py-2 shrink-0 h-auto font-bold">
             Search
           </Button>
         </div>
+
+        <DropdownMenu>
+          <DropdownMenuTrigger as-child>
+            <Button variant="outline" class="bg-white border-slate-200 text-slate-700 hover:bg-slate-50 rounded-lg flex items-center gap-2 shadow-sm px-4 capitalize">
+              {{ currentSort }}
+              <ChevronDown class="w-4 h-4 text-slate-500 ml-1" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" class="w-40">
+            <DropdownMenuItem @click="updateSort('Newest')">Newest</DropdownMenuItem>
+            <DropdownMenuItem @click="updateSort('Oldest')">Oldest</DropdownMenuItem>
+            <DropdownMenuItem @click="updateSort('Title (A-Z)')">Title (A-Z)</DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
 
       </div>
 
@@ -37,7 +52,7 @@
 
       <div v-else class="flex flex-col gap-5">
         <Card
-          v-for="job in jobs.slice(0, 20)"
+          v-for="job in filteredJobs.slice(0, 20)"
           :key="job.id"
           class="flex flex-col sm:flex-row items-start sm:items-center p-4 shadow-sm hover:shadow-md transition-shadow border-slate-200 gap-6"
         >
@@ -261,7 +276,13 @@ import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
-
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import { ChevronDown, Search } from 'lucide-vue-next'
 
 export default {
   name: "JobsList",
@@ -274,6 +295,12 @@ export default {
     Dialog,
     DialogContent,
     Badge,
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuTrigger,
+    ChevronDown,
+    Search,
   },
 
   data() {
@@ -282,7 +309,32 @@ export default {
       loading: false,
       selectedJob: null,
       isDialogOpen: false,
+      searchQuery: '',
+      displayQuery: '',
+      currentSort: 'Sort by',
     };
+  },
+  
+  computed: {
+    filteredJobs() {
+      let result = [...this.jobs]
+
+      if (this.currentSort === 'Newest') {
+        result.sort((a, b) => new Date(b.deadline) - new Date(a.deadline))
+      } else if (this.currentSort === 'Oldest') {
+        result.sort((a, b) => new Date(a.deadline) - new Date(b.deadline))
+      } else if (this.currentSort === 'Title (A-Z)') {
+        result.sort((a, b) => a.title.localeCompare(b.title))
+      }
+
+      if (!this.displayQuery.trim()) return result
+      const q = this.displayQuery.toLowerCase()
+      return result.filter(job =>
+        job.title.toLowerCase().includes(q) ||
+        (job.description || '').toLowerCase().includes(q) ||
+        (job.city || '').toLowerCase().includes(q)
+      )
+    }
   },
 
   async mounted() {
@@ -290,6 +342,14 @@ export default {
   },
 
   methods: {
+
+    applySearch() {
+      this.displayQuery = this.searchQuery
+    },
+
+    updateSort(sortOption) {
+      this.currentSort = sortOption
+    },
 
     formatDate(date) {
       return new Date(date).toLocaleDateString("en-US", {
