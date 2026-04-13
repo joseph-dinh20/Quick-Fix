@@ -132,6 +132,12 @@ class JobSerializer(serializers.ModelSerializer):
 
           
 class JobUpdateSerializer(serializers.ModelSerializer):
+    images = serializers.ListField(
+        child=serializers.ImageField(),
+        write_only=True,
+        required=False
+    )
+        
     class Meta:
         model = Job
         fields = [
@@ -143,8 +149,16 @@ class JobUpdateSerializer(serializers.ModelSerializer):
             "request_type",
             "services",
             "urgency",
-            "status"
+            "status",
+            "images"
         ]
+
+    def update(self, instance, validated_data):
+        images = validated_data.pop("images", [])
+        instance = super().update(instance, validated_data)
+        for image in images:
+            JobImage.objects.create(job=instance, image=image)
+        return instance
 
 
 class JobApplicationSerializer(serializers.ModelSerializer):

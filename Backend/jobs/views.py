@@ -8,7 +8,7 @@ from rest_framework.exceptions import PermissionDenied, NotFound
 from django.db.models import Q
 from .utils import geolocator
 
-from .models import Job, JobApplication
+from .models import Job, JobApplication, JobImage
 from .serializers import JobCreateSerializer, JobSerializer, JobUpdateSerializer, JobApplicationSerializer
 from accounts.models import ServiceProvider, Profile
 from haversine import haversine, Unit
@@ -334,3 +334,15 @@ def get_assigned_jobs(request):
     ).order_by("-created_at")
     serializer = JobSerializer(jobs, many=True, context={"request": request})
     return Response(serializer.data)
+
+
+@api_view(["DELETE"])
+def delete_job_image(request, image_id):
+    try:
+        image = JobImage.objects.get(id=image_id)
+        if image.job.customer.user != request.user:
+            return Response({"detail": "Not authorized."}, status=403)
+        image.delete()
+        return Response({"message": "Image deleted."}, status=204)
+    except JobImage.DoesNotExist:
+        return Response({"detail": "Image not found."}, status=404)
