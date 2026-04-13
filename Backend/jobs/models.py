@@ -63,9 +63,9 @@ class Job(models.Model):
         default=QUOTE
     )
 
-    FLEXIBLE = "flexible"
-    SOON = "soon"
-    URGENT = "urgent"
+    FLEXIBLE = "Flexible"
+    SOON = "Soon"
+    URGENT = "Urgent"
 
     URGENCY_CHOICES = [
         (FLEXIBLE, "Flexible"),
