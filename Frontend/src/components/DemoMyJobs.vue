@@ -291,15 +291,16 @@ onMounted(fetchJobs)
           <CardContent class="p-5 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
             <div>
               <h2 class="font-bold text-[#1a202c] text-[15px] mb-2.5">{{ job.title }}</h2>
-              <h2 class="font-bold text-[#1a202c] text-[15px] mb-2 flex items-center">
-                <DollarSign :size="16" />{{ job.budget }}</h2>
               <div class="flex items-center gap-3 text-slate-500 font-medium pb-2">
                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class=""><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"></path><circle cx="12" cy="10" r="3"></circle></svg>
                 <span>
                 {{ job.city + ', ' + job.state || 'No Location Provided' }}
                 </span>
               </div>
-              <div class="flex items-center gap-3 text-sm">
+              <div class="flex items-center text-sm">
+                <h2 class="font-bold text-[#1a202c] text-[15px] mb-2 flex items-center">
+                ${{ job.budget }}</h2>
+                <span class="text-sm text-slate-500 mr-3 mb-2"> / hr</span>
                 <Badge 
                   variant="outline" 
                   :class="job.status === 'open' 
@@ -313,15 +314,15 @@ onMounted(fetchJobs)
                         : 'bg-blue-50 text-blue-600 border-blue-200'
                       )
                     )"
-                  class="font-medium px-2.5 py-0.5 rounded-md capitalize"
+                  class="font-medium px-2.5 py-0.5 rounded-md capitalize mb-2"
                 >
                   {{ job.status === 'in_progress' ? 'In Progress' : job.status }}
                 </Badge>
+              </div>
                 <div class="flex items-center text-slate-500 font-medium">
                   <Calendar class="w-4 h-4 mr-1.5 text-slate-400" />
                   <span>{{ formatDate(job.deadline) }}</span>
                 </div>
-              </div>
             </div>
 
             <div class="flex items-center gap-1">
