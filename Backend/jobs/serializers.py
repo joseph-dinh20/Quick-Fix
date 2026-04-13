@@ -3,7 +3,7 @@ from .models import Job, JobImage, JobApplication
 from services.models import Service
 from services.serializers import ServiceSerializer
 from accounts.models import ServiceProvider, Profile, Language
-from geopy.geocoders import Nominatim
+from .utils import geolocator
 
 class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
@@ -62,7 +62,6 @@ class JobCreateSerializer(serializers.ModelSerializer):
 
         # convert city/zip to coordinates
         if city or zip_code:
-            geolocator = Nominatim(user_agent="myapp")
             query = f"{city or ''} {zip_code or ''}".strip()
             location = geolocator.geocode(query)
             if location:
@@ -114,7 +113,10 @@ class JobSerializer(serializers.ModelSerializer):
             "customer",
             "languages",
             "urgency",
-            "status"
+            "status",
+            'city',
+            'state',
+            'zip_code',
         ]
 
     def get_is_favorited(self, obj):

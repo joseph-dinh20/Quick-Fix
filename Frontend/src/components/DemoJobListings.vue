@@ -78,14 +78,13 @@
             <SelectValue placeholder="Budget" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value=".">Budget</SelectItem>
-            <SelectItem value="0-25">$0 - $25</SelectItem>
-            <SelectItem value="25-50">$25 - $50</SelectItem>
-            <SelectItem value="50-75">$50 - $75</SelectItem>
-            <SelectItem value="75-100">$75 - $100</SelectItem>
-            <SelectItem value="100-150">$100 - $150</SelectItem>
-            <SelectItem value="150-200">$150 - $200</SelectItem>
-            <SelectItem value="200+">$200+</SelectItem>
+            <SelectItem value="0">$0</SelectItem>
+            <SelectItem value="25">$25</SelectItem>
+            <SelectItem value="50">$50</SelectItem>
+            <SelectItem value="75">$75</SelectItem>
+            <SelectItem value="100">$100</SelectItem>
+            <SelectItem value="150">$150</SelectItem>
+            <SelectItem value="200">$200+</SelectItem>
           </SelectContent>
         </Select>
 
@@ -96,6 +95,7 @@
             <SelectValue placeholder="All Types" />
           </SelectTrigger>
           <SelectContent>
+            <SelectItem value=".">All Type</SelectItem>
             <SelectItem value="quote">Quote</SelectItem>
             <SelectItem value="service">Service</SelectItem>
             <SelectItem value="both">Both</SelectItem>
@@ -105,7 +105,7 @@
       </div>
 
       <div v-if="loading" class="flex flex-col gap-5">
-        <Card v-for="n in 3" :key="n" class="flex flex-col sm:flex-row p-4 gap-6 items-center shadow-sm border-slate-200">
+        <Card v-for="n in 4" :key="n" class="flex flex-col sm:flex-row p-4 gap-6 items-center shadow-sm border-slate-200">
           <Skeleton class="w-full sm:w-48 h-32 rounded-lg" />
           <div class="flex-1 w-full space-y-3">
             <Skeleton class="h-6 w-3/4 sm:w-1/3" />
@@ -117,6 +117,9 @@
       </div>
 
       <div v-else class="flex flex-col gap-5">
+          <div v-if="!jobs.length" class="text-sm text-muted-foreground text-center mt-4">
+            No results found.
+          </div>
         <Card
           v-for="job in filteredJobs.slice(0, 20)"
           :key="job.id"
@@ -294,7 +297,7 @@
 </template>
 
 <script >
-import { getAllJobs, toggleFavoriteJob } from "@/services/api";
+import { searchJobs, toggleFavoriteJob } from "@/services/api";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -333,12 +336,13 @@ export default {
       selectedJob: null,
       isDialogOpen: false,
 
-      pendingDistance: '10',
-      pendingLocation: '',
+      pendingDistance: '',
       pendingBudget: '',
-      pendingJobType: 'service',
+      pendingJobType: '',
       pendingService: '',
+      pendingLocation: '',
 
+      searchLocation: "",
       selectedDistance: "",
       selectedLocation: "",
       selectedBudget: "",
@@ -354,99 +358,7 @@ export default {
 
   computed: {
     filteredJobs() {
-      return this.jobs.filter(job => {
-
-        // title
-        const matchesTitle =
-          !this.searchTitle ||
-          job.title.toLowerCase().includes(this.searchTitle.toLowerCase());
-
-        // location
-        const matchesLocationSearch =
-          !this.searchLocation ||
-          (job.location || "").toLowerCase().includes(this.searchLocation.toLowerCase());
-
-        // category
-        const matchesCategory =
-          !this.selectedService ||
-          job.services.some(service =>
-            service.id === Number(this.selectedService)
-          );
-        try {
-          console.log(this.selectedCategory)
-        }
-        catch {}
-        try {
-          console.log(this.selectedService)
-        }
-        catch {}
-        // location
-        const matchesLocationDropdown =
-          !this.selectedLocation ||
-          (job.location || "").toLowerCase().includes(this.selectedLocation);
-
-        // type
-        const matchesJobType =
-          !this.selectedJobType ||
-          job.request_type === this.selectedJobType;
-
-        //budget
-        let matchesBudget = true;
-
-        if (this.selectedBudget === "0-25") {
-          matchesBudget = job.budget <= 25;
-        } 
-        else if (this.selectedBudget === "25-50") {
-          matchesBudget = job.budget > 25 && job.budget <= 50;
-        } 
-        else if (this.selectedBudget === "50-75") {
-          matchesBudget = job.budget > 50 && job.budget <= 75;
-        } 
-        else if (this.selectedBudget === "75-100") {
-          matchesBudget = job.budget > 75 && job.budget <= 100;
-        } 
-        else if (this.selectedBudget === "100-150") {
-          matchesBudget = job.budget > 100 && job.budget <= 150;
-        } 
-        else if (this.selectedBudget === "150-200") {
-          matchesBudget = job.budget > 150 && job.budget <= 200;
-        } 
-        else if (this.selectedBudget === "200+") {
-          matchesBudget = job.budget > 200;
-        }
-
-        let matchesActiveFilter = true;
-
-        if (this.activeFilter === "Pay") {
-          matchesActiveFilter = job.budget > 0;
-        }
-
-        if (this.activeFilter === "Language") {
-          matchesActiveFilter = !!job.languages;
-        }
-
-        if (this.activeFilter === "Urgency") {
-          matchesActiveFilter = job.urgency === "urgent";
-        }
-
-        if (this.activeFilter === "Type") {
-          matchesActiveFilter = !!job.request_type;
-        }
-
-        if (this.activeFilter === "Credentials") {
-          matchesActiveFilter = !!job.credentials_required;
-        }
-
-        return (
-          matchesTitle &&
-          matchesLocationSearch &&
-          matchesLocationDropdown &&
-          matchesCategory &&
-          matchesJobType &&
-          matchesBudget &&
-          matchesActiveFilter
-        );
-      });
+      return this.jobs;
     }
   },
 
@@ -466,24 +378,28 @@ export default {
     },
 
     async fetchJobs() {
-      this.loading = true;
+      this.loading = true
       try {
-        const res = await getAllJobs();
-        const jobs = res.data.results || res.data;
-
-        this.jobs = jobs.map((job) => ({
+        const res = await searchJobs({
+          services: this.selectedService || undefined,
+          budget: this.selectedBudget || undefined,
+          request_type: this.selectedJobType || undefined,
+          max_distance: this.selectedDistance || undefined,
+          location: this.searchLocation || undefined
+        })
+        const data = res.data.results || res.data
+        console.log('jobs received:', data.length)
+        this.jobs = data.map(job => ({
           ...job,
-          images: (job.images || []).map((img) => ({
+          images: (job.images || []).map(img => ({
             ...img,
-            image: img.image?.startsWith("http")
-              ? img.image
-              : `http://localhost:8000${img.image}`,
-          })),
-        }));
+            image: img.image?.startsWith('http') ? img.image : `http://localhost:8000${img.image}`
+          }))
+        }))
       } catch (err) {
-        console.error(err);
+        console.error(err)
       } finally {
-        this.loading = false;
+        this.loading = false
       }
     },
 
@@ -516,11 +432,12 @@ export default {
     },
 
     searchJobs() {
-      this.searchLocation = this.locationSearch
+      this.searchLocation = this.pendingLocation
       this.selectedService = this.pendingService
       this.selectedDistance = this.pendingDistance
       this.selectedBudget = this.pendingBudget
-      this.selectedJobType = this.pendingJobType
+      this.selectedJobType = this.pendingJobType === '.' ? '' : this.pendingJobType
+      this.fetchJobs()
     },
   },
 };

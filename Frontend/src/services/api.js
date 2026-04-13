@@ -217,4 +217,8 @@ export function completeJob(id) {
   return api.post(`/jobs/${id}/complete/`)
 }
 
+export function searchJobs(params) {
+  return api.get(`/jobs/search/`, { params })
+}
+
 export default api;

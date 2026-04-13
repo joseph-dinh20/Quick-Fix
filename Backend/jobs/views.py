@@ -5,6 +5,8 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.exceptions import PermissionDenied, NotFound
+from django.db.models import Q
+from .utils import geolocator
 
 from .models import Job, JobApplication
 from .serializers import JobCreateSerializer, JobSerializer, JobUpdateSerializer, JobApplicationSerializer
@@ -132,7 +134,7 @@ def update_job(request, job_id):
 
 @api_view(["GET"])
 def search_jobs(request):
-    jobs = Job.objects.all()
+    jobs = Job.objects.filter(is_open=True).order_by("-id")
 
     # Filter by services
     services = request.GET.get("services")
@@ -153,11 +155,37 @@ def search_jobs(request):
 
     # Filter by location
     max_distance = request.GET.get("max_distance")
-    if max_distance and request.user.is_authenticated:
-        profile = Profile.objects.get(user=request.user)
-        user_coord = (profile.latitude, profile.longitude)
+    if max_distance:
+        user_coord = None
 
-        jobs = [job for job in jobs if haversine(user_coord, (job.latitude, job.longitude), unit=Unit.MILES) <= float(max_distance)]
+        # use typed location if provided
+        location = request.GET.get("location")
+        if location:
+            geocoded = geolocator.geocode(location)
+            if geocoded:
+                user_coord = (geocoded.latitude, geocoded.longitude)
+                print(f"Using input location: {user_coord}")
+
+        # fall back to profile location
+        if user_coord is None and request.user.is_authenticated:
+            profile = Profile.objects.get(user=request.user)
+            if profile.latitude and profile.longitude:
+                user_coord = (profile.latitude, profile.longitude)
+                print(f"Using profile coord: {user_coord}")
+
+        if user_coord:
+            for job in jobs:
+                if job.latitude and job.longitude:
+                    dist = haversine(user_coord, (job.latitude, job.longitude), unit=Unit.MILES)
+                    print(f"Job {job.id} distance: {dist} miles")
+            jobs = [
+                job for job in jobs
+                if job.latitude and job.longitude and
+                haversine(user_coord, (job.latitude, job.longitude), unit=Unit.MILES) <= float(max_distance)
+            ]
+            print(f"Jobs after distance filter: {len(jobs)}")
+        else:
+            print("No user_coord found, skipping distance filter")
 
     serializer = JobSerializer(jobs, many=True, context={"request": request})
     return Response(serializer.data)

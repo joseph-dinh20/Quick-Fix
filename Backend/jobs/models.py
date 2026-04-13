@@ -2,7 +2,7 @@ from django.db import models
 from accounts.models import Profile, ServiceProvider
 from services.models import Service
 from django.core.validators import MinValueValidator
-
+from .utils import geolocator
 
 class Job(models.Model):
     customer = models.ForeignKey(
@@ -30,6 +30,10 @@ class Job(models.Model):
     latitude = models.FloatField(blank=True, default=33.7816133)
     longitude = models.FloatField(blank=True, default=-118.1084064)
 
+    city = models.CharField(max_length=100, blank=True, null=True)
+    state = models.CharField(max_length=100, blank=True, null=True)
+    zip_code = models.CharField(max_length=20, blank=True, null=True)
+
     budget = models.DecimalField(
         max_digits=10,
         decimal_places=2,
@@ -37,9 +41,6 @@ class Job(models.Model):
         blank=True,
         validators=[MinValueValidator(0)]
     )
-
-    latitude = models.FloatField(blank=True, default=33.7816133)
-    longitude = models.FloatField(blank=True, default=-118.1084064)
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -101,6 +102,17 @@ class Job(models.Model):
     
 
     def save(self, *args, **kwargs):
+        if self.latitude and self.longitude and not self.city:
+            try:
+                location = geolocator.reverse(f"{self.latitude}, {self.longitude}")
+                if location:
+                    address = location.raw.get('address', {})
+                    self.city = address.get('city') or address.get('town') or address.get('village')
+                    self.state = address.get('state')
+                    self.zip_code = address.get('postcode')
+            except Exception:
+                pass  # don't block 
+        super().save(*args, **kwargs)
         if not self.language and self.customer:
             first_language = self.customer.languages.first()
             if first_language:
