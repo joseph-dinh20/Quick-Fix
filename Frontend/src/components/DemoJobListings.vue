@@ -142,7 +142,7 @@
             <div class="mt-1 flex flex-col gap-1">
               <p class="text-sm text-slate-500">
                 by {{ job.customer?.name || 'Unknown customer' }}</p>
-              <p class="text-sm text-slate-500">{{ capitalize(job.request_type) || 'Location not found' }}</p>
+              <p class="text-sm text-slate-500 capitalize">{{ job.request_type || 'Location not found' }}</p>
               <p class="text-sm text-slate-500">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="inline mr-1 mb-0.5"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"></path><circle cx="12" cy="10" r="3"></circle></svg>
                 {{ job.city }}, {{ job.state }}</p>
@@ -260,19 +260,10 @@
                 {{ selectedJob.city + ', ' + selectedJob.state || 'Location not found' }}
               </div>
 
-              <div class="flex items-center text-slate-600 font-medium">
+              <div class="flex items-center text-slate-600 font-medium capitalize">
                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-3"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-                {{ capitalize(selectedJob.urgency) || 'Urgency not provided' }}
+                {{ selectedJob.urgency || 'Urgency not provided' }}
               </div>
-
-              <div class="flex items-center text-slate-600 font-medium">
-                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-3">
-                  <rect width="20" height="14" x="2" y="7" rx="2" ry="2"></rect>
-                  <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
-                </svg>
-                {{ capitalize(selectedJob.request_type) || 'Location not found' }}
-              </div>
-
               <div class="flex items-center text-slate-600 font-medium">
                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-3">
                   <path d="M8 2v4"></path>
@@ -281,6 +272,14 @@
                   <path d="M3 10h18"></path>
                 </svg>
                 {{ formatDate(selectedJob.deadline) }}
+              </div>
+
+              <div class="flex items-center text-slate-600 font-medium capitalize">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-3">
+                  <rect width="20" height="14" x="2" y="7" rx="2" ry="2"></rect>
+                  <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+                </svg>
+                {{ selectedJob.request_type || 'Location not found' }}
               </div>
 
             </div>
@@ -389,12 +388,10 @@ export default {
       if (!dateStr) return 'No deadline provided'
       return new Date(dateStr).toLocaleDateString('en-US', {
         year: 'numeric',
-        month: 'long',
+        month: 'short',
         day: 'numeric'
       })
     },
-
-    capitalize(str) { return str.charAt(0).toUpperCase() + str.slice(1) },
 
     async fetchServices() {
       const res = await fetch("http://localhost:8000/api/services/");

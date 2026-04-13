@@ -60,8 +60,6 @@ const carousel = ref(null)
 const existingImages = ref([])
 const newImages = ref([])
 
-function capitalize (str) { return str.charAt(0).toUpperCase() + str.slice(1); }
-
 
 function scrollLeft() {
   carousel.value?.scrollBy({ left: -250, behavior: 'smooth' })
@@ -403,17 +401,17 @@ onMounted(fetchJobs)
                 {{ selectedJob.city + ', ' + selectedJob.state || 'Request type not provided' }}
               </div>
 
-              <div class="flex items-center text-slate-600 font-medium">
+              <div class="flex items-center text-slate-600 font-medium capitalize">
                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-3"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-                {{ capitalize(selectedJob.urgency) || 'Urgency not provided' }}
+                {{ selectedJob.urgency || 'Urgency not provided' }}
               </div>
 
-              <div class="flex items-center text-slate-600 font-medium">
+              <div class="flex items-center text-slate-600 font-medium capitalize">
                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-3">
                   <rect width="20" height="14" x="2" y="7" rx="2" ry="2"></rect>
                   <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
                 </svg>
-                {{ capitalize(selectedJob.request_type) || 'Request type not provided' }}
+                {{ selectedJob.request_type || 'Request type not provided' }}
               </div>
 
               <div class="flex items-center text-slate-600 font-medium">
