@@ -13,13 +13,28 @@
         <div class="relative w-full sm:w-[450px] flex items-center bg-white rounded-full border border-slate-200 shadow-sm p-1.5">
           <Search class="w-5 h-5 text-slate-400 ml-3 absolute" />
           <Input
+            v-model="searchQuery"
             placeholder="Search postings"
             class="border-0 focus-visible:ring-0 shadow-none pl-10 bg-transparent w-full"
           />
-          <Button class="text-white rounded-full px-6 py-2 shrink-0 h-auto font-bold">
+          <Button @click="applySearch" class="text-white rounded-full px-6 py-2 shrink-0 h-auto font-bold">
             Search
           </Button>
         </div>
+
+        <DropdownMenu>
+          <DropdownMenuTrigger as-child>
+            <Button variant="outline" class="bg-white border-slate-200 text-slate-700 hover:bg-slate-50 rounded-lg flex items-center gap-2 shadow-sm px-4 capitalize">
+              {{ currentSort }}
+              <ChevronDown class="w-4 h-4 text-slate-500 ml-1" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" class="w-40">
+            <DropdownMenuItem @click="updateSort('Newest')">Newest</DropdownMenuItem>
+            <DropdownMenuItem @click="updateSort('Oldest')">Oldest</DropdownMenuItem>
+            <DropdownMenuItem @click="updateSort('Title (A-Z)')">Title (A-Z)</DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
 
       </div>
 
@@ -37,7 +52,7 @@
 
       <div v-else class="flex flex-col gap-5">
         <Card
-          v-for="job in jobs.slice(0, 20)"
+          v-for="job in filteredJobs.slice(0, 20)"
           :key="job.id"
           class="flex flex-col sm:flex-row items-start sm:items-center p-4 shadow-sm hover:shadow-md transition-shadow border-slate-200 gap-6"
         >
@@ -56,14 +71,30 @@
           <div class="flex-1 min-w-0">
             <h3 class="text-lg font-bold text-slate-900 truncate">{{ job.title }}</h3>
             <div class="mt-1 flex flex-col gap-1">
-              <p class="text-sm text-slate-500">{{ job.customer?.name || 'Unknown customer' }}</p>
-              <p class="text-sm text-slate-500">{{ job.request_type || 'Request type not provided' }}</p>
+              <p class="text-sm text-slate-500">by {{ job.customer?.name || 'Unknown customer' }}</p>
+              <p class="text-sm text-slate-500">{{ job.city + ', ' + job.state || 'Location not provided' }}</p>
             </div>
             <div class="mt-3">
+
               <span class="text-sm font-bold text-slate-900">
                 {{ job.budget ? `$${job.budget}` : 'Budget not provided' }}
               </span>
-              <span class="text-sm text-slate-500"> budget</span>
+              <span class="text-sm text-slate-500 mr-3"> / hr</span>
+                              <Badge 
+                  variant="outline" 
+                  :class="[
+                    'font-medium px-2.5 py-0.5 rounded-md capitalize',
+                    job.status === 'open' 
+                      ? 'bg-red-50 text-red-600 border-red-200'
+                      : job.status === 'complete'
+                      ? 'bg-green-50 text-green-600 border-green-200'
+                      : job.status === 'in_progress'
+                      ? 'bg-yellow-50 text-yellow-600 border-yellow-200'
+                      : 'bg-blue-50 text-blue-600 border-blue-200'
+                  ]"
+                >
+                  {{ job.status === 'in_progress' ? 'In Progress' : job.status }}
+                </Badge>
             </div>
 
             <div class="flex flex-wrap gap-2 mt-2">
@@ -78,9 +109,17 @@
           </div>
 
           <div class="flex flex-col sm:items-end w-full sm:w-auto gap-3 mt-4 sm:mt-0">
-            <Button @click="markDone(job)" class="w-full sm:w-auto text-white font-semibold">
+            <div v-if="1">
+            <Button 
+              @click="markDone(job)"
+              class="w-full sm:w-auto text-white font-semibold"
+              :disabled="job.status != 'in_progress'"
+            >
               Mark as Complete
             </Button>
+
+            </div>
+ 
 
             <Button
               variant="link"
@@ -166,12 +205,12 @@
                 {{ selectedJob.languages || 'Not specified' }}
               </div>
 
-              <div class="flex items-center text-slate-600 font-medium">
+              <div class="flex items-center text-slate-600 font-medium capitalize">
                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-3"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"></path><circle cx="12" cy="10" r="3"></circle></svg>
-                {{ selectedJob.request_type || 'Request type not provided' }}
+                {{ selectedJob.city + ', ' + selectedJob.state || 'ocation not provided' }}
               </div>
 
-              <div class="flex items-center text-slate-600 font-medium">
+              <div class="flex items-center text-slate-600 font-medium capitalize">
                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-3"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
                 {{ selectedJob.urgency || 'Urgency not provided' }}
               </div>
@@ -183,8 +222,18 @@
                   <rect width="18" height="18" x="3" y="4" rx="2"></rect>
                   <path d="M3 10h18"></path>
                 </svg>
-                {{ selectedJob.deadline || 'No deadline provided' }}
+                {{ formatDate(selectedJob.deadline) || 'No deadline provided' }}
               </div>
+
+
+              <div class="flex items-center text-slate-600 font-medium capitalize">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-3">
+                  <rect width="20" height="14" x="2" y="7" rx="2" ry="2"></rect>
+                  <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+                </svg>
+                {{ selectedJob.request_type || 'Location not provided' }}
+              </div>
+
 
             </div>
 
@@ -192,7 +241,15 @@
               <span class="text-lg font-bold text-[#1a202c]">
                 {{ selectedJob.budget ? `$${selectedJob.budget}` : 'Budget not provided' }}
               </span>
-              <span class="text-base text-slate-500 font-medium"> budget</span>
+              <span class="text-base text-slate-500 font-medium mr-5"> / hr</span>
+
+              <span
+                v-for="service in selectedJob.services"
+                :key="service.id"
+                class="text-xs bg-slate-100 px-2 py-1 rounded-md text-slate-600 ml-2"
+              >
+                {{ service.name }}
+              </span>
             </div>
           </div>
 
@@ -213,12 +270,19 @@
 <script>
 import { fetchAssignedJobs, completeJob } from "@/services/api"
 // import { getFavoriteJobs, toggleFavoriteJob } from "@/services/api";
+import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
-
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import { ChevronDown, Search } from 'lucide-vue-next'
 
 export default {
   name: "JobsList",
@@ -230,6 +294,13 @@ export default {
     Skeleton,
     Dialog,
     DialogContent,
+    Badge,
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuTrigger,
+    ChevronDown,
+    Search,
   },
 
   data() {
@@ -238,7 +309,32 @@ export default {
       loading: false,
       selectedJob: null,
       isDialogOpen: false,
+      searchQuery: '',
+      displayQuery: '',
+      currentSort: 'Sort by',
     };
+  },
+  
+  computed: {
+    filteredJobs() {
+      let result = [...this.jobs]
+
+      if (this.currentSort === 'Newest') {
+        result.sort((a, b) => new Date(b.deadline) - new Date(a.deadline))
+      } else if (this.currentSort === 'Oldest') {
+        result.sort((a, b) => new Date(a.deadline) - new Date(b.deadline))
+      } else if (this.currentSort === 'Title (A-Z)') {
+        result.sort((a, b) => a.title.localeCompare(b.title))
+      }
+
+      if (!this.displayQuery.trim()) return result
+      const q = this.displayQuery.toLowerCase()
+      return result.filter(job =>
+        job.title.toLowerCase().includes(q) ||
+        (job.description || '').toLowerCase().includes(q) ||
+        (job.city || '').toLowerCase().includes(q)
+      )
+    }
   },
 
   async mounted() {
@@ -246,6 +342,23 @@ export default {
   },
 
   methods: {
+
+    applySearch() {
+      this.displayQuery = this.searchQuery
+    },
+
+    updateSort(sortOption) {
+      this.currentSort = sortOption
+    },
+
+    formatDate(date) {
+      return new Date(date).toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+      })
+    },
+
     async fetchJobs() {
       this.loading = true;
       try {

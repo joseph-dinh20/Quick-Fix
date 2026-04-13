@@ -217,4 +217,13 @@ export function completeJob(id) {
   return api.post(`/jobs/${id}/complete/`)
 }
 
+export function searchJobs(params) {
+  return api.get(`/jobs/search/`, { params })
+}
+
+
+export function deleteJobImage(imageId) {
+  return api.delete(`/jobs/images/${imageId}/delete/`)
+}
+
 export default api;
