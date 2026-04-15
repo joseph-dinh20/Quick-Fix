@@ -203,4 +203,8 @@ export function deleteReviewImage(id) {
   return api.delete(`/reviews/images/${id}/delete/`)
 }
 
+export const createReport = (data) => {
+    return api.post("/reports/", data);
+};
+
 export default api;
