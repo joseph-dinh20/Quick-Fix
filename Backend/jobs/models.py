@@ -112,7 +112,6 @@ class Job(models.Model):
                     self.zip_code = address.get('postcode')
             except Exception:
                 pass  # don't block 
-        super().save(*args, **kwargs)
         if not self.language and self.customer:
             first_language = self.customer.languages.first()
             if first_language:
