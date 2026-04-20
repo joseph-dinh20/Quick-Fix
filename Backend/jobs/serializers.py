@@ -1,9 +1,9 @@
 from rest_framework import serializers
-from .models import Job, JobImage
+from .models import Job, JobImage, JobApplication
 from services.models import Service
 from services.serializers import ServiceSerializer
-from accounts.models import ServiceProvider, Profile
-
+from accounts.models import ServiceProvider, Profile, Language
+from .utils import geolocator
 
 class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
@@ -29,6 +29,15 @@ class JobCreateSerializer(serializers.ModelSerializer):
         required=False
     )
 
+    city = serializers.CharField(write_only=True, required=False)
+    zip = serializers.CharField(write_only=True, required=False)
+
+    language = serializers.PrimaryKeyRelatedField(
+        queryset=Language.objects.all(),
+        required=False,  # optional field
+        allow_null=True
+    )
+
     class Meta:
         model = Job
         fields = [
@@ -41,23 +50,39 @@ class JobCreateSerializer(serializers.ModelSerializer):
             "latitude",
             "longitude",
             "images",
+            "urgency",
+            "city",
+            "zip",
+            "language"
         ]
 
     def create(self, validated_data):
+        city = validated_data.pop("city", None)
+        zip_code = validated_data.pop("zip", None)
+
+        # convert city/zip to coordinates
+        if city or zip_code:
+            query = f"{city or ''} {zip_code or ''}, California, USA".strip()
+            location = geolocator.geocode(query)
+            if location:
+                validated_data["latitude"] = location.latitude
+                validated_data["longitude"] = location.longitude
+            print(validated_data["latitude"])
+            print(validated_data["longitude"])
+
         images = validated_data.pop("images", [])
         services = validated_data.pop("services", [])
 
         profile = self.context["request"].user.profile
 
-        job = Job.objects.create(
-            customer=profile,
-            **validated_data
-        )
+        language = validated_data.pop("language", None)
+        if language is None:
+            language = Language.objects.filter(name__iexact="English").first()
+        
 
-        # set Many to Many
+        job = Job.objects.create(customer=profile, language=language, **validated_data)
         job.services.set(services)
 
-        # create images
         for img in images:
             JobImage.objects.create(job=job, image=img)
 
@@ -69,6 +94,9 @@ class JobSerializer(serializers.ModelSerializer):
     services = ServiceSerializer(many=True)
     images = JobImageSerializer(many=True)
     customer = ProfileSerializer(read_only=True)
+    language = serializers.StringRelatedField()
+    assigned_provider_id = serializers.SerializerMethodField()
+    assigned_provider_name = serializers.SerializerMethodField()
 
     class Meta:
         model = Job
@@ -84,8 +112,26 @@ class JobSerializer(serializers.ModelSerializer):
             "services",
             "images",
             "is_favorited",
-            "customer"
+            "customer",
+            "language",
+            "urgency",
+            "status",
+            'city',
+            'state',
+            'zip_code',
+            'assigned_provider_id',
+            'assigned_provider_name',
         ]
+
+    def get_assigned_provider_id(self, obj):
+        if obj.assigned_provider:
+            return obj.assigned_provider.id
+        return None
+
+    def get_assigned_provider_name(self, obj):
+        if obj.assigned_provider:
+            return obj.assigned_provider.profile.name
+        return None
 
     def get_is_favorited(self, obj):
         user = self.context["request"].user
@@ -100,6 +146,12 @@ class JobSerializer(serializers.ModelSerializer):
 
           
 class JobUpdateSerializer(serializers.ModelSerializer):
+    images = serializers.ListField(
+        child=serializers.ImageField(),
+        write_only=True,
+        required=False
+    )
+        
     class Meta:
         model = Job
         fields = [
@@ -110,4 +162,29 @@ class JobUpdateSerializer(serializers.ModelSerializer):
             "is_open",
             "request_type",
             "services",
+            "urgency",
+            "status",
+            "images"
+        ]
+
+    def update(self, instance, validated_data):
+        images = validated_data.pop("images", [])
+        instance = super().update(instance, validated_data)
+        for image in images:
+            JobImage.objects.create(job=instance, image=image)
+        return instance
+
+
+class JobApplicationSerializer(serializers.ModelSerializer):
+    job_title = serializers.CharField(source="job.title", read_only=True)
+    job_id = serializers.IntegerField(source="job.id", read_only=True)
+
+    class Meta:
+        model = JobApplication
+        fields = [
+            "id",
+            "job_id",
+            "job_title",
+            "status",
+            "created_at",
         ]

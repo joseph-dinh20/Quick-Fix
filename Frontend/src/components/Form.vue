@@ -1,4 +1,4 @@
-<script setup lang="js">
+<script setup>
 import { toTypedSchema } from "@vee-validate/zod";
 import { Check, Circle, Dot } from "lucide-vue-next";
 import { ref } from "vue";
@@ -111,21 +111,21 @@ const plans = [
 // Keep in mind if onSubmit is valid, then we keep the data to the payment page.
 // Once the user submits the payment, all data will be stored to backend.
 function onSubmit(values) {
-  toast("You submitted the following values:", {
-    description: h(
-      "pre",
-      {
-        class:
-          "bg-code text-code-foreground mt-2 w-[320px] overflow-x-auto rounded-md p-4",
-      },
-      h("code", JSON.stringify(values, null, 2)),
-    ),
-    position: "bottom-right",
-    class: "flex flex-col gap-2",
-    style: {
-      "--border-radius": "calc(var(--radius)  + 4px)",
-    },
-  });
+  // toast("You submitted the following values:", {
+  //   description: h(
+  //     "pre",
+  //     {
+  //       class:
+  //         "bg-code text-code-foreground mt-2 w-[320px] overflow-x-auto rounded-md p-4",
+  //     },
+  //     h("code", JSON.stringify(values, null, 2)),
+  //   ),
+  //   position: "bottom-right",
+  //   class: "flex flex-col gap-2",
+  //   style: {
+  //     "--border-radius": "calc(var(--radius)  + 4px)",
+  //   },
+  // });
   console.log(JSON.stringify(values));
   window.location.hash = "#/ProviderList";
 }
@@ -225,15 +225,15 @@ function onSubmit(values) {
               <Card>
                 <CardHeader>
                   <CardTitle>Service Location</CardTitle>
-                  <CardDescription>where should we meet you?</CardDescription>
+                  <CardDescription
+                    >Where should the provider show up?</CardDescription
+                  >
                 </CardHeader>
                 <CardContent class="flex flex-col gap-6">
-                  <!-- Another way to rename the componentField variable so we can use field instead -->
                   <FormField v-slot="{ componentField: field }" name="address">
                     <FormItem>
                       <FormLabel>Address</FormLabel>
                       <FormControl>
-                        <!-- notice how v-bind is binded to "field" and not "componentField" -->
                         <Input
                           type="text"
                           v-bind="field"
@@ -258,6 +258,23 @@ function onSubmit(values) {
                     </FormItem>
                   </FormField>
                 </CardContent>
+                <CardFooter class="flex items-center justify-between pt-4">
+                  <Button
+                    :disabled="isPrevDisabled"
+                    variant="outline"
+                    @click="prevStep()"
+                  >
+                    Back
+                  </Button>
+                  <Button
+                    class="cursor-pointer"
+                    :type="meta.valid ? 'button' : 'submit'"
+                    :disabled="isNextDisabled"
+                    @click="meta.valid && nextStep()"
+                  >
+                    Next
+                  </Button>
+                </CardFooter>
               </Card>
             </template>
 
@@ -308,11 +325,28 @@ function onSubmit(values) {
                     </FormItem>
                   </FormField>
                 </CardContent>
+                <CardFooter class="flex items-center justify-between pt-4">
+                  <Button
+                    :disabled="isPrevDisabled"
+                    variant="outline"
+                    @click="prevStep()"
+                  >
+                    Back
+                  </Button>
+                  <Button
+                    class="cursor-pointer"
+                    :type="meta.valid ? 'button' : 'submit'"
+                    :disabled="isNextDisabled"
+                    @click="meta.valid && nextStep()"
+                  >
+                    Next
+                  </Button>
+                </CardFooter>
               </Card>
             </template>
 
             <template v-if="stepIndex === 3">
-              <Card class="min-h-full min-w-150">
+              <Card class="min-h-full">
                 <CardHeader>
                   <CardTitle class="font-semibold">Task Description</CardTitle>
                   <CardDescription>
@@ -339,34 +373,51 @@ function onSubmit(values) {
                     </FormItem>
                   </FormField>
                 </CardContent>
+                <CardFooter class="flex items-center justify-between pt-4">
+                  <Button
+                    :disabled="isPrevDisabled"
+                    variant="outline"
+                    @click="prevStep()"
+                  >
+                    Back
+                  </Button>
+                  <Button type="submit" class="cursor-pointer"> Submit </Button>
+                </CardFooter>
               </Card>
             </template>
           </div>
 
-          <div class="flex items-center justify-between mt-4">
-            <Button
-              :disabled="isPrevDisabled"
-              variant="outline"
-              size="sm"
-              @click="prevStep()"
-            >
-              Back
-            </Button>
-            <div class="flex items-center gap-3">
-              <Button
-                v-if="stepIndex !== 3"
-                :type="meta.valid ? 'button' : 'submit'"
-                :disabled="isNextDisabled"
-                size="sm"
-                @click="meta.valid && nextStep()"
-              >
-                Next
-              </Button>
-              <Button v-if="stepIndex === 3" size="sm" type="submit">
-                Submit
-              </Button>
-            </div>
-          </div>
+          <!-- WARN: Old prev and next buttons that were displayed outside of the card -->
+          <!-- <div class="flex items-center justify-between mt-4"> -->
+          <!-- <Button -->
+          <!--   :disabled="isPrevDisabled" -->
+          <!--   variant="outline" -->
+          <!--   size="sm" -->
+          <!--   @click="prevStep()" -->
+          <!-- > -->
+          <!--   Back -->
+          <!-- </Button> -->
+          <!-- <div class="flex items-center gap-3"> -->
+          <!--   <Button -->
+          <!--     class="cursor-pointer" -->
+          <!--     v-if="stepIndex !== 3" -->
+          <!--     :type="meta.valid ? 'button' : 'submit'" -->
+          <!--     :disabled="isNextDisabled" -->
+          <!--     size="sm" -->
+          <!--     @click="meta.valid && nextStep()" -->
+          <!--   > -->
+          <!--     Next -->
+          <!--   </Button> -->
+          <!--   <Button -->
+          <!--     v-if="stepIndex === 3" -->
+          <!--     size="sm" -->
+          <!--     type="submit" -->
+          <!--     class="cursor-pointer" -->
+          <!--   > -->
+          <!--     Submit -->
+          <!--   </Button> -->
+          <!-- </div> -->
+          <!-- </div> -->
         </form>
       </Stepper>
     </Form>

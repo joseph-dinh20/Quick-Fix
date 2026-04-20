@@ -3,7 +3,26 @@ from services.models import Service
 from django.contrib.auth.models import User
 from django.core.validators import MinValueValidator, MaxValueValidator
 
+
+class Language(models.Model):
+    name = models.CharField(max_length=50, unique=True)
+
+    def __str__(self):
+        return self.name
+    
+
 class Profile(models.Model):
+    provider_status = models.CharField(
+        max_length=20,
+        choices=[
+            ("none", "None"),
+            ("pending", "Pending"),
+            ("approved", "Approved"),
+            ("rejected", "Rejected"),
+        ],
+        default="none"
+    )
+    
     USER = "user"
     PROVIDER = "provider"
 
@@ -30,10 +49,32 @@ class Profile(models.Model):
         blank=True
     )
 
+    languages = models.ManyToManyField(Language, blank=True)
+
 
     def __str__(self):
         return self.name or self.user.username
     
+class ProviderApplication(models.Model):
+    PENDING = "pending"
+    APPROVED = "approved"
+    REJECTED = "rejected"
+
+    STATUS_CHOICES = [
+        (PENDING, "Pending"),
+        (APPROVED, "Approved"),
+        (REJECTED, "Rejected"),
+    ]
+
+    profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
+
+    skills = models.JSONField()
+    experience = models.TextField()
+    document = models.FileField(upload_to="provider_applications/")
+
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default=PENDING)
+
+    created_at = models.DateTimeField(auto_now_add=True)
 
 class WorkImage(models.Model):
     provider = models.ForeignKey("ServiceProvider", on_delete=models.CASCADE, related_name="work_images")
@@ -64,3 +105,4 @@ class ServiceProvider(models.Model):
 
     def __str__(self):
         return f"{self.profile.name} (Provider)"
+

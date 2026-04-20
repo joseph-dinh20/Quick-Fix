@@ -1,12 +1,12 @@
 from django.contrib import admin
-from .models import Profile, ServiceProvider, WorkImage
+from .models import Profile, ServiceProvider, WorkImage, ProviderApplication, Language
 
 @admin.register(Profile)
 class ProfileAdmin(admin.ModelAdmin):
     list_display = ("name", "user", "role")  # user is fine here
     search_fields = ("name", "user__username", "user__email")
     list_filter = ("role",)
-    filter_horizontal = ("favorites",)
+    filter_horizontal = ("favorites", "languages")
 
 class WorkImageInline(admin.TabularInline):
     model = WorkImage
@@ -26,3 +26,9 @@ class ServiceProviderAdmin(admin.ModelAdmin):
     def profile_email(self, obj):
         return obj.profile.user.email
     profile_email.short_description = "Email"
+
+admin.site.register(ProviderApplication)
+
+@admin.register(Language)
+class LanguageAdmin(admin.ModelAdmin):
+    list_display = ["id", "name"]

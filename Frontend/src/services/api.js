@@ -44,7 +44,7 @@ export const loadProvider = (id) => {
 };
 
 export const loadProviders = () => {
-  return api.get(`/accounts/providers/`);
+  return api.get(`/accounts/providers/`); // This had params for some reason
 };
 
 function getCSRFToken() {
@@ -121,14 +121,24 @@ export const getNearbyProviders = (userLat = 33.7816133, userLng = -118.1084064,
   })
 }
 
+export const searchProviders = (params) => {
+  return axios.get("/accounts/search_providers", {
+    params
+  })
+}
+
 export const createJob = (data) => {
   const formData = new FormData();
 
   formData.append("title", data.title);
   formData.append("description", data.description);
+  formData.append("city", data.city);
+  formData.append("zip", data.zip);
   formData.append("budget", data.budget || "");
   formData.append("deadline", data.deadline);
   formData.append("request_type", data.request_type);
+  formData.append("urgency", data.urgency);
+  formData.append("language", data.language);
 
   // services (IDs)
   data.services.forEach(id => {
@@ -168,9 +178,16 @@ export function deleteJob(jobId) {
   return api.delete(`/jobs/${jobId}/delete/`);
 }
 
+export function updateJob(jobId, data) {
+    return api.patch(`/jobs/${jobId}/edit/`, data);
+}
 
 export function toggleFavoriteProvider(providerId) {
   return api.post(`/accounts/providers/${providerId}/favorite/`);
+}
+
+export function getFavoriteJobs() {
+    return api.get(`/jobs/favorites`);
 }
 
 
@@ -191,5 +208,46 @@ export function updateReview(id, formData) {
 export function deleteReviewImage(id) {
   return api.delete(`/reviews/images/${id}/delete/`)
 }
+
+export const createReport = (data) => {
+    return api.post("/reports/", data);
+};
+export function fetchAssignedJobs() {
+  return api.get(`/jobs/assigned/`)
+}
+
+export function completeJob(id) {
+  return api.post(`/jobs/${id}/complete/`)
+}
+
+export function searchJobs(params) {
+  return api.get(`/jobs/search/`, { params })
+}
+
+
+export function deleteJobImage(imageId) {
+  return api.delete(`/jobs/images/${imageId}/delete/`)
+}
+
+export function getLanguages()  {
+  return api.get("/accounts/languages/")
+}
+
+export const createReview = (providerId, formData) => {
+  return api.post(`/reviews/${providerId}/reviews/create/`, formData, {
+    headers: {
+      "Content-Type": "multipart/form-data"
+    }
+  });
+};
+
+export const updateSecurity = (data) => {
+  return api.put("/accounts/security/update/", data, {
+    withCredentials: true,
+    headers: {
+      "X-CSRFToken": getCSRFToken(),
+    },
+  });
+};
 
 export default api;

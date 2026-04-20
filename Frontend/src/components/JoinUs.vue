@@ -8,6 +8,10 @@ import {
   CardContent,
 } from '@/components/ui/card'
 
+const navigate = (hash) => {
+  window.location.hash = hash;
+};
+
 const features = [
     {
         icon: "📅",
@@ -60,17 +64,17 @@ const steps = [
                 <Input 
                     type="email" 
                     placeholder="Enter your email" 
-                    class="h-14 px-6 rounded-xl border-input focus-visible:ring-orange-500 shadow-sm"
+                    class="h-14 px-6 rounded-xl border-input focus-visible:ring-primary shadow-sm"
                 />
                 <Button 
-                    class="w-full sm:w-auto h-14 bg-[#FF7D1F] hover:bg-orange-600 text-white font-bold px-8 rounded-xl transition-all"
+                    class="w-full sm:w-auto h-14 bg-primary hover:bg-green-600 text-white font-bold px-8 rounded-xl transition-all"
                 >
                     Get Started
                 </Button>
             </div>
             <p class="mt-6 text-sm text-muted-foreground">
                 Already have an account?
-                <router-link to="/Signup" class="text-orange-500 font-bold hover:underline">
+                <router-link to="/Signup" class="text-primary font-bold hover:underline">
                     Sign In
                 </router-link>
             </p>
@@ -110,7 +114,7 @@ const steps = [
                         :key="step.number"
                         class="flex flex-col items-center"
                     >
-                        <div class="w-12 h-12 bg-orange-500 rounded-full flex items-center justify-center font-bold mb-6 text-lg ring-4 ring-orange-500/20">
+                        <div class="w-12 h-12 bg-primary rounded-full flex items-center justify-center font-bold mb-6 text-lg ring-4 ring-green-500/20">
                             {{ step.number }}
                         </div>
                         <h3 class="text-xl font-bold mb-4">{{ step.title }}</h3>
@@ -123,7 +127,7 @@ const steps = [
         </section>
 
         <section class="py-24 px-6">
-            <div class="max-w-4xl mx-auto bg-orange-50 rounded-[2.5rem] p-12 md:p-20 text-center border border-orange-100/50">
+            <div class="max-w-4xl mx-auto bg-green-50 rounded-[2.5rem] p-12 md:p-20 text-center border border-green-100/50">
                 <h2 class="text-3xl font-extrabold mb-6">Ready to earn?</h2>
                 <p class="text-muted-foreground mb-10 max-w-md mx-auto">
                     Join thousands of Fixers across the country helping people
@@ -132,6 +136,7 @@ const steps = [
                 <Button 
                     size="lg"
                     class="bg-slate-900 hover:bg-black text-white font-bold h-14 px-12 rounded-xl transition-transform active:scale-95 shadow-lg"
+                    @click = "navigate('#/BecomeFixer')"
                 >
                     Apply Now
                 </Button>

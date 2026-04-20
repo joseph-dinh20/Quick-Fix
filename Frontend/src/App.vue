@@ -14,10 +14,10 @@ import Temp from "@/components/Temp.vue";
 import Provider from "@/components/Provider.vue";
 import ProviderList from "@/components/ProviderList.vue";
 import ProviderTest from "@/components/ProviderTest.vue";
-import Hello1 from "@/components/hello1.vue";
-import Hello2 from "@/components/hello2.vue";
-import Hello3 from "@/components/hello3.vue";
-import Hello4 from "@/components/hello4.vue";
+import Hello1 from "@/components/Hello1.vue";
+import Hello2 from "@/components/Hello2.vue";
+import DemoProfile from "@/components/DemoProfile.vue";
+import Hello4 from "@/components/Hello4.vue";
 import JoinUs from "./components/JoinUs.vue";
 import Settings from "./components/Settings.vue";
 import DemoLocation from "./components/DemoLocation.vue";
@@ -27,6 +27,14 @@ import DemoMyJobs from "./components/DemoMyJobs.vue";
 import DemoJobListings from "./components/DemoJobListings.vue";
 import FavoriteProvider from "@/components/FavoriteProvider.vue";
 import DemoProvider from "./components/DemoProvider.vue";
+import DemoSavedJobs from "./components/DemoSavedJobs.vue";
+import DemoProviderList from "./components/DemoProviderList.vue";
+import DemoFavoriteProvider from "./components/DemoFavoriteProvider.vue";
+import Scheduler from "./components/Scheduler.vue";
+import ReportForm from "./components/ReportForm.vue";
+import BecomeFixer from './components/BecomeFixer.vue';
+import DemoAssignedJobs from './components/DemoAssignedJobs.vue';
+import ReviewProvider from "./components/ReviewProvider.vue";
 
 import { me, initCsrf, logout as apiLogout } from "@/services/api.js";
 import { Toaster } from "@/components/ui/sonner";
@@ -80,7 +88,7 @@ const routes = {
   "/Hello": Hello,
   "/Hello1": Hello1,
   "/Hello2": Hello2,
-  "/Hello3": Hello3,
+  "/DemoProfile": DemoProfile,
   "/Hello4": Hello4,
   "/JoinUs": JoinUs,
   "/Settings": Settings,
@@ -90,7 +98,15 @@ const routes = {
   "/DemoMyJobs": DemoMyJobs,
   "/DemoJobListings": DemoJobListings,
   "/FavoriteProvider": FavoriteProvider,
+  "/DemoFavoriteProvider": DemoFavoriteProvider,
   "/DemoProvider": DemoProvider,
+  "/BecomeFixer": BecomeFixer,
+  "/DemoSavedJobs": DemoSavedJobs,
+  "/DemoProviderList": DemoProviderList,
+  "/Scheduler": Scheduler,
+  "/ReportForm": ReportForm,
+  "/DemoAssignedJobs": DemoAssignedJobs,
+  "/ReviewProvider": ReviewProvider
 };
 
 const currentPath = ref(window.location.hash);
@@ -118,14 +134,14 @@ async function handleLoginSuccess() {
     <div v-else class="flex flex-col items-center w-full">
       <Header />
 
-      <div v-if="!isLoggedIn" class="mb-6 flex gap-3">
-        <a class="underline" href="#/Login">Login</a>
-        <a class="underline" href="#/Signup">Signup</a>
-      </div>
-
-      <div v-else class="mb-6 flex gap-3 items-center">
-        <span class="text-sm">{{ user.email }}</span>
-        <a class="underline cursor-pointer" @click="logout">Logout</a>
+      <div v-if="!isLoggedIn" class="mb-6 flex gap-3"> 
+        <!-- <a class="underline" href="#/Login">Login</a> -->
+        <!-- <a class="underline" href="#/Signup">Signup</a> -->
+      </div> 
+      
+      <div v-else class="mb-6 flex gap-3 items-center"> 
+        <span class="text-sm">{{ user.email }}</span> 
+        <a class="underline cursor-pointer" @click="logout">Logout</a> 
       </div>
 
       <div class="w-full">
