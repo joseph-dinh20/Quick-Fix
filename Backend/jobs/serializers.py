@@ -94,7 +94,9 @@ class JobSerializer(serializers.ModelSerializer):
     services = ServiceSerializer(many=True)
     images = JobImageSerializer(many=True)
     customer = ProfileSerializer(read_only=True)
-    languages = serializers.StringRelatedField()
+    language = serializers.StringRelatedField()
+    assigned_provider_id = serializers.SerializerMethodField()
+    assigned_provider_name = serializers.SerializerMethodField()
 
     class Meta:
         model = Job
@@ -111,13 +113,25 @@ class JobSerializer(serializers.ModelSerializer):
             "images",
             "is_favorited",
             "customer",
-            "languages",
+            "language",
             "urgency",
             "status",
             'city',
             'state',
             'zip_code',
+            'assigned_provider_id',
+            'assigned_provider_name',
         ]
+
+    def get_assigned_provider_id(self, obj):
+        if obj.assigned_provider:
+            return obj.assigned_provider.id
+        return None
+
+    def get_assigned_provider_name(self, obj):
+        if obj.assigned_provider:
+            return obj.assigned_provider.profile.name
+        return None
 
     def get_is_favorited(self, obj):
         user = self.context["request"].user
