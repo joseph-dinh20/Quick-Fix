@@ -16,7 +16,7 @@
             placeholder="Search postings"
             class="border-0 focus-visible:ring-0 shadow-none pl-10 bg-transparent w-full"
           />
-          <Button class="bg-green-500 hover:bg-green-600 text-white rounded-full px-6 py-2 shrink-0 h-auto font-bold">
+          <Button class="bg-primary hover:bg-primary text-white rounded-full px-6 py-2 shrink-0 h-auto font-bold">
             Search
           </Button>
         </div>
@@ -63,7 +63,7 @@
               <span class="text-sm font-bold text-slate-900">
                 {{ job.budget ? `$${job.budget}` : 'Budget not provided' }}
               </span>
-              <span class="text-sm text-slate-500"> budget</span>
+              <span class="text-sm text-slate-500"> / hr</span>
             </div>
 
             <div class="flex flex-wrap gap-2 mt-2">
@@ -78,7 +78,7 @@
           </div>
 
           <div class="flex flex-col sm:items-end w-full sm:w-auto gap-3 mt-4 sm:mt-0">
-            <Button @click="openJobModal(job)" class="w-full sm:w-auto bg-green-500 hover:bg-green-600 text-white font-semibold">
+            <Button @click="openJobModal(job)" class="w-full sm:w-auto text-white font-semibold">
               View Job
             </Button>
 
@@ -86,7 +86,7 @@
               variant="link"
               @click="toggle(job)"
               class="h-auto p-0 text-xs font-medium decoration-1 underline-offset-4"
-              :class="job.is_favorited ? 'text-green-500' : 'text-slate-500 hover:text-slate-800'"
+              :class="job.is_favorited ? 'text-primary' : 'text-slate-500 hover:text-slate-800'"
             >
               <svg v-if="job.is_favorited" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-1.5"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"></path></svg>
               {{ job.is_favorited ? "Favorite" : "Save to Favorites" }}
@@ -163,15 +163,15 @@
 
               <div class="flex items-center text-slate-600 font-medium">
                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-3"><circle cx="12" cy="12" r="10"></circle><line x1="2" x2="22" y1="12" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
-                {{ selectedJob.languages || 'Not specified' }}
+                {{ selectedJob.languages || 'English' }}
               </div>
 
-              <div class="flex items-center text-slate-600 font-medium">
+              <div class="flex items-center text-slate-600 font-medium capitalize">
                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-3"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"></path><circle cx="12" cy="10" r="3"></circle></svg>
-                {{ selectedJob.request_type || 'Request type not provided' }}
+                {{ selectedJob.city + ', ' + selectedJob.state || 'Request type not provided' }}
               </div>
 
-              <div class="flex items-center text-slate-600 font-medium">
+              <div class="flex items-center text-slate-600 font-medium capitalize">
                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-3"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
                 {{ selectedJob.urgency || 'Urgency not provided' }}
               </div>
@@ -183,7 +183,15 @@
                   <rect width="18" height="18" x="3" y="4" rx="2"></rect>
                   <path d="M3 10h18"></path>
                 </svg>
-                {{ selectedJob.deadline || 'No deadline provided' }}
+                {{ formatDate(selectedJob.deadline) || 'No deadline provided' }}
+              </div>
+
+              <div class="flex items-center text-slate-600 font-medium capitalize">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-3">
+                  <rect width="20" height="14" x="2" y="7" rx="2" ry="2"></rect>
+                  <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+                </svg>
+                {{ selectedJob.request_type || 'Request type not provided' }}
               </div>
 
             </div>
@@ -192,7 +200,15 @@
               <span class="text-lg font-bold text-[#1a202c]">
                 {{ selectedJob.budget ? `$${selectedJob.budget}` : 'Budget not provided' }}
               </span>
-              <span class="text-base text-slate-500 font-medium"> budget</span>
+              <span class="text-base text-slate-500 font-medium mr-5"> / hr</span>
+              
+              <span
+                v-for="service in selectedJob.services"
+                :key="service.id"
+                class="text-xs bg-slate-100 px-2 py-1 rounded-md text-slate-600 ml-2"
+              >
+                {{ service.name }}
+              </span>
             </div>
           </div>
 
@@ -245,6 +261,12 @@ export default {
   },
 
   methods: {
+    formatDate(date) {
+      if (!date) return '-'
+      return new Date(date).toLocaleDateString('en-US', {
+        year: 'numeric', month: 'short', day: 'numeric',
+      })
+    },
     async fetchJobs() {
       this.loading = true;
       try {

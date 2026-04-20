@@ -1,9 +1,9 @@
 from rest_framework import serializers
-from .models import Job, JobImage
+from .models import Job, JobImage, JobApplication
 from services.models import Service
 from services.serializers import ServiceSerializer
 from accounts.models import ServiceProvider, Profile, Language
-from geopy.geocoders import Nominatim
+from .utils import geolocator
 
 class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
@@ -62,7 +62,6 @@ class JobCreateSerializer(serializers.ModelSerializer):
 
         # convert city/zip to coordinates
         if city or zip_code:
-            geolocator = Nominatim(user_agent="myapp")
             query = f"{city or ''} {zip_code or ''}".strip()
             location = geolocator.geocode(query)
             if location:
@@ -113,7 +112,11 @@ class JobSerializer(serializers.ModelSerializer):
             "is_favorited",
             "customer",
             "languages",
-            "urgency"
+            "urgency",
+            "status",
+            'city',
+            'state',
+            'zip_code',
         ]
 
     def get_is_favorited(self, obj):
@@ -129,6 +132,12 @@ class JobSerializer(serializers.ModelSerializer):
 
           
 class JobUpdateSerializer(serializers.ModelSerializer):
+    images = serializers.ListField(
+        child=serializers.ImageField(),
+        write_only=True,
+        required=False
+    )
+        
     class Meta:
         model = Job
         fields = [
@@ -139,5 +148,29 @@ class JobUpdateSerializer(serializers.ModelSerializer):
             "is_open",
             "request_type",
             "services",
-            "urgency"
+            "urgency",
+            "status",
+            "images"
+        ]
+
+    def update(self, instance, validated_data):
+        images = validated_data.pop("images", [])
+        instance = super().update(instance, validated_data)
+        for image in images:
+            JobImage.objects.create(job=instance, image=image)
+        return instance
+
+
+class JobApplicationSerializer(serializers.ModelSerializer):
+    job_title = serializers.CharField(source="job.title", read_only=True)
+    job_id = serializers.IntegerField(source="job.id", read_only=True)
+
+    class Meta:
+        model = JobApplication
+        fields = [
+            "id",
+            "job_id",
+            "job_title",
+            "status",
+            "created_at",
         ]

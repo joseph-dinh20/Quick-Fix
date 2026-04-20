@@ -1,111 +1,45 @@
 <template>
-
   <div class="min-h-screen bg-slate-0 text-slate-900 p-6 md:p-12 font-sans relative">
     <div class="max-w-5xl mx-auto">
       
       <div class="flex justify-between items-center mb-8">
-        <h1 class="text-3xl font-extrabold tracking-tight">Find work</h1>
+        <h1 class="text-3xl font-extrabold tracking-tight">Favorite Jobs</h1>
         <Button variant="ghost" size="icon" class="text-slate-700">
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21"></polygon><line x1="9" x2="9" y1="3" y2="18"></line><line x1="15" x2="15" y1="6" y2="21"></line></svg>
         </Button>
       </div>
 
-      <Card class="flex flex-col md:flex-row items-center rounded-full p-2 mb-3 shadow-sm border-slate-200 gap-2 md:gap-0">
-        <ServiceSearchSelect class="flex-1 px-4 w-50" v-model="pendingService" placeholder="Enter your task..." />
-        <!-- <div class="flex items-center flex-1 px-4 w-full">
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-slate-400 mr-3"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg>
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
+        <div class="relative w-full sm:w-[450px] flex items-center bg-white rounded-full border border-slate-200 shadow-sm p-1.5">
+          <Search class="w-5 h-5 text-slate-400 ml-3 absolute" />
           <Input
-            v-model="titleSearch" placeholder="What do you need done?"
-          /> -->
-        <!-- </div> -->
-        <div class="hidden md:block w-[1px] h-8 bg-slate-200"></div>
-        <div class="flex items-center flex-1 px-4 w-full border-t md:border-none border-slate-100 pt-2 md:pt-0 mt-2 md:mt-0">
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-slate-400 mr-3"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"></path><circle cx="12" cy="10" r="3"></circle></svg>
-          <Input
-            v-model="pendingLocation" placeholder="City, State, Zip Code"
+            v-model="searchQuery"
+            placeholder="Search postings"
+            class="border-0 focus-visible:ring-0 shadow-none pl-10 bg-transparent w-full"
           />
+          <Button @click="applySearch" class="text-white rounded-full px-6 py-2 shrink-0 h-auto font-bold">
+            Search
+          </Button>
         </div>
-        <Button @click="searchJobs" class="w-full md:w-auto text-white rounded-full px-8 py-2.5">
-          Search
-        </Button>
-      </Card>
 
-      <!--<div class="flex flex-wrap gap-3 mb-10">
-        <Button
-          v-for="filter in ['Pay', 'Language', 'Urgency', 'Type', 'Credentials']"
-          :key="filter"
-          variant="outline"
-          @click="activeFilter = filter"
-          :class="activeFilter === filter ? 'bg-orange-100 border-orange-400' : ''"
-        >
-          {{ filter }}
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="ml-2 text-slate-500"><path d="m6 9 6 6 6-6"></path></svg>
-        </Button>
-      </div>-->
-
-      <div class="flex flex-wrap gap-3 mb-10">
-        <!-- Category -->
-        <!-- <select v-model="selectedCategory" class="border p-2 rounded">
-          <option value="">All Categories</option>
-          <option
-            v-for="service in services"
-            :key="service.id"
-            :value="service.id"
-          >
-            {{ service.name }}
-          </option>
-        </select> -->
-
-        <!-- Distance -->
-         <Select v-model="pendingDistance">
-          <SelectTrigger class="border p-2 rounded w-30">
-            <SelectValue placeholder="Distance" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="5">5 Miles</SelectItem>
-            <SelectItem value="10">10 Miles</SelectItem>
-            <SelectItem value="15">15 Miles</SelectItem>
-            <SelectItem value="20">20 Miles</SelectItem>
-            <SelectItem value="25">25 Miles</SelectItem>
-            <SelectItem value="30">30 Miles</SelectItem>
-          </SelectContent>
-        </Select>
-
-        <!-- Budget -->
-
-        <Select v-model="pendingBudget">
-          <SelectTrigger class="border p-2 rounded w-30">
-            <SelectValue placeholder="Budget" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="0">$0</SelectItem>
-            <SelectItem value="25">$25</SelectItem>
-            <SelectItem value="50">$50</SelectItem>
-            <SelectItem value="75">$75</SelectItem>
-            <SelectItem value="100">$100</SelectItem>
-            <SelectItem value="150">$150</SelectItem>
-            <SelectItem value="200">$200+</SelectItem>
-          </SelectContent>
-        </Select>
-
-        <!-- Job Type -->
-
-        <Select v-model="pendingJobType">
-          <SelectTrigger class="border p-2 rounded w-30">
-            <SelectValue placeholder="All Types" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value=".">All Type</SelectItem>
-            <SelectItem value="quote">Quote</SelectItem>
-            <SelectItem value="service">Service</SelectItem>
-            <SelectItem value="both">Both</SelectItem>
-          </SelectContent>
-        </Select>
+        <DropdownMenu>
+          <DropdownMenuTrigger as-child>
+            <Button variant="outline" class="bg-white border-slate-200 text-slate-700 hover:bg-slate-50 rounded-lg flex items-center gap-2 shadow-sm px-4 capitalize">
+              {{ currentSort }}
+              <ChevronDown class="w-4 h-4 text-slate-500 ml-1" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" class="w-40">
+            <DropdownMenuItem @click="updateSort('Newest')">Newest</DropdownMenuItem>
+            <DropdownMenuItem @click="updateSort('Oldest')">Oldest</DropdownMenuItem>
+            <DropdownMenuItem @click="updateSort('Title (A-Z)')">Title (A-Z)</DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
 
       </div>
 
       <div v-if="loading" class="flex flex-col gap-5">
-        <Card v-for="n in 4" :key="n" class="flex flex-col sm:flex-row p-4 gap-6 items-center shadow-sm border-slate-200">
+        <Card v-for="n in 3" :key="n" class="flex flex-col sm:flex-row p-4 gap-6 items-center shadow-sm border-slate-200">
           <Skeleton class="w-full sm:w-48 h-32 rounded-lg" />
           <div class="flex-1 w-full space-y-3">
             <Skeleton class="h-6 w-3/4 sm:w-1/3" />
@@ -117,9 +51,6 @@
       </div>
 
       <div v-else class="flex flex-col gap-5">
-          <div v-if="!jobs.length" class="text-sm text-muted-foreground text-center mt-4">
-            No results found.
-          </div>
         <Card
           v-for="job in filteredJobs.slice(0, 20)"
           :key="job.id"
@@ -140,19 +71,30 @@
           <div class="flex-1 min-w-0">
             <h3 class="text-lg font-bold text-slate-900 truncate">{{ job.title }}</h3>
             <div class="mt-1 flex flex-col gap-1">
-              <p class="text-sm text-slate-500">
-                by {{ job.customer?.name || 'Unknown customer' }}</p>
-              <p class="text-sm text-slate-500 capitalize">{{ job.request_type || 'Location not found' }}</p>
-              <p class="text-sm text-slate-500">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="inline mr-1 mb-0.5"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"></path><circle cx="12" cy="10" r="3"></circle></svg>
-                {{ job.city }}, {{ job.state }}</p>
+              <p class="text-sm text-slate-500">by {{ job.customer?.name || 'Unknown customer' }}</p>
+              <p class="text-sm text-slate-500">{{ job.city + ', ' + job.state || 'Location not provided' }}</p>
             </div>
-            
             <div class="mt-3">
+
               <span class="text-sm font-bold text-slate-900">
                 {{ job.budget ? `$${job.budget}` : 'Budget not provided' }}
               </span>
-              <!-- <span class="text-sm text-slate-500"> budget</span> -->
+              <span class="text-sm text-slate-500 mr-3"> / hr</span>
+                              <Badge 
+                  variant="outline" 
+                  :class="[
+                    'font-medium px-2.5 py-0.5 rounded-md capitalize',
+                    job.status === 'open' 
+                      ? 'bg-red-50 text-red-600 border-red-200'
+                      : job.status === 'complete'
+                      ? 'bg-green-50 text-green-600 border-green-200'
+                      : job.status === 'in_progress'
+                      ? 'bg-yellow-50 text-yellow-600 border-yellow-200'
+                      : 'bg-blue-50 text-blue-600 border-blue-200'
+                  ]"
+                >
+                  {{ job.status === 'in_progress' ? 'In Progress' : job.status }}
+                </Badge>
             </div>
 
             <div class="flex flex-wrap gap-2 mt-2">
@@ -167,18 +109,26 @@
           </div>
 
           <div class="flex flex-col sm:items-end w-full sm:w-auto gap-3 mt-4 sm:mt-0">
-            <Button @click="openJobModal(job)" class="w-full sm:w-auto  text-white font-semibold">
-              View Job
+            <div v-if="1">
+            <Button 
+              @click="markDone(job)"
+              class="w-full sm:w-auto text-white font-semibold"
+              :disabled="job.status != 'in_progress'"
+            >
+              Mark as Complete
             </Button>
+
+            </div>
+ 
 
             <Button
               variant="link"
-              @click="toggle(job)"
               class="h-auto p-0 text-xs font-medium decoration-1 underline-offset-4"
-              :class="job.is_favorited ? 'text-primary' : 'text-slate-500 hover:text-slate-800'"
+              :class="'text-slate-500 hover:text-slate-800'"
+              @click="openJobModal(job)"
             >
               <svg v-if="job.is_favorited" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-1.5"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"></path></svg>
-              {{ job.is_favorited ? "Favorite" : "Save to Favorites" }}
+              View Job
             </Button>
           </div>
         </Card>
@@ -252,18 +202,19 @@
 
               <div class="flex items-center text-slate-600 font-medium">
                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-3"><circle cx="12" cy="12" r="10"></circle><line x1="2" x2="22" y1="12" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
-                {{ selectedJob.languages || 'English' }}
+                {{ selectedJob.languages || 'Not specified' }}
               </div>
 
-              <div class="flex items-center text-slate-600 font-medium">
+              <div class="flex items-center text-slate-600 font-medium capitalize">
                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-3"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"></path><circle cx="12" cy="10" r="3"></circle></svg>
-                {{ selectedJob.city + ', ' + selectedJob.state || 'Location not found' }}
+                {{ selectedJob.city + ', ' + selectedJob.state || 'ocation not provided' }}
               </div>
 
               <div class="flex items-center text-slate-600 font-medium capitalize">
                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-3"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
                 {{ selectedJob.urgency || 'Urgency not provided' }}
               </div>
+
               <div class="flex items-center text-slate-600 font-medium">
                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-3">
                   <path d="M8 2v4"></path>
@@ -271,16 +222,18 @@
                   <rect width="18" height="18" x="3" y="4" rx="2"></rect>
                   <path d="M3 10h18"></path>
                 </svg>
-                {{ formatDate(selectedJob.deadline) }}
+                {{ formatDate(selectedJob.deadline) || 'No deadline provided' }}
               </div>
+
 
               <div class="flex items-center text-slate-600 font-medium capitalize">
                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-3">
                   <rect width="20" height="14" x="2" y="7" rx="2" ry="2"></rect>
                   <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
                 </svg>
-                {{ selectedJob.request_type || 'Location not found' }}
+                {{ selectedJob.request_type || 'Location not provided' }}
               </div>
+
 
             </div>
 
@@ -298,7 +251,6 @@
                 {{ service.name }}
               </span>
             </div>
-            
           </div>
 
           <hr class="border-slate-100 mb-8" />
@@ -313,23 +265,24 @@
     </Dialog>
 
   </div>
-
-
 </template>
 
-<script >
-import { searchJobs, toggleFavoriteJob } from "@/services/api";
+<script>
+import { fetchAssignedJobs, completeJob } from "@/services/api"
+// import { getFavoriteJobs, toggleFavoriteJob } from "@/services/api";
+import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
-import ServiceSearchSelect from "@/components/ServiceSearchSelect.vue"
-import { ref } from "vue"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-
-
-const selectedService = ref(null)
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import { ChevronDown, Search } from 'lucide-vue-next'
 
 export default {
   name: "JobsList",
@@ -341,93 +294,98 @@ export default {
     Skeleton,
     Dialog,
     DialogContent,
-    ServiceSearchSelect,
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
+    Badge,
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuTrigger,
+    ChevronDown,
+    Search,
   },
 
   data() {
     return {
-      services: [],
       jobs: [],
       loading: false,
       selectedJob: null,
       isDialogOpen: false,
-
-      pendingDistance: '',
-      pendingBudget: '',
-      pendingJobType: '',
-      pendingService: '',
-      pendingLocation: '',
-
-      searchLocation: "",
-      selectedDistance: "",
-      selectedLocation: "",
-      selectedBudget: "",
-      selectedJobType: "",
-      selectedService: "",
+      searchQuery: '',
+      displayQuery: '',
+      currentSort: 'Sort by',
     };
   },
-
-  async mounted() {
-    this.fetchServices();
-    this.fetchJobs();
-  },
-
+  
   computed: {
     filteredJobs() {
-      return this.jobs;
+      let result = [...this.jobs]
+
+      if (this.currentSort === 'Newest') {
+        result.sort((a, b) => new Date(b.deadline) - new Date(a.deadline))
+      } else if (this.currentSort === 'Oldest') {
+        result.sort((a, b) => new Date(a.deadline) - new Date(b.deadline))
+      } else if (this.currentSort === 'Title (A-Z)') {
+        result.sort((a, b) => a.title.localeCompare(b.title))
+      }
+
+      if (!this.displayQuery.trim()) return result
+      const q = this.displayQuery.toLowerCase()
+      return result.filter(job =>
+        job.title.toLowerCase().includes(q) ||
+        (job.description || '').toLowerCase().includes(q) ||
+        (job.city || '').toLowerCase().includes(q)
+      )
     }
   },
 
+  async mounted() {
+    this.fetchJobs();
+  },
+
   methods: {
-    formatDate(dateStr) {
-      if (!dateStr) return 'No deadline provided'
-      return new Date(dateStr).toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: 'short',
-        day: 'numeric'
+
+    applySearch() {
+      this.displayQuery = this.searchQuery
+    },
+
+    updateSort(sortOption) {
+      this.currentSort = sortOption
+    },
+
+    formatDate(date) {
+      return new Date(date).toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "short",
+        day: "numeric",
       })
     },
 
-    async fetchServices() {
-      const res = await fetch("http://localhost:8000/api/services/");
-      this.services = await res.json();
-    },
-
     async fetchJobs() {
-      this.loading = true
+      this.loading = true;
       try {
-        const res = await searchJobs({
-          services: this.selectedService || undefined,
-          budget: this.selectedBudget || undefined,
-          request_type: this.selectedJobType || undefined,
-          max_distance: this.selectedDistance || undefined,
-          location: this.searchLocation || undefined
-        })
-        const data = res.data.results || res.data
-        console.log('jobs received:', data.length)
-        this.jobs = data.map(job => ({
+        const res = await fetchAssignedJobs();
+        const jobs = res.data.results || res.data;
+
+        this.jobs = jobs.map((job) => ({
           ...job,
-          images: (job.images || []).map(img => ({
+          images: (job.images || []).map((img) => ({
             ...img,
-            image: img.image?.startsWith('http') ? img.image : `http://localhost:8000${img.image}`
-          }))
-        }))
+            image: img.image?.startsWith("http")
+              ? img.image
+              : `http://localhost:8000${img.image}`,
+          })),
+        }));
       } catch (err) {
-        console.error(err)
+        console.error(err);
       } finally {
-        this.loading = false
+        this.loading = false;
       }
     },
 
-    async toggle(job) {
+    async markDone(job) {
       try {
-        const res = await toggleFavoriteJob(job.id);
-        job.is_favorited = res.data.favorited;
+        const res = await completeJob(job.id)
+        await this.loadJobs()
+        console.log(res);
       } catch (err) {
         console.error(err);
       }
@@ -450,15 +408,6 @@ export default {
         left: 250,
         behavior: "smooth",
       });
-    },
-
-    searchJobs() {
-      this.searchLocation = this.pendingLocation
-      this.selectedService = this.pendingService
-      this.selectedDistance = this.pendingDistance
-      this.selectedBudget = this.pendingBudget
-      this.selectedJobType = this.pendingJobType === '.' ? '' : this.pendingJobType
-      this.fetchJobs()
     },
   },
 };

@@ -16,7 +16,7 @@ import ProviderList from "@/components/ProviderList.vue";
 import ProviderTest from "@/components/ProviderTest.vue";
 import Hello1 from "@/components/Hello1.vue";
 import Hello2 from "@/components/Hello2.vue";
-import Hello3 from "@/components/Hello3.vue";
+import DemoProfile from "@/components/DemoProfile.vue";
 import Hello4 from "@/components/Hello4.vue";
 import JoinUs from "./components/JoinUs.vue";
 import Settings from "./components/Settings.vue";
@@ -32,6 +32,8 @@ import DemoProviderList from "./components/DemoProviderList.vue";
 import DemoFavoriteProvider from "./components/DemoFavoriteProvider.vue";
 import Scheduler from "./components/Scheduler.vue";
 import ReportForm from "./components/ReportForm.vue";
+import BecomeFixer from './components/BecomeFixer.vue';
+import DemoAssignedJobs from './components/DemoAssignedJobs.vue';
 
 import { me, initCsrf, logout as apiLogout } from "@/services/api.js";
 import { Toaster } from "@/components/ui/sonner";
@@ -85,7 +87,7 @@ const routes = {
   "/Hello": Hello,
   "/Hello1": Hello1,
   "/Hello2": Hello2,
-  "/Hello3": Hello3,
+  "/DemoProfile": DemoProfile,
   "/Hello4": Hello4,
   "/JoinUs": JoinUs,
   "/Settings": Settings,
@@ -97,10 +99,12 @@ const routes = {
   "/FavoriteProvider": FavoriteProvider,
   "/DemoFavoriteProvider": DemoFavoriteProvider,
   "/DemoProvider": DemoProvider,
+  "/BecomeFixer": BecomeFixer,
   "/DemoSavedJobs": DemoSavedJobs,
   "/DemoProviderList": DemoProviderList,
   "/Scheduler": Scheduler,
   "/ReportForm": ReportForm,
+  "/DemoAssignedJobs": DemoAssignedJobs,
 };
 
 const currentPath = ref(window.location.hash);

@@ -51,7 +51,7 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 
-import { onMounted } from "vue";
+import { onMounted, ref } from "vue";
 import workPhoto1 from "@/assets/workPhotos/bathroom.jpg";
 import workPhoto2 from "@/assets/workPhotos/garden.jpg";
 import workPhoto3 from "@/assets/workPhotos/kitchen.jpg";
@@ -80,8 +80,8 @@ import {
   toggleFavoriteProvider,
   getFavorites,
 } from "../services/api";
-import { userListStore } from "@/store/userList";
-import { storeToRefs } from "pinia";
+// import { userListStore } from "@/store/userList";
+// import { storeToRefs } from "pinia";
 
 const BASE_URL = "http://localhost:8000";
 
@@ -110,6 +110,7 @@ function normalizeProvider(provider) {
 }
 
 async function fetchProviders() {
+  console.log("Fetching providers")
   try {
     const response = await loadProviders();
     providers.value = response.data.map(normalizeProvider);
@@ -142,8 +143,7 @@ async function handleToggleFavorite(provider) {
 }
 
 // NOTE: grabbing data from pinia from store.js in the /store directory.
-const store = userListStore();
-const { providers } = storeToRefs(store);
+const providers = ref([]);
 
 onMounted(fetchProviders);
 </script>

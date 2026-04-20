@@ -1,6 +1,6 @@
 <script setup>
-import { ref, onMounted } from "vue"
-import { getMyJobs, deleteJob, updateJob } from "../services/api"
+import { ref, onMounted, computed, } from "vue"
+import { getMyJobs, deleteJob, updateJob, deleteJobImage } from "../services/api"
 
 // --- UI IMPORTS (Expanded for maximum shadcn usage) ---
 import { Button } from "@/components/ui/button"
@@ -32,15 +32,116 @@ import {
   ChevronDown, 
   DollarSign, 
   Info,
-  ImageIcon 
+  ImageIcon,
 } from "lucide-vue-next"
+
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 // ---------------------------------------------------
+
+import ServiceSelect from "./ServiceSelect.vue"
+import CardTitle from "./ui/card/CardTitle.vue"
 
 const jobs = ref([])
 const currentSort = ref("Sort by")
 const isDialogOpen = ref(false)
 const selectedJob = ref(null)
 const isEditDialogOpen = ref(false)
+const searchQuery = ref('')
+const displayQuery = ref('')
+const jobService = ref([])   // array of IDs
+const carousel = ref(null)
+
+const existingImages = ref([])
+const newImages = ref([])
+
+
+function scrollLeft() {
+  carousel.value?.scrollBy({ left: -250, behavior: 'smooth' })
+}
+
+function scrollRight() {
+  carousel.value?.scrollBy({ left: 250, behavior: 'smooth' })
+}
+
+function handleImageUpload(event) {
+  const files = Array.from(event.target.files)
+  files.forEach(file => {
+    if (!newImages.value.some(f => f.file.name === file.name)) {
+      newImages.value.push({ file, preview: URL.createObjectURL(file) })
+    }
+  })
+  event.target.value = ""
+}
+
+function removeNewImage(index) {
+  URL.revokeObjectURL(newImages.value[index].preview)
+  newImages.value.splice(index, 1)
+}
+
+async function removeExistingImage(id) {
+  try {
+    await deleteJobImage(id)  // add this to your api.js
+    existingImages.value = existingImages.value.filter(img => img.id !== id)
+  } catch (err) {
+    console.error('Failed to delete image', err)
+  }
+}
+
+function removeImage(img) {
+  if (img.type === 'existing') {
+    removeExistingImage(img.id)
+  } else {
+    removeNewImage(img.index)
+  }
+}
+
+const combinedImages = computed(() => {
+  const existing = existingImages.value.map(img => ({
+    src: img.image?.startsWith('http') ? img.image : `http://localhost:8000${img.image}`,
+    type: 'existing',
+    id: img.id,
+    key: 'existing-' + img.id
+  }))
+  const newly = newImages.value.map((img, index) => ({
+    src: img.preview,
+    type: 'new',
+    index,
+    key: 'new-' + index
+  }))
+  return [...existing, ...newly]
+})
+
+const filteredJobs = computed(() => {
+  const sorted = [...jobs.value]
+  if (currentSort.value === 'Newest') {
+    sorted.sort((a, b) => new Date(b.deadline) - new Date(a.deadline))
+  } else if (currentSort.value === 'Oldest') {
+    sorted.sort((a, b) => new Date(a.deadline) - new Date(b.deadline))
+  } else if (currentSort.value === 'Title (A-Z)') {
+    sorted.sort((a, b) => a.title.localeCompare(b.title))
+  } else if (currentSort.value === 'Status') {
+    sorted.sort((a, b) => b.status.localeCompare(a.status))
+  }
+
+  if (!displayQuery.value.trim()) return sorted
+
+  const q = displayQuery.value.toLowerCase()
+  return sorted.filter(job =>
+    job.title.toLowerCase().includes(q) ||
+    (job.description || '').toLowerCase().includes(q)
+  )
+})
+
+function applySearch() {
+  displayQuery.value = searchQuery.value
+}
+
 
 async function fetchJobs() {
   try {
@@ -63,6 +164,18 @@ async function removeJob(jobId) {
 
 function updateSort(sortOption) {
   currentSort.value = sortOption
+  if (sortOption === 'Newest') {
+    jobs.value.sort((a, b) => new Date(b.deadline) - new Date(a.deadline))
+  } else if (sortOption === 'Oldest') {
+    jobs.value.sort((a, b) => new Date(a.deadline) - new Date(b.deadline))
+  } else if (sortOption === 'Title (A-Z)') {
+    jobs.value.sort((a, b) => a.title.localeCompare(b.title))
+  }
+}
+
+function handleServiceChange(val) {
+  if (val.length === 0) return  
+  editForm.value.services = val.slice(-1)  
 }
 
 function openJobDetails(job) {
@@ -73,7 +186,14 @@ function openJobDetails(job) {
 
 function editJob(job) {
   // Use spread syntax to clone the job so we don't mutate the UI before saving
-  editForm.value = { ...job }
+  const fresh = jobs.value.find(j => j.id === job.id) || job
+  editForm.value = {
+    ...fresh,
+    deadline: fresh.deadline ? fresh.deadline.split('T')[0] : '',
+    services: fresh.services?.map(s => s.id) ?? []
+  }
+  existingImages.value = fresh.images || []
+  newImages.value = []
   isEditDialogOpen.value = true
 }
 
@@ -83,34 +203,41 @@ const editForm = ref({
   budget: "",
   deadline: "",
   status: "",
+  urgency: "",
+  request_type: "",
+  services: [],
 })
 // Handle saving the edited job
 async function saveJobChanges() {
   try {
-    // Package the specific fields that JobUpdateSerializer expects
-    const payload = {
-      title: editForm.value.title,
-      description: editForm.value.description,
-      budget: editForm.value.budget,
-      deadline: editForm.value.deadline,
-    }
+    console.log('urgency:', editForm.value.urgency)
+    console.log('request_type:', editForm.value.request_type)
+    const payload = new FormData()
+    payload.append('title', editForm.value.title)
+    payload.append('description', editForm.value.description)
+    payload.append('budget', editForm.value.budget)
+    payload.append('request_type', editForm.value.request_type || '')
+    payload.append('urgency', editForm.value.urgency || '')
+    payload.append('deadline', editForm.value.deadline ? `${editForm.value.deadline.split('T')[0]}T00:00:00Z` : '')
+    editForm.value.services.forEach(id => payload.append('services', id))
+    newImages.value.forEach(img => payload.append('images', img.file))
 
-    // Call the updated API route
-    const res = await updateJob(editForm.value.id, payload)
-
-    // Update the local state so the UI updates instantly without refreshing
-    const index = jobs.value.findIndex(j => j.id === editForm.value.id)
-    if (index !== -1) {
-      // Merge the returned updated job data into our local list
-      jobs.value[index] = { ...jobs.value[index], ...res.data.job }
-    }
-
-    // Close the modal
+    await updateJob(editForm.value.id, payload)
+    newImages.value.forEach(img => URL.revokeObjectURL(img.preview))
+    newImages.value = []
+    await fetchJobs()
     isEditDialogOpen.value = false
   } catch (err) {
     console.error("Failed to save changes", err.response?.data || err)
-    alert("Failed to update job. Check console for details.")
   }
+}
+
+function formatDate(date) {
+  if (!date) return '-'
+  const [year, month, day] = date.split('T')[0].split('-')
+  return new Date(year, month - 1, day).toLocaleDateString('en-US', {
+    year: 'numeric', month: 'short', day: 'numeric',
+  })
 }
 
 onMounted(fetchJobs)
@@ -126,10 +253,14 @@ onMounted(fetchJobs)
         <div class="relative w-full sm:w-[450px] flex items-center bg-white rounded-full border border-slate-200 shadow-sm p-1.5">
           <Search class="w-5 h-5 text-slate-400 ml-3 absolute" />
           <Input
+            v-model="searchQuery"
             placeholder="Search postings"
             class="border-0 focus-visible:ring-0 shadow-none pl-10 bg-transparent w-full"
           />
-          <Button class="bg-green-500 hover:bg-green-600 text-white rounded-full px-6 py-2 shrink-0 h-auto font-bold">
+          <Button 
+            class="bg-primary hover:bg-primary text-white rounded-full px-6 py-2 shrink-0 h-auto font-bold"
+            @click="applySearch"
+          >
             Search
           </Button>
         </div>
@@ -145,35 +276,53 @@ onMounted(fetchJobs)
             <DropdownMenuItem @click="updateSort('Newest')">Newest</DropdownMenuItem>
             <DropdownMenuItem @click="updateSort('Oldest')">Oldest</DropdownMenuItem>
             <DropdownMenuItem @click="updateSort('Title (A-Z)')">Title (A-Z)</DropdownMenuItem>
+            <DropdownMenuItem @click="updateSort('Status')">Status</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
 
       <div v-if="jobs.length" class="space-y-4">
         <Card 
-          v-for="job in jobs" 
+          v-for="job in filteredJobs" 
           :key="job.id" 
           @click="openJobDetails(job)"
-          class="overflow-hidden border-slate-200 shadow-sm rounded-xl hover:shadow-md hover:border-green-200 transition-all cursor-pointer"
+          class="overflow-hidden border-slate-200 shadow-sm rounded-xl hover:shadow-md hover:border-primary transition-all cursor-pointer"
         >
           <CardContent class="p-5 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
             <div>
-              <h3 class="font-bold text-[#1a202c] text-[15px] mb-2.5">{{ job.title }}</h3>
-              <div class="flex items-center gap-3 text-sm">
+              <h2 class="font-bold text-[#1a202c] text-[15px] mb-2.5">{{ job.title }}</h2>
+              <div class="flex items-center gap-3 text-slate-500 font-medium pb-2">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class=""><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                <span>
+                {{ job.city + ', ' + job.state || 'No Location Provided' }}
+                </span>
+              </div>
+              <div class="flex items-center text-sm">
+                <h2 class="font-bold text-[#1a202c] text-[15px] mb-2 flex items-center">
+                ${{ job.budget }}</h2>
+                <span class="text-sm text-slate-500 mr-3 mb-2"> / hr</span>
                 <Badge 
                   variant="outline" 
-                  :class="job.status === 'inactive' 
+                  :class="job.status === 'open' 
                     ? 'bg-red-50 text-red-600 border-red-200' 
-                    : 'bg-green-50 text-green-600 border-green-200'"
-                  class="font-medium px-2.5 py-0.5 rounded-md capitalize"
+                    : (
+                      job.status === 'complete' ?
+                      'bg-green-50 text-green-600 border-green-200'
+                      : (
+                        job.status === 'in_progress' ?
+                        'bg-yellow-50 text-yellow-600 border-yellow-200'
+                        : 'bg-blue-50 text-blue-600 border-blue-200'
+                      )
+                    )"
+                  class="font-medium px-2.5 py-0.5 rounded-md capitalize mb-2"
                 >
-                  {{ job.status === 'inactive' ? 'Inactive' : 'Active' }}
+                  {{ job.status === 'in_progress' ? 'In Progress' : job.status }}
                 </Badge>
+              </div>
                 <div class="flex items-center text-slate-500 font-medium">
                   <Calendar class="w-4 h-4 mr-1.5 text-slate-400" />
-                  <span>{{ job.deadline || 'No date set' }}</span>
+                  <span>{{ formatDate(job.deadline) }}</span>
                 </div>
-              </div>
             </div>
 
             <div class="flex items-center gap-1">
@@ -245,17 +394,25 @@ onMounted(fetchJobs)
 
               <div class="flex items-center text-slate-600 font-medium">
                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-3"><circle cx="12" cy="12" r="10"></circle><line x1="2" x2="22" y1="12" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
-                {{ selectedJob.languages || 'Not specified' }}
+                {{ selectedJob.languages || 'English' }}
               </div>
 
               <div class="flex items-center text-slate-600 font-medium">
                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-3"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"></path><circle cx="12" cy="10" r="3"></circle></svg>
-                {{ selectedJob.request_type || 'Request type not provided' }}
+                {{ selectedJob.city + ', ' + selectedJob.state || 'Request type not provided' }}
               </div>
 
-              <div class="flex items-center text-slate-600 font-medium">
+              <div class="flex items-center text-slate-600 font-medium capitalize">
                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-3"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
                 {{ selectedJob.urgency || 'Urgency not provided' }}
+              </div>
+
+              <div class="flex items-center text-slate-600 font-medium capitalize">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-3">
+                  <rect width="20" height="14" x="2" y="7" rx="2" ry="2"></rect>
+                  <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+                </svg>
+                {{ selectedJob.request_type || 'Request type not provided' }}
               </div>
 
               <div class="flex items-center text-slate-600 font-medium">
@@ -265,7 +422,7 @@ onMounted(fetchJobs)
                   <rect width="18" height="18" x="3" y="4" rx="2"></rect>
                   <path d="M3 10h18"></path>
                 </svg>
-                {{ selectedJob.deadline || 'No deadline provided' }}
+                {{ formatDate(selectedJob.deadline) || 'No deadline provided' }}
               </div>
 
             </div>
@@ -332,6 +489,79 @@ onMounted(fetchJobs)
                 </div>
               </div>
 
+            <div class="grid grid-cols-2 gap-4">
+              <div class="space-y-2">
+                <Label class="font-semibold text-slate-700">Job Type</Label>
+                <Select v-model="editForm.request_type">
+                  <SelectTrigger class="w-full">
+                    <SelectValue placeholder="Select type" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="quote">Quote</SelectItem>
+                    <SelectItem value="service">Service</SelectItem>
+                    <SelectItem value="both">Both</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div class="space-y-2">
+                <Label class="font-semibold text-slate-700">Urgency</Label>
+                <Select v-model="editForm.urgency">
+                  <SelectTrigger class="w-full">
+                    <SelectValue placeholder="Select urgency" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="flexible">Flexible</SelectItem>
+                    <SelectItem value="soon">Soon</SelectItem>
+                    <SelectItem value="urgent">Urgent</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+
+            <Separator class="bg-slate-100 my-2" />
+
+              <div class="space-y-2">
+                <Label class="font-semibold text-slate-700">Select Service</Label>
+                <ServiceSelect 
+                :model-value="editForm.services" 
+                @update:model-value="handleServiceChange"
+              />
+              </div>
+
+              <Separator class="bg-slate-100 my-2" />
+
+                <div class="space-y-2">
+                  <Label class="font-semibold text-slate-700">Images</Label>
+                  <div class="grid grid-cols-4 gap-3">
+                    <div
+                      v-for="img in combinedImages"
+                      :key="img.key"
+                      class="relative group"
+                    >
+                      <AspectRatio :ratio="1">
+                        <img :src="img.src" class="object-cover w-full h-full rounded-lg" />
+                      </AspectRatio>
+                      <Button
+                        size="icon"
+                        variant="destructive"
+                        class="absolute top-1 right-1 opacity-0 group-hover:opacity-100 h-6 w-6"
+                        @click="removeImage(img)"
+                      >
+                        ✕
+                      </Button>
+                    </div>
+
+                    <!-- Upload box -->
+                    <AspectRatio :ratio="1">
+                      <label class="flex items-center justify-center border-2 border-dashed rounded-lg cursor-pointer hover:bg-slate-50 w-full h-full">
+                        <span class="text-sm text-slate-500">+ Upload</span>
+                        <input type="file" multiple accept="image/*" class="hidden" @change="handleImageUpload" />
+                      </label>
+                    </AspectRatio>
+                  </div>
+                </div>
+<!-- 
               <Separator class="bg-slate-100 my-2" />
 
               <div class="space-y-2">
@@ -345,11 +575,11 @@ onMounted(fetchJobs)
                     type="file" 
                     multiple 
                     accept="image/*" 
-                    class="cursor-pointer file:bg-green-50 file:text-green-600 file:border-0 file:rounded-md file:px-4 file:py-2 file:mr-4 file:font-semibold hover:file:bg-green-100" 
+                    class="cursor-pointer file:bg-green-50 file:text-primary file:border-0 file:rounded-md file:px-4 file:py-2 file:mr-4 file:font-semibold hover:file:bg-green-100" 
                     @change="handleImageSelection"
                   />
                 </div>
-              </div>
+              </div> -->
             </div>
           </ScrollArea>
 
@@ -357,7 +587,7 @@ onMounted(fetchJobs)
             <Button variant="outline" @click="isEditDialogOpen = false" class="font-bold">
               Cancel
             </Button>
-            <Button @click="saveJobChanges" class="bg-green-500 hover:bg-green-600 text-white font-bold">
+            <Button @click="saveJobChanges" class="bg-primary hover:bg-primary text-white font-bold">
               Save Changes
             </Button>
           </div>

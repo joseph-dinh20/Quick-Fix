@@ -4,6 +4,7 @@ from .views import get_providers, get_provider
 from .views import update_profile, update_service_provider, delete_work_image, provider_me, get_services, update_provider_services
 from .views import get_favorites, toggle_favorite_provider, is_favorite_provider
 from .views import get_nearby_providers, search_providers
+from .views import apply_provider, update_provider_status
 
 urlpatterns = [
     path("csrf/", csrf),
@@ -23,6 +24,8 @@ urlpatterns = [
     path("providers/favorites/", get_favorites),
     path("providers/<int:provider_id>/is-favorite/", is_favorite_provider),
     path("providers/nearby/", get_nearby_providers),
-    path("providers/search/", search_providers, name="search_provider")
+    path("providers/search/", search_providers, name="search_provider"),
+    path("provider/apply/", apply_provider),
+    path("provider/<int:user_id>/status/", update_provider_status)
 
 ]
