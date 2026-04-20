@@ -11,6 +11,7 @@ from django.db.models import Avg
 @api_view(["POST"])
 @permission_classes([IsAuthenticated])
 def create_review(request, service_provider_id):
+    print(request.data, service_provider_id)
     try:
         profile = Profile.objects.get(user=request.user)
         service_provider = ServiceProvider.objects.get(id=service_provider_id)
