@@ -348,9 +348,9 @@ onMounted(fetchJobs);
                             <div class="flex items-center text-sm">
                                 <h2
                                     class="font-bold text-[#1a202c] text-[15px] mb-2 flex items-center">
-                                    ${{ job.budget }}
+                                    ${{ job.budget || 0}}
                                 </h2>
-                                <span class="text-sm text-slate-500 mr-3 mb-2">
+                                <span class="text-sm text-slate-500 mr-3 ml-1 mb-2">
                                     / hr</span
                                 >
                                 <Badge
@@ -398,11 +398,6 @@ onMounted(fetchJobs);
                         </div>
                     </CardContent>
                 </Card>
-            <div class="mt-6 pt-2">
-              <span class="text-lg font-bold text-[#1a202c]">
-                {{ selectedJob.budget ? `$${selectedJob.budget}` : '$0' }}
-              </span>
-              <span class="text-base text-slate-500 font-medium"> / hr</span>
             </div>
 
             <Dialog :open="isDialogOpen" @update:open="isDialogOpen = $event">
@@ -720,12 +715,12 @@ onMounted(fetchJobs);
                                     {{
                                         selectedJob.budget
                                             ? `$${selectedJob.budget}`
-                                            : "Budget not provided"
+                                            : "$0.00"
                                     }}
                                 </span>
                                 <span
                                     class="text-base text-slate-500 font-medium">
-                                    budget</span
+                                    / hr</span
                                 >
                             </div>
                         </div>
