@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from .models import Profile, ServiceProvider, WorkImage
+from .models import Profile, ServiceProvider, WorkImage, Language
 from django.middleware.csrf import get_token
 
 from django.contrib.auth import get_user_model
@@ -489,3 +489,10 @@ def apply_provider(request):
     )
 
     return Response({"message": "Application submitted"})
+
+
+@api_view(["GET"])
+def get_languages(request):
+    languages = Language.objects.all()
+    data = [{"id": l.id, "name": l.name} for l in languages]
+    return Response(data)

@@ -62,7 +62,7 @@ class JobCreateSerializer(serializers.ModelSerializer):
 
         # convert city/zip to coordinates
         if city or zip_code:
-            query = f"{city or ''} {zip_code or ''}".strip()
+            query = f"{city or ''} {zip_code or ''}, California, USA".strip()
             location = geolocator.geocode(query)
             if location:
                 validated_data["latitude"] = location.latitude
