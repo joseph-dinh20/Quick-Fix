@@ -61,7 +61,7 @@
             </div>
             <div class="mt-3">
               <span class="text-sm font-bold text-slate-900">
-                {{ job.budget ? `$${job.budget}` : 'Budget not provided' }}
+                {{ job.budget ? `$${job.budget}` : '$0' }}
               </span>
               <span class="text-sm text-slate-500"> / hr</span>
             </div>
@@ -198,7 +198,7 @@
 
             <div class="mt-6 pt-2">
               <span class="text-lg font-bold text-[#1a202c]">
-                {{ selectedJob.budget ? `$${selectedJob.budget}` : 'Budget not provided' }}
+                {{ selectedJob.budget ? `$${selectedJob.budget}` : '$0' }}
               </span>
               <span class="text-base text-slate-500 font-medium mr-5"> / hr</span>
               
