@@ -152,6 +152,36 @@ def get_provider(request, provider_id):
 #     serializer = ServiceProviderSerializer(providers, many=True)
 #     return Response(serializer.data)
 
+# Add this near your other update views
+@api_view(["PUT"])
+@permission_classes([IsAuthenticated])
+def update_account_security(request):
+    user = request.user
+    email = request.data.get("email")
+    new_password = request.data.get("new_password")
+
+    # Update Email / Username
+    if email and email != user.email:
+        if User.objects.exclude(id=user.id).filter(email=email).exists():
+            return Response({"error": "This email is already in use."}, status=400)
+        user.email = email
+        user.username = email  # Keeping username synced with email like in signup
+
+    # Update Password
+    if new_password:
+        password_errors = validate_password_strength(new_password)
+        if password_errors:
+            return Response({"errors": password_errors}, status=400)
+        user.set_password(new_password)
+
+    user.save()
+    
+    # Optional: If you change password, Django might log the user out. 
+    # You can re-authenticate them or let them log back in.
+    # dj_login(request, user) 
+
+    return Response({"message": "Account security updated successfully"}, status=200)
+
 @api_view(["PUT"])
 @permission_classes([IsAuthenticated])
 def update_profile(request):

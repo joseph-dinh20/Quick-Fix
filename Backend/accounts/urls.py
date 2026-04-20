@@ -6,6 +6,7 @@ from .views import get_favorites, toggle_favorite_provider, is_favorite_provider
 from .views import get_nearby_providers, search_providers
 from .views import apply_provider, update_provider_status
 from .views import get_languages
+from .views import update_account_security
 
 urlpatterns = [
     path("csrf/", csrf),
@@ -29,5 +30,6 @@ urlpatterns = [
     path("provider/apply/", apply_provider),
     path("provider/<int:user_id>/status/", update_provider_status),
     path("languages/", get_languages),
+    path("security/update/", update_account_security, name="update_account_security"),
 
 ]

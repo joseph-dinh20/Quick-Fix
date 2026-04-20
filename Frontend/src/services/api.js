@@ -241,4 +241,13 @@ export const createReview = (providerId, formData) => {
   });
 };
 
+export const updateSecurity = (data) => {
+  return api.put("/accounts/security/update/", data, {
+    withCredentials: true,
+    headers: {
+      "X-CSRFToken": getCSRFToken(),
+    },
+  });
+};
+
 export default api;
