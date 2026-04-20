@@ -1,6 +1,6 @@
 <script setup>
-import { ref } from "vue"
-import { createJob } from "../services/api"
+import { ref, onMounted } from "vue"
+import { createJob, getLanguages } from "../services/api"
 
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -28,6 +28,7 @@ const requestType = ref("quote")
 const urgency = ref("flexible")
 const services = ref([])   // array of IDs
 const language = ref("")
+const languages = ref([])
 
 const message = ref("")
 const fileInput = ref(null) // Template ref for the file input
@@ -70,7 +71,7 @@ async function submitJob() {
       urgency: urgency.value,
       services: services.value,
       images: jobImages.value,
-      language: language.value,
+      language: language.value || 1,
     })
 
     message.value = "Job created successfully"
@@ -92,6 +93,21 @@ async function submitJob() {
     message.value = "Error creating job"
   }
 }
+
+
+const fetchLanguages = async () => {
+  try {
+    const response = await getLanguages()
+    languages.value = response.data
+  } catch (error) {
+    console.error('Failed to load languages', error)
+    languages.value = []
+  }
+}
+
+
+onMounted(fetchLanguages);
+
 </script>
 
 <template>
@@ -203,9 +219,12 @@ async function submitJob() {
                   </SelectTrigger>
                   <SelectContent>
                     <SelectGroup>
-                      <SelectItem value="English">English</SelectItem>
-                      <SelectItem value="Spanish">Spanish</SelectItem>
-                      <SelectItem value="Korean">Korean</SelectItem>
+                      <SelectItem></SelectItem>
+                      <SelectItem
+                      v-for="lang in languages"
+                      :key="lang.id"
+                      :value="lang.id"
+                      >{{ lang.name }}</SelectItem>
                     </SelectGroup>
                   </SelectContent>
                 </Select>
