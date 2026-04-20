@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import {
   Card,
   CardHeader,
@@ -11,9 +11,11 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Switch } from '@/components/ui/switch'
 import { Separator } from '@/components/ui/separator'
-import { Search, PlusCircle, ChevronRight, User, PencilLine, Settings, Shield, Lock } from 'lucide-vue-next'
+import { Search, PlusCircle, User, PencilLine, Settings, Shield, Lock } from 'lucide-vue-next'
 
-// Mock data based on your template
+// Import your API functions
+import { me, updateProfile, updateSecurity } from '@/services/api' // Adjust path if needed
+
 const navLinks = ref([
   { name: 'Settings', target: 'settings', icon: Settings },
   { name: 'Profile', target: 'profile', icon: User },
@@ -21,23 +23,83 @@ const navLinks = ref([
   { name: 'Data & Privacy', target: 'privacy', icon: Lock }
 ])
 
-const personalData = ref([
-  { label: 'Full Name', value: 'John Doe' },
-  { label: 'Email', value: 'john@example.com' },
-  { label: 'Phone', value: '+1 234 567 8900' }
-])
-
-const editedData = ref([...personalData.value])
+// Personal Info State
+const personalData = ref({
+  name: '',
+  email: ''
+})
+const editedData = ref({ name: '', email: '' })
 const isEditing = ref(false)
 
-const saveChanges = () => {
-  // Logic to save
-  isEditing.value = false
+// Password State
+const isEditingPassword = ref(false)
+const passwordForm = ref({ newPassword: '', confirmPassword: '' })
+const passwordError = ref('')
+const passwordSuccess = ref('')
+
+// Load user data on mount
+onMounted(async () => {
+  try {
+    const res = await me()
+    // Populate the form using the MeSerializer payload
+    personalData.value.name = res.data.name || '' // Name comes from Profile
+    personalData.value.email = res.data.email || '' // Email comes from User
+    
+    // Copy to editable state
+    editedData.value = { ...personalData.value }
+  } catch (error) {
+    console.error("Failed to load user data:", error)
+  }
+})
+
+const saveChanges = async () => {
+  try {
+    // 1. Update Profile (Name) if changed
+    if (editedData.value.name !== personalData.value.name) {
+      await updateProfile({ name: editedData.value.name })
+      personalData.value.name = editedData.value.name
+    }
+
+    // 2. Update User (Email/Username) if changed
+    if (editedData.value.email !== personalData.value.email) {
+      await updateSecurity({ email: editedData.value.email })
+      personalData.value.email = editedData.value.email
+    }
+
+    isEditing.value = false
+  } catch (error) {
+    console.error("Failed to update profile:", error)
+    alert(error.response?.data?.error || "Failed to save changes.")
+  }
 }
 
 const cancelChanges = () => {
-  editedData.value = [...personalData.value]
+  editedData.value = { ...personalData.value }
   isEditing.value = false
+}
+
+const savePassword = async () => {
+  passwordError.value = ''
+  passwordSuccess.value = ''
+
+  if (passwordForm.value.newPassword !== passwordForm.value.confirmPassword) {
+    passwordError.value = "Passwords do not match."
+    return
+  }
+
+  try {
+    await updateSecurity({ new_password: passwordForm.value.newPassword })
+    passwordSuccess.value = "Password updated successfully!"
+    isEditingPassword.value = false
+    passwordForm.value = { newPassword: '', confirmPassword: '' }
+  } catch (error) {
+    // Handle password validation errors returned by the backend
+    if (error.response?.data?.errors) {
+      passwordError.value = error.response.data.errors.join(", ")
+    } else {
+      passwordError.value = "Failed to update password."
+    }
+  }
 }
 
 const scrollToSection = (id) => {
@@ -72,7 +134,7 @@ const scrollToSection = (id) => {
                 </nav>
 
                 <div class="space-y-3">
-                    <Button class="w-full  text-white font-bold h-12">
+                    <Button class="w-full text-white font-bold h-12">
                         <Search class="w-4 h-4 mr-2" />
                         FIND WORK
                     </Button>
@@ -87,19 +149,6 @@ const scrollToSection = (id) => {
                 <h1 class="text-5xl font-extrabold mb-10 tracking-tight" id="settings">
                     Your Account
                 </h1>
-
-                <Card class="rounded-3xl shadow-sm">
-                    <CardHeader>
-                        <CardTitle class="text-2xl">Overview</CardTitle>
-                    </CardHeader>
-                    <Separator class="mb-6 mx-6 w-auto" />
-                    <CardContent class="space-y-4">
-                        <a href="#" class="block text-blue-500 font-medium hover:underline text-lg">Manage profile</a>
-                        <a href="#/DemoMyJobs" class="block text-blue-500 font-medium hover:underline text-lg">Manage postings</a>
-                        <a href="#" class="block text-blue-500 font-medium hover:underline text-lg">View favorites</a>
-                        <a href="#/JoinUs" class="block text-blue-500 font-medium hover:underline text-lg">Join Us</a>
-                    </CardContent>
-                </Card>
 
                 <Card class="rounded-3xl shadow-sm bg-card" id="profile">
                     <CardHeader class="flex flex-row justify-between items-start space-y-0">
@@ -116,34 +165,31 @@ const scrollToSection = (id) => {
 
                     <CardContent class="pt-6">
                         <div class="space-y-2">
-                            <div
-                                v-for="(row, index) in personalData"
-                                :key="row.label"
-                                class="flex justify-between items-center text-lg py-3 group border-b border-transparent hover:border-muted transition-all"
-                            >
-                                <span class="font-bold w-48 text-foreground shrink-0">{{ row.label }}</span>
-
+                            <div class="flex justify-between items-center text-lg py-3 group border-b border-transparent hover:border-muted transition-all">
+                                <span class="font-bold w-48 text-foreground shrink-0">Full Name</span>
                                 <div class="flex-1 pr-10 min-w-0">
-                                    <Input
-                                        v-if="isEditing"
-                                        v-model="editedData[index].value"
-                                        class="w-full"
-                                    />
-                                    <span
-                                        v-else
-                                        @click="isEditing = true"
-                                        class="block w-full truncate text-muted-foreground cursor-pointer hover:text-foreground transition-colors"
-                                    >
-                                        {{ row.value }}
+                                    <Input v-if="isEditing" v-model="editedData.name" class="w-full" />
+                                    <span v-else @click="isEditing = true" class="block w-full truncate text-muted-foreground cursor-pointer hover:text-foreground transition-colors">
+                                        {{ personalData.name || 'Not set' }}
                                     </span>
                                 </div>
+                                <PencilLine class="w-5 h-5 text-muted-foreground/30 group-hover:text-primary transition-colors shrink-0 cursor-pointer" @click="isEditing = true" />
+                            </div>
 
+                            <div class="flex justify-between items-center text-lg py-3 group border-b border-transparent hover:border-muted transition-all">
+                                <span class="font-bold w-48 text-foreground shrink-0">Email</span>
+                                <div class="flex-1 pr-10 min-w-0">
+                                    <Input v-if="isEditing" v-model="editedData.email" type="email" class="w-full" />
+                                    <span v-else @click="isEditing = true" class="block w-full truncate text-muted-foreground cursor-pointer hover:text-foreground transition-colors">
+                                        {{ personalData.email || 'Not set' }}
+                                    </span>
+                                </div>
                                 <PencilLine class="w-5 h-5 text-muted-foreground/30 group-hover:text-primary transition-colors shrink-0 cursor-pointer" @click="isEditing = true" />
                             </div>
                         </div>
 
                         <div v-if="isEditing" class="mt-8 flex gap-4 animate-in fade-in slide-in-from-bottom-2">
-                            <Button @click="saveChanges" class="bg-orange-500 hover:bg-orange-600 text-white font-bold h-12 px-8 rounded-xl shadow-lg shadow-orange-200">
+                            <Button @click="saveChanges" class=" text-white font-bold h-12 px-8 rounded-xl shadow-lg ">
                                 Save Changes
                             </Button>
                             <Button @click="cancelChanges" variant="secondary" class="font-bold h-12 px-8 rounded-xl">
@@ -158,9 +204,38 @@ const scrollToSection = (id) => {
                         <CardTitle class="text-2xl">Security & sign-in</CardTitle>
                     </CardHeader>
                     <Separator class="mb-6 mx-6 w-auto" />
-                    <CardContent class="space-y-4">
-                        <a href="#" class="block text-blue-500 font-medium hover:underline text-lg">Change Password</a>
-                        <a href="#" class="block text-blue-500 font-medium hover:underline text-lg">Enable two-factor authentication</a>
+                    <CardContent class="space-y-6">
+                        
+                        <div v-if="!isEditingPassword">
+                            <button @click="isEditingPassword = true" class="block text-blue-500 font-medium hover:underline text-lg">
+                                Change Password
+                            </button>
+                            <span v-if="passwordSuccess" class="text-green-500 text-sm mt-2 block">{{ passwordSuccess }}</span>
+                        </div>
+
+                        <div v-else class="space-y-4 max-w-md animate-in fade-in slide-in-from-bottom-2">
+                            <div class="space-y-2">
+                                <label class="font-semibold">New Password</label>
+                                <Input v-model="passwordForm.newPassword" type="password" placeholder="Enter new password" />
+                            </div>
+                            <div class="space-y-2">
+                                <label class="font-semibold">Confirm Password</label>
+                                <Input v-model="passwordForm.confirmPassword" type="password" placeholder="Confirm new password" />
+                            </div>
+                            
+                            <p v-if="passwordError" class="text-red-500 text-sm">{{ passwordError }}</p>
+
+                            <div class="flex gap-4 mt-4">
+                                <Button @click="savePassword" class=" text-white font-bold">
+                                    Update Password
+                                </Button>
+                                <Button @click="isEditingPassword = false" variant="secondary" class="font-bold">
+                                    Cancel
+                                </Button>
+                            </div>
+                        </div>
+
+                        <a href="#" class="block text-blue-500 font-medium hover:underline text-lg mt-4">Enable two-factor authentication</a>
                     </CardContent>
                 </Card>
 

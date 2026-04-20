@@ -209,6 +209,9 @@ export function deleteReviewImage(id) {
   return api.delete(`/reviews/images/${id}/delete/`)
 }
 
+export const createReport = (data) => {
+    return api.post("/reports/", data);
+};
 export function fetchAssignedJobs() {
   return api.get(`/jobs/assigned/`)
 }
@@ -229,5 +232,22 @@ export function deleteJobImage(imageId) {
 export function getLanguages()  {
   return api.get("/accounts/languages/")
 }
+
+export const createReview = (providerId, formData) => {
+  return api.post(`/reviews/${providerId}/reviews/create/`, formData, {
+    headers: {
+      "Content-Type": "multipart/form-data"
+    }
+  });
+};
+
+export const updateSecurity = (data) => {
+  return api.put("/accounts/security/update/", data, {
+    withCredentials: true,
+    headers: {
+      "X-CSRFToken": getCSRFToken(),
+    },
+  });
+};
 
 export default api;

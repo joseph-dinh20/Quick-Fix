@@ -8,6 +8,10 @@ import {
   CardContent,
 } from '@/components/ui/card'
 
+const navigate = (hash) => {
+  window.location.hash = hash;
+};
+
 const features = [
     {
         icon: "📅",
@@ -132,6 +136,7 @@ const steps = [
                 <Button 
                     size="lg"
                     class="bg-slate-900 hover:bg-black text-white font-bold h-14 px-12 rounded-xl transition-transform active:scale-95 shadow-lg"
+                    @click = "navigate('#/BecomeFixer')"
                 >
                     Apply Now
                 </Button>

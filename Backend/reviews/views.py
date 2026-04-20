@@ -27,9 +27,10 @@ def create_review(request, service_provider_id):
     serializer = ReviewSerializer(data=data)
     if serializer.is_valid():
         review = serializer.save(reviewer=profile)
+
+        provider = review.service_provider
         agg = provider.reviews.aggregate(avg=Avg("rating"))
         provider.average_rating = agg["avg"] or 0
-        provider = review.service_provider
         
         provider.total_rating = provider.reviews.count()
         provider.save()
