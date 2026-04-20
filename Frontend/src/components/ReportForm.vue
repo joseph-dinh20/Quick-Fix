@@ -58,7 +58,7 @@ const submitReport = async () => {
     isSuccess.value = false;
 
     const payload = {
-        reported_profile: props.reportedProfileId,
+        reported_profile: Number(form.reported_profile),
         reason: form.reason,
         details: form.details,
     };
@@ -139,7 +139,7 @@ const submitReport = async () => {
                                 <SelectItem
                                     v-for="provider in providers"
                                     :key="provider.id"
-                                    :value="String(provider.id)">
+                                    :value="provider.id">
                                     {{
                                         provider.name ||
                                         `Provider #${provider.id}`

@@ -34,6 +34,7 @@ import Scheduler from "./components/Scheduler.vue";
 import ReportForm from "./components/ReportForm.vue";
 import BecomeFixer from './components/BecomeFixer.vue';
 import DemoAssignedJobs from './components/DemoAssignedJobs.vue';
+import ReviewProvider from "./components/ReviewProvider.vue";
 
 import { me, initCsrf, logout as apiLogout } from "@/services/api.js";
 import { Toaster } from "@/components/ui/sonner";
@@ -105,6 +106,7 @@ const routes = {
   "/Scheduler": Scheduler,
   "/ReportForm": ReportForm,
   "/DemoAssignedJobs": DemoAssignedJobs,
+  "/ReviewProvider": ReviewProvider
 };
 
 const currentPath = ref(window.location.hash);

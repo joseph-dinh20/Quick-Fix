@@ -24,6 +24,28 @@ export const userListStore = defineStore("users", () => {
   return { providers };
 });
 
+
+// This is to store who is being reported, this is so userIDs do not get leaked into the URL
+export const reportStore = defineStore("report", () => {
+    const targetUser = ref({ id: null, username: "" });
+
+    function setTargetUser(userData) {
+        targetUser.value = userData;
+    }
+
+    return { targetUser, setTargetUser };
+});
+
+export const reviewStore = defineStore("review", () => {
+    const targetUser = ref({ id: null, username: "" });
+
+    function setTargetUser(userData) {
+        targetUser.value = userData;
+    }
+
+    return { targetUser, setTargetUser };
+});
+
 // NOTE: generatesProvider() generates a list of providers with random data,
 // calls it and return object list of providers
 // export const userListStore = defineStore("users", () => {

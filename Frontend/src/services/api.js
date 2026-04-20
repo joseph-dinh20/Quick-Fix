@@ -233,4 +233,12 @@ export function getLanguages()  {
   return api.get("/accounts/languages/")
 }
 
+export const createReview = (providerId, formData) => {
+  return api.post(`/reviews/${providerId}/reviews/create/`, formData, {
+    headers: {
+      "Content-Type": "multipart/form-data"
+    }
+  });
+};
+
 export default api;
