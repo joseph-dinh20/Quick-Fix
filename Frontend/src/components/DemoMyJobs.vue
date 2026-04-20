@@ -398,6 +398,11 @@ onMounted(fetchJobs);
                         </div>
                     </CardContent>
                 </Card>
+            <div class="mt-6 pt-2">
+              <span class="text-lg font-bold text-[#1a202c]">
+                {{ selectedJob.budget ? `$${selectedJob.budget}` : '$0' }}
+              </span>
+              <span class="text-base text-slate-500 font-medium"> / hr</span>
             </div>
 
             <Dialog :open="isDialogOpen" @update:open="isDialogOpen = $event">
