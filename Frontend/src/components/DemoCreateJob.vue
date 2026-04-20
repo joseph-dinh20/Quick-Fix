@@ -1,6 +1,6 @@
 <script setup>
-import { ref } from "vue";
-import { createJob } from "../services/api";
+import { ref, onMounted } from "vue"
+import { createJob, getLanguages } from "../services/api"
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -18,16 +18,17 @@ import {
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import ServiceSelect from "@/components/ServiceSelect.vue";
 
-const title = ref("");
-const city = ref(""); // Added missing ref
-const zip = ref(""); // Added missing ref
-const description = ref("");
-const budget = ref("");
-const deadline = ref("");
-const requestType = ref("quote");
-const urgency = ref("flexible");
-const services = ref([]); // array of IDs
-const language = ref("");
+const title = ref("")
+const city = ref("") // Added missing ref
+const zip = ref("")  // Added missing ref
+const description = ref("")
+const budget = ref("")
+const deadline = ref("")
+const requestType = ref("quote")
+const urgency = ref("flexible")
+const services = ref([])   // array of IDs
+const language = ref("")
+const languages = ref([])
 
 const message = ref("");
 const fileInput = ref(null); // Template ref for the file input
@@ -53,24 +54,25 @@ function removeJobImage(index) {
 }
 
 async function submitJob() {
-    if (services.value.length === 0) {
-        message.value = "Error creating job: No services selected";
-        return;
-    }
-    try {
-        await createJob({
-            title: title.value,
-            city: city.value,
-            zip: zip.value,
-            description: description.value,
-            budget: budget.value || "0",
-            deadline: deadline.value,
-            request_type: requestType.value,
-            urgency: urgency.value,
-            services: services.value,
-            images: jobImages.value,
-            language: language.value,
-        });
+  if (services.value.length === 0) {
+    message.value = "Error creating job: No services selected";
+    return;
+  }
+  try {
+    
+    await createJob({
+      title: title.value,
+      city: city.value,
+      zip: zip.value,
+      description: description.value,
+      budget: budget.value || "0",
+      deadline: deadline.value,
+      request_type: requestType.value,
+      urgency: urgency.value,
+      services: services.value,
+      images: jobImages.value,
+      language: language.value || 1,
+    })
 
         message.value = "Job created successfully";
 
@@ -92,6 +94,21 @@ async function submitJob() {
         message.value = "Error creating job";
     }
 }
+
+
+const fetchLanguages = async () => {
+  try {
+    const response = await getLanguages()
+    languages.value = response.data
+  } catch (error) {
+    console.error('Failed to load languages', error)
+    languages.value = []
+  }
+}
+
+
+onMounted(fetchLanguages);
+
 </script>
 
 <template>

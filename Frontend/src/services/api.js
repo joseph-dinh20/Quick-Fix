@@ -229,4 +229,8 @@ export function deleteJobImage(imageId) {
   return api.delete(`/jobs/images/${imageId}/delete/`)
 }
 
+export function getLanguages()  {
+  return api.get("/accounts/languages/")
+}
+
 export default api;

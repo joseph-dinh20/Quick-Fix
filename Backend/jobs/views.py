@@ -16,6 +16,7 @@ from haversine import haversine, Unit
 @api_view(["POST"])
 @permission_classes([IsAuthenticated])
 def create_job(request):
+    print(request.data)
 
     serializer = JobCreateSerializer(
         data=request.data,
