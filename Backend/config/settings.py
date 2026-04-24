@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'jobs',
     'reviews',
     'reports',
+    'orders',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
