@@ -1,5 +1,7 @@
 # orders/views.py
 from rest_framework import generics, permissions
+from django.db.models import Q
+
 from .models import Order
 from .serializers import OrderSerializer, OrderCreateSerializer
 
@@ -15,5 +17,5 @@ class MyOrdersView(generics.ListAPIView):
     def get_queryset(self):
         user = self.request.user
         return Order.objects.filter(
-            models.Q(customer=user) | models.Q(provider=user)
+            Q(customer=user) | Q(provider=user)
         ).order_by("-date_completed")

@@ -4,8 +4,8 @@ from .models import Order
 from accounts.serializers import ProfileSerializer
 
 class OrderSerializer(serializers.ModelSerializer):
-    customer = ProfileSerializer(read_only=True)
-    provider = ProfileSerializer(read_only=True)
+    customer = ProfileSerializer(read_only=True, source="customer.profile")
+    provider = ProfileSerializer(read_only=True, source="provider.profile")
     display_amount = serializers.SerializerMethodField()
 
     class Meta:
