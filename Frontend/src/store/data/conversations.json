@@ -1,0 +1,66 @@
+[
+  {
+    "id": 1,
+    "name": "Mia Torres",
+    "initials": "MT",
+    "avatar": "https://api.dicebear.com/9.x/thumbs/svg?seed=mia",
+    "online": true,
+    "time": "2m ago",
+    "preview": "Sounds great, see you then!",
+    "unread": 3,
+    "messages": [
+      { "text": "Hey! Are you free this weekend?", "mine": false, "time": "10:01 AM", "date": "Today" },
+      { "text": "Yeah totally! What did you have in mind?", "mine": true, "time": "10:03 AM", "date": "Today" },
+      { "text": "Maybe we could grab brunch somewhere? There's a new place on Elm St", "mine": false, "time": "10:04 AM", "date": "Today" },
+      { "text": "Oh I've been wanting to try that! Saturday work for you?", "mine": true, "time": "10:05 AM", "date": "Today" },
+      { "text": "Saturday is perfect 🎉", "mine": false, "time": "10:06 AM", "date": "Today" },
+      { "text": "Sounds great, see you then!", "mine": false, "time": "10:06 AM", "date": "Today" }
+    ]
+  },
+  {
+    "id": 2,
+    "name": "Leo Park",
+    "initials": "LP",
+    "avatar": "https://api.dicebear.com/9.x/thumbs/svg?seed=leo",
+    "online": true,
+    "time": "1h ago",
+    "preview": "Can you review my PR?",
+    "unread": 0,
+    "messages": [
+      { "text": "Just pushed the new feature branch", "mine": false, "time": "9:00 AM", "date": "Today" },
+      { "text": "Nice, I'll take a look!", "mine": true, "time": "9:05 AM", "date": "Today" },
+      { "text": "Can you review my PR?", "mine": false, "time": "9:10 AM", "date": "Today" }
+    ]
+  },
+  {
+    "id": 3,
+    "name": "Sadie Bloom",
+    "initials": "SB",
+    "avatar": "https://api.dicebear.com/9.x/thumbs/svg?seed=sadie",
+    "online": false,
+    "time": "Yesterday",
+    "preview": "Thanks for the help 🙏",
+    "unread": 0,
+    "messages": [
+      { "text": "Hey, do you know how to fix that CSS bug?", "mine": false, "time": "4:30 PM", "date": "Yesterday" },
+      { "text": "Yeah! Add overflow: hidden to the parent", "mine": true, "time": "4:32 PM", "date": "Yesterday" },
+      { "text": "That worked perfectly!", "mine": false, "time": "4:33 PM", "date": "Yesterday" },
+      { "text": "Thanks for the help 🙏", "mine": false, "time": "4:33 PM", "date": "Yesterday" }
+    ]
+  },
+  {
+    "id": 4,
+    "name": "Jordan Reed",
+    "initials": "JR",
+    "avatar": "https://api.dicebear.com/9.x/thumbs/svg?seed=jordan",
+    "online": false,
+    "time": "Mon",
+    "preview": "Let me know what you think",
+    "unread": 0,
+    "messages": [
+      { "text": "Sent you the design mockups!", "mine": false, "time": "2:00 PM", "date": "Monday" },
+      { "text": "Got them, looks really good!", "mine": true, "time": "2:15 PM", "date": "Monday" },
+      { "text": "Let me know what you think", "mine": false, "time": "2:16 PM", "date": "Monday" }
+    ]
+  }
+]
