@@ -143,6 +143,20 @@ class ServiceProviderUpdateSerializer(serializers.ModelSerializer):
             "work_images"
         ]
 
+class ProfileSerializer(serializers.ModelSerializer):
+    username = serializers.CharField(source="user.username")
+
+    class Meta:
+        model = Profile
+        fields = [
+            "id",
+            "username",
+            "name",
+            "avatar",
+            "city",
+            "state",
+        ]
+        
 
 class MeSerializer(serializers.ModelSerializer):
     avatar = serializers.ImageField(source="profile.avatar")
