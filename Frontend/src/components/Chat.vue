@@ -4,12 +4,6 @@
     <aside class="sidebar">
       <div class="sidebar-header">
         <div class="brand">
-          <div class="brand-avatar">
-            <Avatar>
-              <AvatarImage src="https://api.dicebear.com/9.x/thumbs/svg?seed=me" />
-              <AvatarFallback>Me</AvatarFallback>
-            </Avatar>
-          </div>
           <div>
             <p class="brand-name">Messages</p>
             <!-- <p class="brand-status">● Online</p> -->
@@ -76,17 +70,11 @@
               <!-- <p class="chat-status">{{ activeConvo.online ? 'Active now' : 'Offline' }}</p> -->
             </div>
           </div>
-          <div class="chat-actions">
-            <Button variant="ghost" size="icon">
-              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.41 2 2 0 0 1 3.6 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.61a16 16 0 0 0 6 6l.91-.91a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 21.73 16z"/></svg>
-            </Button>
-            <Button variant="ghost" size="icon">
-              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m16 13 5.223 3.482a.5.5 0 0 0 .777-.416V7.87a.5.5 0 0 0-.752-.432L16 10.5"/><rect x="2" y="6" width="14" height="12" rx="2"/></svg>
-            </Button>
+          <!-- <div class="chat-actions">
             <Button variant="ghost" size="icon">
               <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>
             </Button>
-          </div>
+          </div> -->
         </div>
 
         <!-- Messages -->
@@ -281,8 +269,6 @@ watch(selectedId, () => nextTick(() => scrollToBottom()))
 .chat-layout {
   display: flex;
   height: 100vh;
-  background: #fdf8f3;
-  font-family: 'Georgia', serif;
   overflow: hidden;
 }
 
@@ -292,8 +278,7 @@ watch(selectedId, () => nextTick(() => scrollToBottom()))
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
-  background: #fff8f1;
-  border-right: 1.5px solid #f0dece;
+  border-right: 1.5px solid;
   overflow: hidden;
 }
 
@@ -302,14 +287,14 @@ watch(selectedId, () => nextTick(() => scrollToBottom()))
   align-items: center;
   justify-content: space-between;
   padding: 20px 16px 12px;
-  border-bottom: 1px solid #f0dece;
+  border-bottom: 1px solid #f9efe7;
 }
 
 .brand { display: flex; align-items: center; gap: 10px; }
-.brand-name { font-size: 1rem; font-weight: 700; color: #3d2c1e; letter-spacing: -0.01em; }
+.brand-name { font-size: 1rem; font-weight: 700; letter-spacing: -0.01em; }
 .brand-status { font-size: 0.72rem; color: #84b87a; font-family: sans-serif; }
 
-.compose-btn { color: #b87a5a; }
+.compose-btn { color: #c5add7; }
 
 .search-wrap {
   position: relative;
@@ -320,18 +305,17 @@ watch(selectedId, () => nextTick(() => scrollToBottom()))
   left: 24px;
   top: 50%;
   transform: translateY(-50%);
-  color: #c4a48a;
   pointer-events: none;
 }
 .search-input {
   padding-left: 2rem;
-  background: #fdf0e6;
-  border: 1px solid #e8cdb0;
+  background: #f8f6f5;
+  border: 1px solid #8b8a88;
   border-radius: 999px;
   font-size: 0.85rem;
   color: #3d2c1e;
 }
-.search-input::placeholder { color: #c4a48a; }
+.search-input::placeholder { color: #242221; }
 
 .sidebar-scroll { flex: 1; overflow: hidden; }
 
@@ -350,8 +334,8 @@ watch(selectedId, () => nextTick(() => scrollToBottom()))
   transition: background 0.15s;
   width: 100%;
 }
-.convo-item:hover { background: #fdeede; }
-.convo-item.active { background: #fde3c8; }
+.convo-item:hover { background: #cff6d9; }
+.convo-item.active { background: #a7f0bb; }
 
 .convo-avatar-wrap { position: relative; flex-shrink: 0; }
 .convo-avatar { width: 44px; height: 44px; }
@@ -369,12 +353,11 @@ watch(selectedId, () => nextTick(() => scrollToBottom()))
 
 .convo-info { flex: 1; min-width: 0; }
 .convo-top { display: flex; justify-content: space-between; align-items: baseline; }
-.convo-name { font-size: 0.9rem; font-weight: 700; color: #3d2c1e; }
+.convo-name { font-size: 0.9rem; font-weight: 700; }
 .convo-time { font-size: 0.72rem; color: #b89878; font-family: sans-serif; flex-shrink: 0; }
 .convo-bottom { display: flex; justify-content: space-between; align-items: center; margin-top: 2px; }
 .convo-preview {
   font-size: 0.8rem;
-  color: #9a7a62;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -382,7 +365,6 @@ watch(selectedId, () => nextTick(() => scrollToBottom()))
   font-family: sans-serif;
 }
 .unread-badge {
-  background: #e07840;
   color: white;
   border-radius: 999px;
   font-size: 0.68rem;
@@ -400,7 +382,6 @@ watch(selectedId, () => nextTick(() => scrollToBottom()))
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  background: #fdf8f3;
 }
 
 /* ── Chat Header ─────────────────────────────────────────────────────────────── */
@@ -409,15 +390,14 @@ watch(selectedId, () => nextTick(() => scrollToBottom()))
   align-items: center;
   justify-content: space-between;
   padding: 14px 24px;
-  background: #fff8f1;
-  border-bottom: 1.5px solid #f0dece;
+  border-bottom: 1.5px solid;
   flex-shrink: 0;
 }
 .chat-header-info { display: flex; align-items: center; gap: 12px; }
 .chat-avatar-wrap { position: relative; }
 .chat-name { font-size: 1rem; font-weight: 700; color: #3d2c1e; }
 .chat-status { font-size: 0.75rem; color: #84b87a; font-family: sans-serif; }
-.chat-actions { display: flex; gap: 4px; color: #b87a5a; }
+.chat-actions { display: flex; gap: 4px; }
 
 /* ── Messages ────────────────────────────────────────────────────────────────── */
 .messages-scroll { flex: 1; overflow: hidden; }
@@ -437,11 +417,12 @@ watch(selectedId, () => nextTick(() => scrollToBottom()))
 }
 .date-divider span {
   font-size: 0.72rem;
-  color: #b89878;
-  background: #f5e8d8;
-  border-radius: 999px;
   padding: 3px 12px;
   font-family: sans-serif;
+  color: #363534;
+  background: #d8f5df;
+  border-radius: 999px;
+
 }
 
 .message-row {
@@ -477,13 +458,12 @@ watch(selectedId, () => nextTick(() => scrollToBottom()))
 }
 
 .bubble--theirs {
-  background: #fff0e4;
+  background: #d3f6d0;
   color: #3d2c1e;
-  border: 1px solid #f0dece;
   border-bottom-left-radius: 4px;
 }
 .bubble--mine {
-  background: #e07840;
+  background: #5ab071;
   color: #fff;
   border-bottom-right-radius: 4px;
 }
@@ -495,7 +475,7 @@ watch(selectedId, () => nextTick(() => scrollToBottom()))
 
 .msg-time {
   font-size: 0.68rem;
-  color: #b89878;
+  color: #8b8a88;
   margin-top: 3px;
   font-family: sans-serif;
   padding: 0 4px;
@@ -517,7 +497,6 @@ watch(selectedId, () => nextTick(() => scrollToBottom()))
 .dot {
   width: 7px;
   height: 7px;
-  background: #c4a48a;
   border-radius: 50%;
   animation: bounce 1.2s infinite;
 }
@@ -535,35 +514,27 @@ watch(selectedId, () => nextTick(() => scrollToBottom()))
   align-items: flex-end;
   gap: 6px;
   padding: 12px 16px;
-  background: #fff8f1;
-  border-top: 1.5px solid #f0dece;
   flex-shrink: 0;
 }
 
-.attach-btn { color: #b87a5a; flex-shrink: 0; }
+.attach-btn {  flex-shrink: 0; }
 
 .input-wrap { flex: 1; }
 
 .chat-textarea {
   resize: none;
-  background: #fdf0e6;
-  border: 1px solid #e8cdb0;
   border-radius: 18px;
   padding: 10px 16px;
   font-size: 0.9rem;
   font-family: sans-serif;
-  color: #3d2c1e;
   line-height: 1.5;
   min-height: 42px;
   max-height: 120px;
   overflow-y: auto;
   width: 100%;
 }
-.chat-textarea::placeholder { color: #c4a48a; }
-.chat-textarea:focus { outline: none; border-color: #e07840; box-shadow: 0 0 0 2px #f5c9a8; }
 
 .send-btn {
-  background: #e07840;
   color: white;
   border-radius: 50%;
   width: 40px;
@@ -571,8 +542,6 @@ watch(selectedId, () => nextTick(() => scrollToBottom()))
   flex-shrink: 0;
   transition: background 0.15s, transform 0.1s;
 }
-.send-btn:hover:not(:disabled) { background: #c8612a; transform: scale(1.05); }
-.send-btn:disabled { background: #e8cdb0; }
 
 /* ── Empty State ─────────────────────────────────────────────────────────────── */
 .empty-state {
