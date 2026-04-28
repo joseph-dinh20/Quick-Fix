@@ -92,7 +92,7 @@
                 {{ activeView === 'providers' ? 'Provider Map' : 'Job Map' }}
               </h2>
               <p class="text-sm text-slate-500">
-                Click a pin to view more details.
+                Click a pin or listing to view more details.
               </p>
             </div>
 
@@ -166,54 +166,84 @@
         </div>
       </div>
 
+      <!-- PROVIDER POPUP -->
       <div
         v-if="activeView === 'providers' && selectedProviderForDetail"
-        class="mt-8 bg-white rounded-2xl shadow-sm border border-slate-200 p-4"
+        class="fixed inset-0 z-[9999] bg-black/40 flex items-center justify-center p-4"
+        @click.self="closeProviderPopup"
       >
-        <div class="flex justify-between items-center mb-4">
-          <h2 class="text-xl font-bold text-slate-900">Provider Profile</h2>
+        <div class="bg-white rounded-2xl shadow-xl border border-slate-200 p-5 w-full max-w-4xl max-h-[90vh] overflow-y-auto relative">
           <button
-            @click="selectedProviderForDetail = null"
-            class="px-4 py-2 rounded-xl border border-slate-300 text-slate-700 hover:bg-slate-100"
+            @click="closeProviderPopup"
+            class="absolute top-4 right-4 text-slate-500 hover:text-slate-900 text-2xl font-bold z-10"
           >
-            Close
+            ×
           </button>
-        </div>
 
-        <div @click.capture="handleProviderClickCapture">
-          <Provider
-            :provider="selectedProviderForDetail"
-            @select="handleProviderSelect"
-          />
+          <h2 class="text-xl font-bold text-slate-900 mb-4">
+            Provider Profile
+          </h2>
+
+          <div @click.capture="handleProviderClickCapture">
+            <Provider
+              :provider="selectedProviderForDetail"
+              @select="handleProviderSelect"
+            />
+          </div>
         </div>
       </div>
 
+      <!-- JOB POPUP -->
       <div
-        v-if="activeView === 'jobs' && selectedItem"
-        class="mt-6 bg-white rounded-2xl shadow-sm border border-slate-200 p-5"
+        v-if="activeView === 'jobs' && selectedJobForPopup"
+        class="fixed inset-0 z-[9999] bg-black/40 flex items-center justify-center p-4"
+        @click.self="closeJobPopup"
       >
-        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-          <div>
-            <p class="text-sm font-semibold text-blue-600">Selected Job</p>
-            <h2 class="text-2xl font-bold text-slate-900 mt-1">
-              {{ selectedItem.title }}
-            </h2>
-            <p class="text-slate-600 mt-1">{{ selectedItem.service }}</p>
-            <p class="text-slate-500 mt-1">
-              {{ selectedItem.city }} · {{ getDistanceMiles(selectedItem).toFixed(1) }} miles away
+        <div class="bg-white rounded-2xl shadow-xl border border-slate-200 p-6 w-full max-w-lg relative">
+          <button
+            @click="closeJobPopup"
+            class="absolute top-4 right-4 text-slate-500 hover:text-slate-900 text-2xl font-bold"
+          >
+            ×
+          </button>
+
+          <p class="text-sm font-semibold text-blue-600">Selected Job</p>
+
+          <h2 class="text-2xl font-bold text-slate-900 mt-1 pr-8">
+            {{ selectedJobForPopup.title }}
+          </h2>
+
+          <p class="text-slate-600 mt-2">
+            {{ selectedJobForPopup.service }}
+          </p>
+
+          <p class="text-slate-500 mt-1">
+            {{ selectedJobForPopup.city }} · {{ getDistanceMiles(selectedJobForPopup).toFixed(1) }} miles away
+          </p>
+
+          <div class="mt-4 border-t border-slate-200 pt-4">
+            <p class="font-semibold text-slate-800">
+              Budget: {{ selectedJobForPopup.budgetDisplay }}
+            </p>
+
+            <p v-if="selectedJobForPopup.description" class="text-slate-600 mt-3">
+              {{ selectedJobForPopup.description }}
             </p>
           </div>
 
-          <div class="md:text-right">
-            <p class="font-semibold text-slate-800">
-              Budget: {{ selectedItem.budgetDisplay }}
-            </p>
-
+          <div class="flex gap-3 mt-6">
             <button
               @click="goToJobsPage"
-              class="mt-3 px-5 py-2 rounded-xl bg-blue-600 text-white font-semibold hover:bg-blue-700 transition"
+              class="flex-1 px-5 py-2 rounded-xl bg-blue-600 text-white font-semibold hover:bg-blue-700 transition"
             >
               View Job
+            </button>
+
+            <button
+              @click="closeJobPopup"
+              class="px-5 py-2 rounded-xl border border-slate-300 text-slate-700 font-semibold hover:bg-slate-100 transition"
+            >
+              Close
             </button>
           </div>
         </div>
@@ -228,8 +258,8 @@
         </DialogHeader>
 
         <Scheduler
-            v-if="selectedProviderForScheduler"
-            :provider="selectedProviderForScheduler"
+          v-if="selectedProviderForScheduler"
+          :provider="selectedProviderForScheduler"
         />
       </DialogContent>
     </Dialog>
@@ -237,7 +267,7 @@
 </template>
 
 <script setup>
-import {ref, computed, onMounted, watch, nextTick} from "vue";
+import { ref, computed, onMounted, watch } from "vue";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 
@@ -253,15 +283,16 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 
-import {userListStore} from "@/store/userList";
-import {storeToRefs} from "pinia";
-import {searchJobs} from "@/services/api";
+import { userListStore } from "@/store/userList";
+import { storeToRefs } from "pinia";
+import { searchJobs } from "@/services/api";
 
 const store = userListStore();
-const {providers} = storeToRefs(store);
+const { providers } = storeToRefs(store);
 
 const activeView = ref("providers");
 const selectedItem = ref(null);
+const selectedJobForPopup = ref(null);
 const selectedProviderForDetail = ref(null);
 const selectedProviderForScheduler = ref(null);
 const schedulerOpen = ref(false);
@@ -285,22 +316,22 @@ let userMarker = null;
 let radiusCircle = null;
 
 const activeTab =
-    "px-4 py-2 rounded-lg bg-white text-blue-600 font-semibold shadow-sm";
+  "px-4 py-2 rounded-lg bg-white text-blue-600 font-semibold shadow-sm";
 
 const inactiveTab =
-    "px-4 py-2 rounded-lg text-slate-600 font-semibold hover:text-slate-900";
+  "px-4 py-2 rounded-lg text-slate-600 font-semibold hover:text-slate-900";
 
 const fallbackCoords = [
-  {lat: 33.7701, lng: -118.1937},
-  {lat: 33.7890, lng: -118.1892},
-  {lat: 33.7560, lng: -118.2019},
-  {lat: 33.7361, lng: -118.2922},
-  {lat: 33.7858, lng: -118.2645},
-  {lat: 33.8317, lng: -118.2817},
-  {lat: 33.8034, lng: -118.1670},
-  {lat: 33.8358, lng: -118.3406},
-  {lat: 33.7683, lng: -118.3644},
-  {lat: 33.8847, lng: -118.4109},
+  { lat: 33.7701, lng: -118.1937 },
+  { lat: 33.7890, lng: -118.1892 },
+  { lat: 33.7560, lng: -118.2019 },
+  { lat: 33.7361, lng: -118.2922 },
+  { lat: 33.7858, lng: -118.2645 },
+  { lat: 33.8317, lng: -118.2817 },
+  { lat: 33.8034, lng: -118.1670 },
+  { lat: 33.8358, lng: -118.3406 },
+  { lat: 33.7683, lng: -118.3644 },
+  { lat: 33.8847, lng: -118.4109 },
 ];
 
 const mapProviders = computed(() => {
@@ -360,12 +391,12 @@ const filteredItems = computed(() => {
     const query = searchQuery.value.toLowerCase();
 
     const matchesSearch =
-        nameOrTitle.toLowerCase().includes(query) ||
-        item.service.toLowerCase().includes(query) ||
-        item.city.toLowerCase().includes(query);
+      nameOrTitle.toLowerCase().includes(query) ||
+      item.service.toLowerCase().includes(query) ||
+      item.city.toLowerCase().includes(query);
 
     const matchesService =
-        selectedService.value === "All" || item.service === selectedService.value;
+      selectedService.value === "All" || item.service === selectedService.value;
 
     const insideRadius = getDistanceMiles(item) <= radiusMiles.value;
 
@@ -400,6 +431,7 @@ function getJobService(job) {
 function switchView(view) {
   activeView.value = view;
   selectedItem.value = null;
+  selectedJobForPopup.value = null;
   selectedProviderForDetail.value = null;
   selectedProviderForScheduler.value = null;
   schedulerOpen.value = false;
@@ -478,8 +510,8 @@ function updateUserLocationVisuals() {
   userMarker = L.marker([userLocation.value.lat, userLocation.value.lng], {
     icon: createUserIcon(),
   })
-      .addTo(map)
-      .bindPopup(`<strong>Your Location</strong><br/>${userLocation.value.city}`);
+    .addTo(map)
+    .bindPopup(`<strong>Your Location</strong><br/>${userLocation.value.city}`);
 
   radiusCircle = L.circle([userLocation.value.lat, userLocation.value.lng], {
     radius: radiusMiles.value * 1609.34,
@@ -529,6 +561,12 @@ function addMarkers() {
 
     marker.on("click", () => {
       selectedItem.value = item;
+
+      if (activeView.value === "jobs") {
+        selectedJobForPopup.value = item;
+      } else {
+        selectedProviderForDetail.value = item;
+      }
     });
 
     marker.on("popupopen", () => {
@@ -574,23 +612,30 @@ function focusItem(item) {
   if (marker) {
     marker.openPopup();
   }
+
+  if (activeView.value === "jobs") {
+    selectedJobForPopup.value = item;
+  } else {
+    selectedProviderForDetail.value = item;
+  }
 }
 
-async function openItem(item) {
+function openItem(item) {
   selectedItem.value = item;
 
   if (activeView.value === "providers") {
     selectedProviderForDetail.value = item;
-
-    await nextTick();
-
-    window.scrollTo({
-      top: document.body.scrollHeight,
-      behavior: "smooth",
-    });
   } else {
-    goToJobsPage();
+    selectedJobForPopup.value = item;
   }
+}
+
+function closeJobPopup() {
+  selectedJobForPopup.value = null;
+}
+
+function closeProviderPopup() {
+  selectedProviderForDetail.value = null;
 }
 
 function handleProviderSelect() {
@@ -617,23 +662,24 @@ function useMyLocation() {
   }
 
   navigator.geolocation.getCurrentPosition(
-      (position) => {
-        userLocation.value = {
-          id: "user-location",
-          city: "Your Current Location",
-          lat: position.coords.latitude,
-          lng: position.coords.longitude,
-        };
+    (position) => {
+      userLocation.value = {
+        id: "user-location",
+        city: "Your Current Location",
+        lat: position.coords.latitude,
+        lng: position.coords.longitude,
+      };
 
-        selectedItem.value = null;
-        selectedProviderForDetail.value = null;
-        selectedProviderForScheduler.value = null;
-        schedulerOpen.value = false;
-        refreshMap();
-      },
-      () => {
-        alert("Could not access your location. Using Long Beach as default.");
-      }
+      selectedItem.value = null;
+      selectedJobForPopup.value = null;
+      selectedProviderForDetail.value = null;
+      selectedProviderForScheduler.value = null;
+      schedulerOpen.value = false;
+      refreshMap();
+    },
+    () => {
+      alert("Could not access your location. Using Long Beach as default.");
+    }
   );
 }
 
@@ -649,8 +695,8 @@ function getDistanceMiles(item) {
   const lngDiff = lng2 - lng1;
 
   const a =
-      Math.sin(latDiff / 2) * Math.sin(latDiff / 2) +
-      Math.cos(lat1) *
+    Math.sin(latDiff / 2) * Math.sin(latDiff / 2) +
+    Math.cos(lat1) *
       Math.cos(lat2) *
       Math.sin(lngDiff / 2) *
       Math.sin(lngDiff / 2);
@@ -699,6 +745,7 @@ onMounted(async () => {
 
 watch([activeView, searchQuery, selectedService, radiusMiles, mapProviders, mapJobs], () => {
   selectedItem.value = null;
+  selectedJobForPopup.value = null;
   selectedProviderForDetail.value = null;
   selectedProviderForScheduler.value = null;
   schedulerOpen.value = false;
