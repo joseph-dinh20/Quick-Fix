@@ -17,8 +17,10 @@
             :class="[
               'flex items-center gap-4 p-4 cursor-pointer transition-colors duration-200',
               selectedChatId === chat.id 
-                ? 'bg-orange-200 hover:bg-orange-300 dark:bg-orange-900/40 dark:hover:bg-orange-900/60' 
-                : 'hover:bg-accent/50'
+                ? 'bg-green-200 hover:bg-green-300 dark:bg-green-900/40 dark:hover:bg-green-900/60' 
+                : chat.unread
+                  ? 'bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700'
+                  : 'hover:bg-accent/50'
             ]"
           >
             <Avatar class="w-12 h-12 border border-border">
@@ -29,12 +31,19 @@
             </Avatar>
             
             <div class="flex-1 min-w-0">
-              <h2 class="text-base font-medium truncate">{{ chat.name }}</h2>
-              <p class="text-sm text-muted-foreground truncate">{{ getLastMessage(chat) }}</p>
+              <h2 :class="['text-base truncate', chat.unread ? 'font-bold' : 'font-medium']">
+                {{ chat.name }}
+              </h2>
+              <p :class="['text-sm truncate', chat.unread ? 'text-foreground font-medium' : 'text-muted-foreground']">
+                {{ getLastMessage(chat) }}
+              </p>
             </div>
             
-            <div class="text-xs text-muted-foreground whitespace-nowrap font-medium">
-              {{ chat.lastMessageTime }}
+            <div class="flex flex-col items-end gap-1">
+              <div class="text-xs text-muted-foreground whitespace-nowrap font-medium">
+                {{ chat.lastMessageTime }}
+              </div>
+              <div v-if="chat.unread" class="w-2.5 h-2.5 bg-green-500 rounded-full"></div>
             </div>
           </div>
           <Separator v-for="n in chats.length - 1" :key="'sep-'+n" class="opacity-50" />
@@ -82,7 +91,7 @@
           </div>
         </div>
 
-        <ScrollArea class="flex-1 p-6" ref="messagesScrollArea">
+        <ScrollArea class="flex-1 p-6">
           <div class="space-y-6 flex flex-col pb-4">
             <div 
               v-for="message in activeChat.messages" 
@@ -101,19 +110,21 @@
                   :class="[
                     'px-5 py-3 rounded-3xl shadow-sm text-sm border',
                     message.sender === 'me' 
-                      ? 'bg-[#fb923c] text-gray-900 border-[#ea580c] rounded-br-sm' 
-                      : 'bg-[#fed7aa] text-gray-900 border-[#fdba74] rounded-bl-sm'
+                      ? 'bg-green-300 text-gray-900 border-green-375 rounded-br-sm' 
+                      : 'bg-green-100 text-gray-900 border-green-175 rounded-bl-sm'
                   ]"
                 >
                   {{ message.text }}
                 </div>
               </div>
             </div>
+            <!-- Invisible element to anchor the scroll to -->
+            <div ref="bottomRef" class="h-px w-full"></div>
           </div>
         </ScrollArea>
 
         <div class="p-4 bg-card border-t">
-          <form @submit.prevent="sendMessage" class="flex items-center gap-3 bg-background border rounded-full px-2 py-2 focus-within:ring-2 focus-within:ring-orange-300 focus-within:border-orange-400 transition-all shadow-sm">
+          <form @submit.prevent="sendMessage" class="flex items-center gap-3 bg-background border rounded-full px-2 py-2 focus-within:ring-2 focus-within:ring-green-300 focus-within:border-green-400 transition-all shadow-sm">
             
             <TooltipProvider>
               <Tooltip>
@@ -170,7 +181,7 @@ const STORAGE_KEY = 'quick-fix-chats-data'
 // --- State ---
 const selectedChatId = ref<number | null>(null)
 const newMessage = ref('')
-const messagesScrollArea = ref<InstanceType<typeof ScrollArea> | null>(null)
+const bottomRef = ref<HTMLElement | null>(null) // Anchor ref for scrolling
 
 // --- Default Mock Data ---
 const defaultChats = [
@@ -180,6 +191,7 @@ const defaultChats = [
     initials: 'JD',
     avatarUrl: '',
     lastMessageTime: '10 min',
+    unread: false,
     messages: [
       { id: 1, sender: 'me', text: 'Lorem Ipsum' },
       { id: 2, sender: 'them', text: 'Lorem Ipsum' },
@@ -193,6 +205,7 @@ const defaultChats = [
     initials: 'SJ',
     avatarUrl: '',
     lastMessageTime: '2 hrs',
+    unread: true, 
     messages: [
       { id: 1, sender: 'them', text: 'Are we still meeting to discuss the database schema?' },
       { id: 2, sender: 'me', text: 'Yes, let\'s sync at 2 PM. I have the Entity Framework models ready.' },
@@ -205,6 +218,7 @@ const defaultChats = [
     initials: 'SA',
     avatarUrl: '',
     lastMessageTime: '1 day',
+    unread: false,
     messages: [
       { id: 1, sender: 'them', text: 'Docker container "p2p_node_42" has restarted unexpectedly.' },
       { id: 2, sender: 'me', text: 'Acknowledge. Checking the logs now.' }
@@ -212,7 +226,7 @@ const defaultChats = [
   }
 ]
 
-// --- Initialization Logic ---
+
 const loadChats = () => {
   const savedData = localStorage.getItem(STORAGE_KEY)
   if (savedData) {
@@ -226,14 +240,28 @@ const loadChats = () => {
   return defaultChats
 }
 
-// Reactive chats array loaded synchronously
 const chats = ref(loadChats())
 
-// --- Persistence Logic ---
-// Watch for deep changes in the chats array and save to local storage automatically
+
+const activeChat = computed(() => {
+  return chats.value.find((c: any) => c.id === selectedChatId.value) || null
+})
+
+
 const onStorageChange = (event: StorageEvent) => {
   if (event.key === STORAGE_KEY && event.newValue) {
-    chats.value = JSON.parse(event.newValue)
+    const newChats = JSON.parse(event.newValue)
+    
+    newChats.forEach((newChat: any) => {
+      const oldChat = chats.value.find((c: any) => c.id === newChat.id)
+      if (oldChat && newChat.messages.length > oldChat.messages.length) {
+         if (selectedChatId.value !== newChat.id) {
+            newChat.unread = true 
+         }
+      }
+    })
+    
+    chats.value = newChats
   }
 }
 
@@ -245,19 +273,25 @@ onUnmounted(() => {
   window.removeEventListener('storage', onStorageChange)
 })
 
-// Auto-save whenever chats change
 watch(chats, (newVal) => {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(newVal))
 }, { deep: true })
 
-// --- Computed ---
-const activeChat = computed(() => {
-  return chats.value.find((c: any) => c.id === selectedChatId.value) || null
-})
+watch(
+  () => activeChat.value?.messages?.length,
+  () => {
+    scrollToBottom()
+  }
+)
 
-// --- Methods ---
 const selectChat = (id: number) => {
   selectedChatId.value = id
+  
+  const chat = chats.value.find((c: any) => c.id === id)
+  if (chat && chat.unread) {
+    chat.unread = false
+  }
+
   scrollToBottom()
 }
 
@@ -275,25 +309,40 @@ const sendMessage = async () => {
     text: newMessage.value.trim()
   }
 
-  // Update active chat's message array and time
   activeChat.value.messages.push(newMsg)
   activeChat.value.lastMessageTime = 'Just now'
-  
-  // Clear input
   newMessage.value = ''
 
-  // Scroll down to see the new message
-  await scrollToBottom()
+  scrollToBottom()
 }
 
 const scrollToBottom = async () => {
   await nextTick()
-  // With shadcn-vue's ScrollArea, we need to target the viewport element inside it
-  if (messagesScrollArea.value?.$el) {
-    const viewport = messagesScrollArea.value.$el.querySelector('[data-radix-scroll-area-viewport]')
-    if (viewport) {
-      viewport.scrollTop = viewport.scrollHeight
+  setTimeout(() => {
+    if (bottomRef.value) {
+      let scrollContainer = bottomRef.value.closest('[data-radix-scroll-area-viewport]')
+      
+      if (!scrollContainer) {
+        let parent = bottomRef.value.parentElement
+        while (parent) {
+          const style = window.getComputedStyle(parent)
+          if (style.overflowY === 'auto' || style.overflowY === 'scroll') {
+            scrollContainer = parent
+            break
+          }
+          parent = parent.parentElement
+        }
+      }
+
+      if (scrollContainer) {
+        scrollContainer.scrollTo({
+          top: scrollContainer.scrollHeight,
+          behavior: 'smooth'
+        })
+      } else {
+        bottomRef.value.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
+      }
     }
-  }
+  }, 50)
 }
 </script>
