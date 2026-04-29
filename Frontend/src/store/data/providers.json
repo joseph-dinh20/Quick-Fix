@@ -5,28 +5,27 @@
     "avatar": "https://cdn.jsdelivr.net/gh/faker-js/assets-person-portrait/male/512/75.jpg",
     "price": 25,
     "workPhotos": [
-      "https://picsum.photos/seed/2vX01tha/800/800",
-      "https://picsum.photos/seed/eOIow3Oh/800/800",
-      "https://picsum.photos/seed/gJhH6okb/800/800",
-      "https://picsum.photos/seed/vgi44Q7I/800/800",
-      "https://picsum.photos/seed/auJ4S2dm/800/800",
-      "https://picsum.photos/seed/niBUpbbc/800/800",
-      "https://picsum.photos/seed/7D0A6jk9/800/800",
-      "https://picsum.photos/seed/1IJFXqqS/800/800",
-      "https://picsum.photos/seed/qF6jipn7/800/800"
+      "https://production-next-images-cdn.thumbtack.com/i/381283774048256006/width/640.webp",
+      "https://production-next-images-cdn.thumbtack.com/i/381283802297589760/width/640.webp",
+      "https://production-next-images-cdn.thumbtack.com/i/381283816801394699/width/640.webp",
+      "https://production-next-images-cdn.thumbtack.com/i/381283019207262218/width/640.webp",
+      "https://production-next-images-cdn.thumbtack.com/i/574187166920507406/width/640.webp",
+      "https://production-next-images-cdn.thumbtack.com/i/381283390099398662/width/640.webp",
+      "https://production-next-images-cdn.thumbtack.com/i/381280242605875200/width/640.webp",
+      "https://production-next-images-cdn.thumbtack.com/i/381280318858428422/width/640.webp"
     ],
-    "aboutMe": "Tamen cui demitto ad degenero nostrum tabella. Maxime caput tenetur conor vinco pecus curto coniuratio. Caries patior deorsum repudiandae acceptus crepusculum voluptatem. 2. Tamen cui demitto ad degenero nostrum tabella. Maxime caput tenetur conor vinco pecus curto coniuratio. Caries patior deorsum repudiandae acceptus crepusculum voluptatem.Tamen cui demitto ad degenero nostrum tabella. Maxime caput tenetur conor vinco pecus curto coniuratio. Caries patior deorsum repudiandae acceptus crepusculum voluptatem. 3.Tamen cui demitto ad degenero nostrum tabella. Maxime caput tenetur conor vinco pecus curto coniuratio. Caries patior deorsum repudiandae acceptus crepusculum voluptatem. 4.Tamen cui demitto ad degenero nostrum tabella. Maxime caput tenetur conor vinco pecus curto coniuratio. Caries patior deorsum repudiandae acceptus crepusculum voluptatem.  ",
+    "aboutMe": "Hi, I'm Beaulah, a general handyman and also licensed plumber with over 12 years of experience in providing high-quality plumbing services. I bring my expertise and commitment to every job and pride myself on offering reliable, affordable solutions for both residential and commercial clients. I understand the urgency of maintenance issues and aim to complete every job efficiently while ensuring long-lasting results. With me, you can trust that the problem will be solved the right way, every time.  ",
     "averageRating": "4.9",
     "jobsCompleted": 25,
     "datesBooked": [],
     "ratings": [
       {
-        "jobType": "Gardening",
+        "jobType": "Plumbing",
         "userName": "Winifred Bartoletti II",
         "date": "2025-11-02T01:50:08.256Z",
         "userAvatar": "/assets/avatars/defaultAvatar.png",
         "userRated": 3,
-        "userComment": "Spiritus urbanus trado temptatio anser corrumpo vulnus. Vicinus teres demitto sperno desolo enim accendo comparo venustas. Candidus ipsum comedo civis tergum."
+        "userComment": "Fixed the leak under my sink but took longer than expected. Got the job done."
       },
       {
         "jobType": "Plumbing",
@@ -34,31 +33,31 @@
         "date": "2025-10-24T12:37:47.950Z",
         "userAvatar": "/assets/avatars/defaultAvatar.png",
         "userRated": 5,
-        "userComment": "Vespillo spoliatio vix sollicito. Necessitatibus conatus cenaculum angulus curto aperiam vox accendo. Voro aliquam tergo claustrum abutor."
+        "userComment": "Showed up on time and cleared the clog fast. Very professional, will definitely book again."
       },
       {
-        "jobType": "Carpentry",
+        "jobType": "Plumbing",
         "userName": "Juana Hills",
         "date": "2026-09-14T22:47:42.140Z",
         "userAvatar": "/assets/avatars/defaultAvatar.png",
         "userRated": 1,
-        "userComment": "Trucido audax vespillo tenetur. Sol audio pecto solvo asperiores velut subvenio fugit cumque tenax. Denego vel attollo confido canonicus denuo defendo adimpleo."
+        "userComment": "Pipe he replaced started leaking again two days later. Very disappointed."
       },
       {
-        "jobType": "Electrical",
+        "jobType": "Plumbing",
         "userName": "Ben Schuppe",
         "date": "2025-06-08T09:02:45.500Z",
         "userAvatar": "/assets/avatars/defaultAvatar.png",
         "userRated": 2,
-        "userComment": "Paulatim peccatus benigne corpus. Vicissitudo confugo aliquam deficio. Cervus corrigo deludo tripudio conventus."
+        "userComment": "Took three visits to fix what should've been a simple water heater issue. Not great."
       },
       {
-        "jobType": "Gardening",
+        "jobType": "Plumbing",
         "userName": "Jodi Daniel-Beatty",
         "date": "2026-09-11T03:51:16.495Z",
         "userAvatar": "/assets/avatars/defaultAvatar.png",
         "userRated": 1,
-        "userComment": "Arceo cubitum claudeo. Degero cito commodo repudiandae. Decretum titulus suadeo terminatio placeat."
+        "userComment": "Left a mess in my bathroom and the problem wasn't fully resolved. Would not hire again."
       },
       {
         "jobType": "Plumbing",
@@ -66,324 +65,42 @@
         "date": "2026-06-06T01:15:23.889Z",
         "userAvatar": "/assets/avatars/defaultAvatar.png",
         "userRated": 2,
-        "userComment": "Thymbra tactus fuga adiuvo at spoliatio tollo versus utroque conitor. Adinventitias textor tergo volup tam stipes capto. Auctus arx ciminatio angustus claro."
-      },
-      {
-        "jobType": "Carpentry",
-        "userName": "Korbin Stamm",
-        "date": "2027-02-06T16:16:49.450Z",
-        "userAvatar": "/assets/avatars/defaultAvatar.png",
-        "userRated": 3,
-        "userComment": "Apostolus verbum urbs terebro acerbitas admitto. Capitulus vacuus cogito alter. Aliquid denique acer quod arbustum odit nulla aegrus."
-      },
-      {
-        "jobType": "Electrical",
-        "userName": "Mr. Albina Swaniawski-Ankunding",
-        "date": "2025-10-30T16:36:36.456Z",
-        "userAvatar": "/assets/avatars/defaultAvatar.png",
-        "userRated": 5,
-        "userComment": "Ipsam arguo autus voluptas provident amoveo bis summopere demo. Conturbo timidus earum desidero tondeo ulciscor qui pecto. Triduana maxime viduo sursum quo."
-      },
-      {
-        "jobType": "Gardening",
-        "userName": "Marta Stark",
-        "date": "2025-09-07T03:36:20.345Z",
-        "userAvatar": "/assets/avatars/defaultAvatar.png",
-        "userRated": 3,
-        "userComment": "Bestia virga stillicidium creo tabgo theca tersus quibusdam. Rem totus eligendi magnam. Cupressus odit solvo vere balbus adicio sub tremo communis."
-      },
-      {
-        "jobType": "Plumbing",
-        "userName": "Lorenz Hackett",
-        "date": "2026-03-11T16:58:18.213Z",
-        "userAvatar": "/assets/avatars/defaultAvatar.png",
-        "userRated": 3,
-        "userComment": "Vesco summa coniecto vulgo cupressus vicissitudo viriliter averto clamo acsi. Amplus tonsor deinde constans. Pel spiculum allatus suppono cimentarius templum."
-      },
-      {
-        "jobType": "Carpentry",
-        "userName": "Jermaine VonRueden",
-        "date": "2026-08-11T12:28:05.970Z",
-        "userAvatar": "/assets/avatars/defaultAvatar.png",
-        "userRated": 4,
-        "userComment": "Denego thymbra amiculum deludo civis auctus. Quia allatus supplanto sed nesciunt adeptio. Aureus quaerat admitto centum comptus adiuvo arma provident corrigo."
-      },
-      {
-        "jobType": "Electrical",
-        "userName": "Mittie Torphy",
-        "date": "2026-06-13T16:04:52.441Z",
-        "userAvatar": "/assets/avatars/defaultAvatar.png",
-        "userRated": 5,
-        "userComment": "Tracto succedo administratio comptus laborum victoria vomica auditor. Tempore demoror ab vomer. Textor cumque turpis tabesco."
-      },
-      {
-        "jobType": "Gardening",
-        "userName": "Kaylie Steuber",
-        "date": "2025-08-01T12:07:08.416Z",
-        "userAvatar": "/assets/avatars/defaultAvatar.png",
-        "userRated": 3,
-        "userComment": "Adhaero comes nostrum acidus adhaero aliquam ambulo. Creber valens vitae verus creo. Aegrus celer vapulus adinventitias ab vulgo totam."
-      },
-      {
-        "jobType": "Plumbing",
-        "userName": "Ronaldo Schaden",
-        "date": "2026-08-17T19:28:56.759Z",
-        "userAvatar": "/assets/avatars/defaultAvatar.png",
-        "userRated": 2,
-        "userComment": "Dolorem sufficio aureus. Repellat canis a spiritus. Vigor degusto tamen decipio cetera solutio bellum casso."
-      },
-      {
-        "jobType": "Carpentry",
-        "userName": "Helen Smitham",
-        "date": "2026-02-20T06:24:59.008Z",
-        "userAvatar": "/assets/avatars/defaultAvatar.png",
-        "userRated": 4,
-        "userComment": "Temeritas acerbitas voluptatibus auditor bardus depopulo culpo vallum. Sublime convoco possimus. Accusator surculus velum attero accedo."
-      },
-      {
-        "jobType": "Electrical",
-        "userName": "Hermann Hammes",
-        "date": "2026-05-06T01:10:11.607Z",
-        "userAvatar": "/assets/avatars/defaultAvatar.png",
-        "userRated": 2,
-        "userComment": "Nisi sed amitto aestus suasoria. Cursus appello tener terga caste alienus ulciscor sollers ambitus vox. Ascit cras textor amicitia."
-      },
-      {
-        "jobType": "Gardening",
-        "userName": "Gene Macejkovic",
-        "date": "2025-05-08T15:31:52.698Z",
-        "userAvatar": "/assets/avatars/defaultAvatar.png",
-        "userRated": 5,
-        "userComment": "Ait viridis delego delego reprehenderit. Quam concido tristis abscido aveho. Admoveo coniecto argentum curis."
-      },
-      {
-        "jobType": "Plumbing",
-        "userName": "Ralph Williamson",
-        "date": "2025-05-16T12:25:37.973Z",
-        "userAvatar": "/assets/avatars/defaultAvatar.png",
-        "userRated": 5,
-        "userComment": "Dapifer solium celer cado depraedor quaerat. Ipsum adipiscor totam eum denuncio creber. Cilicium cumque clarus corrumpo ambulo."
-      },
-      {
-        "jobType": "Carpentry",
-        "userName": "Elna Osinski",
-        "date": "2027-02-11T11:33:35.127Z",
-        "userAvatar": "/assets/avatars/defaultAvatar.png",
-        "userRated": 3,
-        "userComment": "Suspendo aggero infit tam constans voluptatibus perspiciatis iusto. Ventosus umerus cariosus uredo claustrum. Suffragium caelestis iusto copia solutio bellum enim."
-      },
-      {
-        "jobType": "Electrical",
-        "userName": "Jim Jacobi",
-        "date": "2025-12-31T21:03:58.914Z",
-        "userAvatar": "/assets/avatars/defaultAvatar.png",
-        "userRated": 3,
-        "userComment": "Defungo vilicus calco adfectus cultellus bis chirographum. Tergeo unus tremo accendo accusantium corrupti deporto aetas. Confero arca totidem suffoco vulgo sumptus adflicto deleo acidus deinde."
-      },
-      {
-        "jobType": "Gardening",
-        "userName": "Corene Gleichner",
-        "date": "2027-03-06T19:09:07.250Z",
-        "userAvatar": "/assets/avatars/defaultAvatar.png",
-        "userRated": 3,
-        "userComment": "Crinis termes appono illum desino bonus. Thalassinus venia quisquam odit. Suffoco temptatio qui delinquo vinculum theca articulus aperiam."
-      },
-      {
-        "jobType": "Plumbing",
-        "userName": "Wiley McDermott",
-        "date": "2026-01-07T15:27:09.531Z",
-        "userAvatar": "/assets/avatars/defaultAvatar.png",
-        "userRated": 1,
-        "userComment": "Compono pariatur abscido tertius statim. Torqueo venustas placeat sum tergeo compello sursum ara. Altus sol spiritus absorbeo."
-      },
-      {
-        "jobType": "Carpentry",
-        "userName": "Doris Konopelski",
-        "date": "2025-08-01T21:43:57.879Z",
-        "userAvatar": "/assets/avatars/defaultAvatar.png",
-        "userRated": 1,
-        "userComment": "Appono doloremque somniculosus approbo adopto ante venia ipsam cras commodo. Umerus solium taedium. Suppellex coerceo candidus territo compono quae bellicus coruscus solium concedo."
-      },
-      {
-        "jobType": "Electrical",
-        "userName": "Mrs. Addie Marvin",
-        "date": "2026-05-11T02:42:09.285Z",
-        "userAvatar": "/assets/avatars/defaultAvatar.png",
-        "userRated": 2,
-        "userComment": "Aestas unde conforto demulceo taedium vociferor aliquam tepidus antiquus. Tantum barba sulum vomica coerceo. Super tabesco crudelis calcar apud."
-      },
-      {
-        "jobType": "Gardening",
-        "userName": "Conner Sanford",
-        "date": "2026-04-29T23:03:11.716Z",
-        "userAvatar": "/assets/avatars/defaultAvatar.png",
-        "userRated": 2,
-        "userComment": "Solum atque turpis depulso balbus adsum. Magni commemoro vivo ubi absum. Modi eos tamdiu molestias."
+        "userComment": "Prices seemed fair but the work was sloppy. Had to call someone else to finish the job."
       }
     ]
   },
   {
     "userID": 3421,
-    "name": "Freddie Rippin",
+    "name": "Sarah Rippin",
     "avatar": "https://cdn.jsdelivr.net/gh/faker-js/assets-person-portrait/female/512/42.jpg",
     "price": 81,
     "workPhotos": [
-      "https://picsum.photos/seed/jzUN34D6/800/800",
-      "https://picsum.photos/seed/3XRPquvR/800/800",
-      "https://picsum.photos/seed/MUIqKHtP/800/800",
-      "https://picsum.photos/seed/UCFN4qj2/800/800",
-      "https://picsum.photos/seed/BLJdr8tV/800/800",
-      "https://picsum.photos/seed/kZ6B9ypT/800/800",
-      "https://picsum.photos/seed/oRbBlyNx/800/800"
+      "https://production-next-images-cdn.thumbtack.com/i/577157204014211073/width/640.webp",
+      "https://production-next-images-cdn.thumbtack.com/i/577157204923351047/width/640.webp",
+      "https://production-next-images-cdn.thumbtack.com/i/505691877589622790/width/640.webp",
+      "https://production-next-images-cdn.thumbtack.com/i/505691885503569930/width/640.webp",
+      "https://production-next-images-cdn.thumbtack.com/i/505691894532087809/width/640.webp"
     ],
-    "aboutMe": "Tabesco subito tres. Decipio antiquus velum suscipio aliquid demonstro. Adaugeo alienus patior approbo.\nUllus admiratio ratione ambitus ubi avaritia acquiro. Vix capio amaritudo censura ascisco. Venia decretum aggredior surculus sol adhaero antea cohaero.\nVoluptatum votum canonicus crustulum. Stillicidium universe acervus aro ultra vox averto confido sopor. Appono compello quod tibi veritas consequatur patruus delinquo certus conculco.",
+    "aboutMe": "Hello, I'm Sarah, a skilled carpenter with a passion for transforming spaces through custom woodwork. From furniture creation to home renovations and everything in between, I specialize in crafting beautiful, functional pieces that suit your needs and style. I've been in the carpentry business for 15 years and pride myself on my attention to detail and dedication to craftsmanship. Whether you need a new bookshelf, kitchen cabinetry, or custom woodwork for your home or office, I'll work closely with you to bring your vision to life, with a focus on quality materials and expert techniques.",
     "averageRating": "4.9",
     "jobsCompleted": 81,
     "datesBooked": [],
     "ratings": [
       {
-        "jobType": "Gardening",
+        "jobType": "Carpentry",
         "userName": "Dr. Camille Glover",
         "date": "2026-03-24T06:58:46.667Z",
         "userAvatar": "/assets/avatars/defaultAvatar.png",
         "userRated": 4,
-        "userComment": "Tego arbor appositus. Vigor cumque congregatio eligendi tabella spes valde cumque adhuc tutis. Veritatis abduco vita xiphias deprecator caelestis."
-      },
-      {
-        "jobType": "Plumbing",
-        "userName": "Lana Armstrong",
-        "date": "2026-07-01T00:29:07.369Z",
-        "userAvatar": "/assets/avatars/defaultAvatar.png",
-        "userRated": 3,
-        "userComment": "Decerno damnatio vita tot adiuvo valde vulariter tristis itaque. Cauda impedit demens. Tribuo aer ceno abeo tergiversatio super tutamen terreo."
+        "userComment": "Built a beautiful floating shelf for my living room. Clean finish and sturdy. Very happy."
       },
       {
         "jobType": "Carpentry",
-        "userName": "Luther O'Kon",
-        "date": "2025-11-25T16:53:12.350Z",
-        "userAvatar": "/assets/avatars/defaultAvatar.png",
-        "userRated": 1,
-        "userComment": "Atqui angustus concido ultio vomito amicitia. Decretum tabula stabilis cunae tego vomer. Speciosus charisma vita tepidus capitulus velit voluptatibus."
-      },
-      {
-        "jobType": "Electrical",
-        "userName": "Jasen Farrell",
-        "date": "2026-10-24T12:39:23.090Z",
-        "userAvatar": "/assets/avatars/defaultAvatar.png",
-        "userRated": 3,
-        "userComment": "Certe armarium thymbra. Coma abstergo conculco. Averto xiphias reprehenderit."
-      },
-      {
-        "jobType": "Gardening",
-        "userName": "Elaine Medhurst",
-        "date": "2026-08-30T05:23:11.232Z",
-        "userAvatar": "/assets/avatars/defaultAvatar.png",
-        "userRated": 3,
-        "userComment": "Coniecto patria allatus tenetur. Combibo voluntarius modi atavus spoliatio hic. Vulgus ante vox tactus suppono aspicio."
-      },
-      {
-        "jobType": "Plumbing",
-        "userName": "Dr. Jaleel King PhD",
-        "date": "2026-06-03T19:20:21.428Z",
-        "userAvatar": "/assets/avatars/defaultAvatar.png",
-        "userRated": 1,
-        "userComment": "Cum tum utilis vere degusto pecco amaritudo tersus cumque beatus. Creptio molestias alias paens. Cicuta aliqua ultra."
-      },
-      {
-        "jobType": "Carpentry",
-        "userName": "Dr. Carlotta Hodkiewicz",
-        "date": "2026-07-03T02:20:52.267Z",
-        "userAvatar": "/assets/avatars/defaultAvatar.png",
-        "userRated": 1,
-        "userComment": "Solvo rem vigilo utroque cupressus catena. Adstringo credo taedium videlicet. Amissio conservo numquam avarus argentum voluptatem circumvenio accommodo sub."
-      },
-      {
-        "jobType": "Electrical",
-        "userName": "Patrick Bechtelar-Schoen",
-        "date": "2026-12-04T10:50:22.219Z",
-        "userAvatar": "/assets/avatars/defaultAvatar.png",
-        "userRated": 1,
-        "userComment": "Desipio rerum curso colligo sublime nostrum. Crinis creo benigne tertius aetas. Vergo vos aggero substantia cohaero numquam."
-      },
-      {
-        "jobType": "Gardening",
-        "userName": "Margarita Grady",
-        "date": "2026-05-25T06:34:45.784Z",
-        "userAvatar": "/assets/avatars/defaultAvatar.png",
-        "userRated": 3,
-        "userComment": "Accedo suus suppellex pecto. Terebro vado cunae taedium territo autem talio vaco. Degero error quisquam arbustum."
-      },
-      {
-        "jobType": "Plumbing",
-        "userName": "Nicola Ernser",
-        "date": "2026-06-02T07:09:38.341Z",
-        "userAvatar": "/assets/avatars/defaultAvatar.png",
-        "userRated": 5,
-        "userComment": "Corrigo cura quam cauda. Antea alii thesaurus curis illum cunctatio. Tandem aspernatur tertius officiis victoria synagoga sed bos somnus."
-      },
-      {
-        "jobType": "Carpentry",
-        "userName": "Ronald Gislason",
-        "date": "2026-03-31T04:58:50.910Z",
-        "userAvatar": "/assets/avatars/defaultAvatar.png",
-        "userRated": 3,
-        "userComment": "Adicio vesper suadeo beatus caveo pax velum urbs. Dolore capto claustrum enim aegrotatio amplitudo contabesco neque argentum. Ullam adduco aurum voluptates coadunatio."
-      },
-      {
-        "jobType": "Electrical",
-        "userName": "Eula Stehr",
-        "date": "2026-03-24T23:19:27.329Z",
-        "userAvatar": "/assets/avatars/defaultAvatar.png",
-        "userRated": 2,
-        "userComment": "Termes defetiscor adopto tabernus vallum adflicto balbus. Tamdiu amet termes. Adstringo vinitor architecto non compono basium conitor volutabrum expedita solitudo."
-      },
-      {
-        "jobType": "Gardening",
-        "userName": "Mack Gleason",
-        "date": "2026-12-31T19:37:26.901Z",
-        "userAvatar": "/assets/avatars/defaultAvatar.png",
-        "userRated": 4,
-        "userComment": "Sperno turba tempora strenuus. Addo textus cornu. Patria termes patria dicta velociter beatus commemoro quis casso."
-      },
-      {
-        "jobType": "Plumbing",
-        "userName": "Sophia Hartmann",
-        "date": "2026-02-12T12:32:41.506Z",
-        "userAvatar": "/assets/avatars/defaultAvatar.png",
-        "userRated": 5,
-        "userComment": "Aequus addo triduana vicinus. Vetus modi adipisci tutis. Talus usque aequus sequi tutis caritas."
-      },
-      {
-        "jobType": "Carpentry",
-        "userName": "Tonya Metz",
-        "date": "2025-10-21T04:35:25.944Z",
-        "userAvatar": "/assets/avatars/defaultAvatar.png",
-        "userRated": 5,
-        "userComment": "Mollitia crustulum itaque ultra calcar ipsa. Maxime deprimo adflicto arto constans pax appositus velociter toties. Verus agnosco beneficium callide."
-      },
-      {
-        "jobType": "Electrical",
-        "userName": "Mr. Korey Altenwerth",
-        "date": "2025-10-14T04:17:26.065Z",
-        "userAvatar": "/assets/avatars/defaultAvatar.png",
-        "userRated": 5,
-        "userComment": "Cilicium tubineus pel turba venio acsi tenuis. Amissio esse addo caries iusto. Fugiat tempore curvo."
-      },
-      {
-        "jobType": "Gardening",
-        "userName": "Adolph Klocko",
-        "date": "2025-10-09T20:42:55.980Z",
-        "userAvatar": "/assets/avatars/defaultAvatar.png",
-        "userRated": 2,
-        "userComment": "Crapula bestia neque videlicet deripio cuius decens sonitus. Demergo tersus combibo somniculosus vesica adaugeo laboriosam apostolus ventosus. Qui corpus aedificium vis demo calamitas."
-      },
-      {
-        "jobType": "Plumbing",
         "userName": "Everardo Berge",
         "date": "2026-12-17T16:59:16.727Z",
         "userAvatar": "/assets/avatars/defaultAvatar.png",
         "userRated": 2,
-        "userComment": "Voluptatibus nostrum voluptatum tribuo sursum audacia ait. Vorago audax voro veritas abstergo tripudio cornu aestus. Adipisci minus territo clarus crinis."
+        "userComment": "The cabinet doors weren't aligned properly. She offered to come back but I'd lost confidence."
       },
       {
         "jobType": "Carpentry",
@@ -391,31 +108,31 @@
         "date": "2027-01-03T09:08:03.737Z",
         "userAvatar": "/assets/avatars/defaultAvatar.png",
         "userRated": 5,
-        "userComment": "Careo ullus abeo dignissimos cupiditas amo aiunt. Collum ventito templum alo necessitatibus. Decet suscipio carpo bellum virga aggero ademptio."
+        "userComment": "Sarah built us a custom dining table and it's absolutely stunning. Exceeded expectations."
       },
       {
-        "jobType": "Electrical",
+        "jobType": "Carpentry",
         "userName": "Archibald Jerde",
         "date": "2025-09-08T23:28:07.145Z",
         "userAvatar": "/assets/avatars/defaultAvatar.png",
         "userRated": 1,
-        "userComment": "Appello auditor decimus pel cruciamentum vigor talio. Repudiandae vitiosus tendo decimus decor alienus umerus tempore conforto ascit. Ea vester cunabula verbum sint culpo."
+        "userComment": "Showed up late and the deck boards she installed were uneven. Requested a refund."
       },
       {
-        "jobType": "Gardening",
+        "jobType": "Carpentry",
         "userName": "Kaitlin Morissette",
         "date": "2025-12-23T22:09:21.128Z",
         "userAvatar": "/assets/avatars/defaultAvatar.png",
         "userRated": 3,
-        "userComment": "Vapulus armarium aperte. Articulus avaritia odit subvenio soleo desipio degusto. Abutor acer valens umerus solvo."
+        "userComment": "Decent work on the bookcase but communication could've been better throughout."
       },
       {
-        "jobType": "Plumbing",
+        "jobType": "Carpentry",
         "userName": "Dr. Else Jacobi Sr.",
         "date": "2026-05-31T22:51:19.889Z",
         "userAvatar": "/assets/avatars/defaultAvatar.png",
         "userRated": 2,
-        "userComment": "Demo sono abscido aro. Volaticus adnuo charisma deputo adsuesco verbera varietas centum antiquus apostolus. Confero tantillus decet vitae turpis atavus pectus."
+        "userComment": "Trim work was okay but took twice as long as quoted. Not the best experience."
       },
       {
         "jobType": "Carpentry",
@@ -423,31 +140,31 @@
         "date": "2025-09-07T02:53:27.681Z",
         "userAvatar": "/assets/avatars/defaultAvatar.png",
         "userRated": 5,
-        "userComment": "Abeo ceno voluptate thymum creber vae sortitus delinquo. Demens tardus error adsum torrens deporto avaritia cervus teres complectus. Bellum ambulo acerbitas amissio timidus decumbo video eum vito."
+        "userComment": "Installed new kitchen cabinets and the quality is top notch. Very detail-oriented."
       },
       {
-        "jobType": "Electrical",
+        "jobType": "Carpentry",
         "userName": "Rebeca Greenholt",
         "date": "2027-03-06T21:23:16.900Z",
         "userAvatar": "/assets/avatars/defaultAvatar.png",
         "userRated": 3,
-        "userComment": "Tutis spero tempus valetudo asporto conicio. Suadeo careo videlicet ut utrimque. Abstergo denuncio constans voco abscido thymum."
+        "userComment": "She did fine work on the window frames. Nothing exceptional but solid and reliable."
       },
       {
-        "jobType": "Gardening",
+        "jobType": "Carpentry",
         "userName": "Leroy Christiansen",
         "date": "2026-07-07T06:47:16.919Z",
         "userAvatar": "/assets/avatars/defaultAvatar.png",
         "userRated": 4,
-        "userComment": "Vilicus tabella auxilium cunae comparo vir odit. Commodi suppellex curso vinculum temporibus delego doloribus. Conduco vilitas avarus tabernus depromo trans tego molestiae celebrer aiunt."
+        "userComment": "Framed out our new mudroom perfectly. Arrived on time and cleaned up after herself."
       },
       {
-        "jobType": "Plumbing",
+        "jobType": "Carpentry",
         "userName": "Ms. Mertie Ferry",
         "date": "2026-05-02T04:19:21.385Z",
         "userAvatar": "/assets/avatars/defaultAvatar.png",
         "userRated": 3,
-        "userComment": "Aut thermae conduco amplexus cultura vomica delectus vulgus. Comburo conatus communis teneo arto alo ambulo. Vinitor beneficium sunt crebro."
+        "userComment": "Got the fence repaired but had to follow up a few times to get her scheduled."
       },
       {
         "jobType": "Carpentry",
@@ -455,31 +172,31 @@
         "date": "2026-12-01T03:41:44.877Z",
         "userAvatar": "/assets/avatars/defaultAvatar.png",
         "userRated": 1,
-        "userComment": "Dicta suasoria eos ascisco despecto administratio numquam vita nostrum. Molestias angustus tenax temeritas amaritudo abeo curatio ventito. Blanditiis tempus denego tandem tandem auctus."
+        "userComment": "Stair railing she installed came loose within a week. Felt unsafe. Very disappointed."
       },
       {
-        "jobType": "Electrical",
+        "jobType": "Carpentry",
         "userName": "Hugo Weissnat",
         "date": "2026-05-24T03:24:27.384Z",
         "userAvatar": "/assets/avatars/defaultAvatar.png",
         "userRated": 2,
-        "userComment": "Praesentium articulus succurro capio speculum. Usus cetera antepono avaritia correptius tripudio. Templum deorsum cimentarius sodalitas ver terminatio dignissimos."
+        "userComment": "The wood she used didn't match what we discussed. Felt like a bait and switch."
       },
       {
-        "jobType": "Gardening",
+        "jobType": "Carpentry",
         "userName": "Cecilia Batz IV",
         "date": "2025-09-30T00:14:29.462Z",
         "userAvatar": "/assets/avatars/defaultAvatar.png",
         "userRated": 5,
-        "userComment": "Bellum ademptio aiunt molestias. Dignissimos aestus appono supplanto conturbo. Corroboro molestiae decet labore vulariter amita accendo alii."
+        "userComment": "Custom built-in wardrobe looks incredible. Exactly what I envisioned, maybe even better."
       },
       {
-        "jobType": "Plumbing",
+        "jobType": "Carpentry",
         "userName": "Jacky Frami",
         "date": "2026-12-04T05:25:11.315Z",
         "userAvatar": "/assets/avatars/defaultAvatar.png",
         "userRated": 4,
-        "userComment": "Depromo sophismata sunt deprimo tubineus vulnero cibo amissio assumenda absens. Sint vulgus abstergo valens. Amet cupiditate contego cado est."
+        "userComment": "Replaced all the baseboards in my hallway. Nice clean lines and a fair price."
       },
       {
         "jobType": "Carpentry",
@@ -487,127 +204,31 @@
         "date": "2027-01-18T19:42:32.303Z",
         "userAvatar": "/assets/avatars/defaultAvatar.png",
         "userRated": 2,
-        "userComment": "Asperiores agnosco pectus theca aggredior crastinus cum auctor. Abstergo amaritudo cras corrigo coruscus. Deinde unus urbs vinum natus cenaculum deorsum somnus commodi."
+        "userComment": "Finished product looked okay but she left sawdust everywhere and didn't offer to clean up."
       },
       {
-        "jobType": "Electrical",
+        "jobType": "Carpentry",
         "userName": "Mr. Nick Gleichner",
         "date": "2026-08-18T00:48:23.632Z",
         "userAvatar": "/assets/avatars/defaultAvatar.png",
         "userRated": 1,
-        "userComment": "Attero depopulo vacuus et praesentium occaecati valens tricesimus votum aliqua. Sufficio et supplanto ter adsum alias soluta appositus campana viduo. Tertius at impedit demoror."
-      },
-      {
-        "jobType": "Gardening",
-        "userName": "Shawna Schulist",
-        "date": "2026-07-13T14:50:56.446Z",
-        "userAvatar": "/assets/avatars/defaultAvatar.png",
-        "userRated": 4,
-        "userComment": "Arcesso magni vinco. Cur bibo deduco amplexus corporis decretum numquam curo. Viridis vigor suscipit voco reprehenderit ad est utpote."
-      },
-      {
-        "jobType": "Plumbing",
-        "userName": "Junior Purdy",
-        "date": "2027-01-25T14:19:00.522Z",
-        "userAvatar": "/assets/avatars/defaultAvatar.png",
-        "userRated": 2,
-        "userComment": "Cimentarius careo soleo ducimus patior decipio strues. Rem vulpes ager carbo arbustum animadverto at subito. Temporibus carus vulgivagus vomer commodi."
+        "userComment": "The deck she built had gaps between boards that she said were 'normal.' Not happy at all."
       },
       {
         "jobType": "Carpentry",
-        "userName": "Clint Koch IV",
-        "date": "2025-12-03T01:53:37.271Z",
-        "userAvatar": "/assets/avatars/defaultAvatar.png",
-        "userRated": 1,
-        "userComment": "Dens cubicularis cicuta arbitro absens verbum. Vester atrox dedecor iste civitas. Agnitio demonstro audacia congregatio supellex cunae turba."
-      },
-      {
-        "jobType": "Electrical",
-        "userName": "Kimberly Cruickshank",
-        "date": "2025-08-18T20:54:58.065Z",
-        "userAvatar": "/assets/avatars/defaultAvatar.png",
-        "userRated": 4,
-        "userComment": "Aufero tracto trucido tabula amita. Tribuo adnuo quidem. Cibus velit apud dolorum adicio voluptates architecto."
-      },
-      {
-        "jobType": "Gardening",
-        "userName": "Jake Stanton DDS",
-        "date": "2025-10-06T08:02:22.729Z",
-        "userAvatar": "/assets/avatars/defaultAvatar.png",
-        "userRated": 1,
-        "userComment": "Animi temeritas antiquus attonbitus blandior cenaculum velum coma. Spes temeritas crinis sperno aetas cupiditate. Urbs suscipio thema."
-      },
-      {
-        "jobType": "Plumbing",
-        "userName": "Osvaldo Hettinger",
-        "date": "2026-08-24T22:21:45.603Z",
-        "userAvatar": "/assets/avatars/defaultAvatar.png",
-        "userRated": 1,
-        "userComment": "Venio aspicio valens conscendo. Carcer velociter supra addo. Asporto totam centum colligo abundans quaerat torqueo."
-      },
-      {
-        "jobType": "Carpentry",
-        "userName": "Theodore Brekke",
-        "date": "2025-07-03T14:31:14.452Z",
-        "userAvatar": "/assets/avatars/defaultAvatar.png",
-        "userRated": 1,
-        "userComment": "Aestas adulescens ceno aeternus. Sollers patior audacia deserunt. Vesco vere verus peior toties demoror celebrer tremo."
-      },
-      {
-        "jobType": "Electrical",
-        "userName": "Ernesto Haley",
-        "date": "2025-06-28T03:53:59.262Z",
-        "userAvatar": "/assets/avatars/defaultAvatar.png",
-        "userRated": 2,
-        "userComment": "Acerbitas crur antepono aliqua celebrer dolore super tolero. Acervus ait expedita adeptio spiritus dedico adhuc illum. Commemoro alo sollicito."
-      },
-      {
-        "jobType": "Gardening",
-        "userName": "Archie Gerlach",
-        "date": "2026-03-25T01:15:34.989Z",
-        "userAvatar": "/assets/avatars/defaultAvatar.png",
-        "userRated": 1,
-        "userComment": "Stillicidium cupiditate defaeco vulariter. Amita solutio volaticus cervus. Textus voluptas adulatio."
-      },
-      {
-        "jobType": "Plumbing",
-        "userName": "Janie Donnelly",
-        "date": "2025-08-18T18:33:00.691Z",
-        "userAvatar": "/assets/avatars/defaultAvatar.png",
-        "userRated": 4,
-        "userComment": "Cultura vetus damno alioqui tibi quam. Subvenio vestigium attonbitus varietas aegrotatio. Adstringo creber auctor curvo certus umerus casus."
-      },
-      {
-        "jobType": "Carpentry",
-        "userName": "Lolita Kuhlman",
-        "date": "2026-12-24T21:18:38.344Z",
-        "userAvatar": "/assets/avatars/defaultAvatar.png",
-        "userRated": 4,
-        "userComment": "Sumptus capio tabula. Custodia usus deficio aut color allatus nihil deinde. Tres temeritas vobis comitatus viduo conor."
-      },
-      {
-        "jobType": "Electrical",
-        "userName": "Mr. Brock Mosciski-Waelchi",
-        "date": "2026-08-25T09:30:10.968Z",
-        "userAvatar": "/assets/avatars/defaultAvatar.png",
-        "userRated": 4,
-        "userComment": "Centum quis defendo advoco cui pecco. Succurro alius possimus artificiose collum tardus accusamus cito. Reiciendis aperio thorax talus dicta defaeco aduro currus."
-      },
-      {
-        "jobType": "Gardening",
         "userName": "Freddy Grady",
         "date": "2026-06-28T06:58:00.794Z",
         "userAvatar": "/assets/avatars/defaultAvatar.png",
         "userRated": 3,
-        "userComment": "Caritas cresco spes quibusdam vivo quia amplitudo esse delego vigilo. Cur animi arceo vulgus teres supellex. Vitae tantillus cenaculum accommodo studio claudeo verto."
+        "userComment": "Solid work on the pantry shelves. Nothing fancy but they're sturdy and level."
       },
       {
-        "jobType": "Plumbing",
+        "jobType": "Carpentry",
         "userName": "Irene Cassin",
         "date": "2025-06-30T09:51:15.062Z",
         "userAvatar": "/assets/avatars/defaultAvatar.png",
         "userRated": 2,
-        "userComment": "Adeptio appositus admitto statim deporto. Vulticulus caveo consuasor degero animadverto creta victus ascisco. Cogo sustineo supra admoneo sollicito aliquam tubineus vulgivagus ipsum."
+        "userComment": "Had to remind her multiple times about details we'd agreed on. Frustrating experience."
       },
       {
         "jobType": "Carpentry",
@@ -615,31 +236,31 @@
         "date": "2027-01-14T03:18:59.589Z",
         "userAvatar": "/assets/avatars/defaultAvatar.png",
         "userRated": 3,
-        "userComment": "Patria eos antiquus tondeo cicuta. Absque ut aliquam voluptatum aspernatur vinco depraedor anser. Absum vox supra cubo cervus appono conor adflicto."
+        "userComment": "She built a workbench for my garage. It's functional but not the prettiest finish."
       },
       {
-        "jobType": "Electrical",
+        "jobType": "Carpentry",
         "userName": "Elvira Schmeler",
         "date": "2026-04-05T17:55:09.811Z",
         "userAvatar": "/assets/avatars/defaultAvatar.png",
         "userRated": 5,
-        "userComment": "Abutor colligo magnam delinquo aptus debeo placeat atqui amita. Id victoria defleo. Coniuratio abduco perferendis viscus patria arx turba urbs deficio capto."
+        "userComment": "Incredible craftsmanship on our custom office desk. Looks like it came from a high-end store."
       },
       {
-        "jobType": "Gardening",
+        "jobType": "Carpentry",
         "userName": "Lora Turcotte",
         "date": "2026-04-27T23:17:16.390Z",
         "userAvatar": "/assets/avatars/defaultAvatar.png",
         "userRated": 3,
-        "userComment": "Vulpes bonus expedita subiungo annus. Carpo coerceo thymum amplus depraedor cimentarius animus decimus. Vetus totus suasoria crebro trucido caritas quaerat."
+        "userComment": "Door frame repair was fine. A bit pricey for the scope of work but no complaints otherwise."
       },
       {
-        "jobType": "Plumbing",
+        "jobType": "Carpentry",
         "userName": "Aliyah Rosenbaum",
         "date": "2026-04-15T03:27:07.598Z",
         "userAvatar": "/assets/avatars/defaultAvatar.png",
         "userRated": 2,
-        "userComment": "Casso vulgaris suffoco amo venio causa suspendo cubicularis averto depereo. Subito peior bos. Nostrum caute unde pectus aegrus caput certe caveo."
+        "userComment": "She seemed rushed and it showed in the work. Had to touch up the edges myself."
       },
       {
         "jobType": "Carpentry",
@@ -647,31 +268,31 @@
         "date": "2025-12-03T13:00:16.863Z",
         "userAvatar": "/assets/avatars/defaultAvatar.png",
         "userRated": 5,
-        "userComment": "Sono praesentium audeo aliquid. Cubitum peior copiose cado soleo ultra assumenda. Testimonium sulum subito stella arx ullam antiquus."
+        "userComment": "She transformed our plain staircase into something really special. Absolutely loved the result."
       },
       {
-        "jobType": "Electrical",
+        "jobType": "Carpentry",
         "userName": "Estella Murazik",
         "date": "2025-11-04T22:30:00.323Z",
         "userAvatar": "/assets/avatars/defaultAvatar.png",
         "userRated": 1,
-        "userComment": "Tricesimus vigor deleo constans voluptatem deserunt. Argumentum laborum et. Itaque pecus claudeo cubicularis caute curis."
+        "userComment": "The shelves she installed pulled away from the wall within days. Complete waste of money."
       },
       {
-        "jobType": "Gardening",
+        "jobType": "Carpentry",
         "userName": "Mr. Alton Ritchie",
         "date": "2026-12-23T02:50:37.419Z",
         "userAvatar": "/assets/avatars/defaultAvatar.png",
         "userRated": 1,
-        "userComment": "Vitae ab valetudo. Argentum comes averto quia vobis tondeo. Tribuo adeo adnuo velit vos tibi aureus in repellendus."
+        "userComment": "Showed up without the right tools and had to reschedule. Poor planning and communication."
       },
       {
-        "jobType": "Plumbing",
+        "jobType": "Carpentry",
         "userName": "Jensen Farrell Jr.",
         "date": "2026-01-02T01:17:57.400Z",
         "userAvatar": "/assets/avatars/defaultAvatar.png",
         "userRated": 2,
-        "userComment": "Aegrus enim tripudio decens quibusdam sed articulus vinum. Minus comparo sordeo eius decumbo. Altus contabesco venio textilis auditor audio velut vulticulus."
+        "userComment": "Average work on the closet framing. Took longer than expected and felt overpriced."
       },
       {
         "jobType": "Carpentry",
@@ -679,31 +300,31 @@
         "date": "2027-01-20T19:04:54.552Z",
         "userAvatar": "/assets/avatars/defaultAvatar.png",
         "userRated": 4,
-        "userComment": "Vereor cilicium tergeo sursum. Sono beneficium ascisco attero reiciendis. Esse ara depopulo eius convoco carcer."
+        "userComment": "Great job on the kids' bunk bed frame. Sturdy, safe, and finished ahead of schedule."
       },
       {
-        "jobType": "Electrical",
+        "jobType": "Carpentry",
         "userName": "Robyn Dietrich",
         "date": "2025-12-19T05:34:54.893Z",
         "userAvatar": "/assets/avatars/defaultAvatar.png",
         "userRated": 4,
-        "userComment": "Utroque doloribus suffoco altus caste. Vitae urbs arceo succurro dedecor decet vacuus ipsum vergo. Denique bis curis dignissimos clibanus molestias tubineus."
+        "userComment": "Replaced my rotting porch boards and it looks great. Reasonable price for the quality."
       },
       {
-        "jobType": "Gardening",
+        "jobType": "Carpentry",
         "userName": "Ms. Minnie Bode",
         "date": "2026-03-05T10:54:46.952Z",
         "userAvatar": "/assets/avatars/defaultAvatar.png",
         "userRated": 4,
-        "userComment": "Spoliatio verto balbus. Aliquid sustineo constans assumenda advenio veniam earum ipsum repellendus aliquid. Audacia degero adaugeo cultellus viridis textor fugit."
+        "userComment": "She built a window seat with storage for our reading nook. Looks lovely and very practical."
       },
       {
-        "jobType": "Plumbing",
+        "jobType": "Carpentry",
         "userName": "Nyasia Kiehn",
         "date": "2025-06-28T20:40:03.588Z",
         "userAvatar": "/assets/avatars/defaultAvatar.png",
         "userRated": 5,
-        "userComment": "Defero adicio quasi ex comitatus admitto arbor illum tametsi nam. Argentum aliqua centum. Caute voluptas blanditiis arma canonicus doloribus tempus textor conculco canonicus."
+        "userComment": "Hired Sarah for a full kitchen reframe and the results were flawless. Highly recommend."
       },
       {
         "jobType": "Carpentry",
@@ -711,31 +332,31 @@
         "date": "2025-06-19T04:25:30.075Z",
         "userAvatar": "/assets/avatars/defaultAvatar.png",
         "userRated": 4,
-        "userComment": "Campana certe solitudo derelinquo audacia arcus theatrum tutis adimpleo subnecto. Atrocitas nemo vindico ventus aliquam. Sperno spiculum conforto beatae subnecto coepi debilito voluptatem beneficium debilito."
+        "userComment": "She built a really clean TV console unit for us. Good attention to detail and friendly too."
       },
       {
-        "jobType": "Electrical",
+        "jobType": "Carpentry",
         "userName": "Carmine Gibson",
         "date": "2025-06-06T12:54:28.605Z",
         "userAvatar": "/assets/avatars/defaultAvatar.png",
         "userRated": 1,
-        "userComment": "Carpo tametsi aptus amicitia audeo teneo coma statua iure. Labore surgo ducimus aegrus corrumpo acquiro statim creo. Thesis reiciendis uterque crux curia coaegresco sodalitas adamo excepturi tactus."
+        "userComment": "Measurements were off and the cabinet she built didn't fit the space. Very frustrating."
       },
       {
-        "jobType": "Gardening",
+        "jobType": "Carpentry",
         "userName": "Rhiannon Considine",
         "date": "2026-04-15T05:13:25.329Z",
         "userAvatar": "/assets/avatars/defaultAvatar.png",
         "userRated": 3,
-        "userComment": "Venio modi agnosco videlicet vitiosus utroque depulso. Defleo amoveo statua deripio tantum thymbra accusator desparatus. Nobis cognomen soleo aegrus cernuus soluta caritas."
+        "userComment": "She fixed our broken drawer slides. Quick job, fair price, nothing to complain about."
       },
       {
-        "jobType": "Plumbing",
+        "jobType": "Carpentry",
         "userName": "Gary McLaughlin",
         "date": "2026-12-03T14:28:26.458Z",
         "userAvatar": "/assets/avatars/defaultAvatar.png",
         "userRated": 3,
-        "userComment": "Vergo ancilla trado cupiditate molestias adaugeo cibo fugiat coniecto ab. Verecundia appositus demo universe denuo defessus aptus contigo. Minima adulatio dolorum altus modi viridis."
+        "userComment": "Installed crown molding in two rooms. Looks decent but a few corners aren't perfectly mitered."
       },
       {
         "jobType": "Carpentry",
@@ -743,172 +364,25 @@
         "date": "2025-05-27T10:06:46.492Z",
         "userAvatar": "/assets/avatars/defaultAvatar.png",
         "userRated": 2,
-        "userComment": "Subseco curis expedita commemoro candidus ager aspernatur crur necessitatibus tutis. Ipsam antea adversus vester sponte atrox substantia ulciscor. Sit delibero solvo."
-      },
-      {
-        "jobType": "Electrical",
-        "userName": "Byron Kris",
-        "date": "2025-07-06T12:35:32.362Z",
-        "userAvatar": "/assets/avatars/defaultAvatar.png",
-        "userRated": 2,
-        "userComment": "Doloribus depromo iure abundans. Curvo neque utroque amo venio coniecto deserunt. Atrocitas arcesso valeo iste chirographum conspergo."
-      },
-      {
-        "jobType": "Gardening",
-        "userName": "Mozelle Considine IV",
-        "date": "2026-10-05T01:04:21.396Z",
-        "userAvatar": "/assets/avatars/defaultAvatar.png",
-        "userRated": 4,
-        "userComment": "Accusamus demulceo minima. Desidero adversus ocer caritas accedo ciminatio paulatim. Sumptus demum verumtamen surgo subiungo tempore quaerat concedo auctus."
-      },
-      {
-        "jobType": "Plumbing",
-        "userName": "Kristen Hoeger",
-        "date": "2026-12-14T18:38:04.162Z",
-        "userAvatar": "/assets/avatars/defaultAvatar.png",
-        "userRated": 1,
-        "userComment": "Vicissitudo talis congregatio socius suasoria cattus complectus utique vespillo. Abstergo exercitationem consuasor crur quod animus curriculum. Demonstro supellex porro tum cohibeo possimus balbus temeritas solum amor."
-      },
-      {
-        "jobType": "Carpentry",
-        "userName": "Greg Hermiston",
-        "date": "2026-12-22T22:21:06.549Z",
-        "userAvatar": "/assets/avatars/defaultAvatar.png",
-        "userRated": 5,
-        "userComment": "Tres adsuesco ascisco angustus tonsor usus demoror. Comis vestrum cariosus accommodo depereo pauper verbera. Aveho aeternus creator."
-      },
-      {
-        "jobType": "Electrical",
-        "userName": "Shane Hilll III",
-        "date": "2026-09-22T02:05:42.605Z",
-        "userAvatar": "/assets/avatars/defaultAvatar.png",
-        "userRated": 1,
-        "userComment": "Sollicito valens surgo vinum. Autem accendo absconditus. Nostrum utilis termes aegrotatio alioqui usitas suppellex cinis."
-      },
-      {
-        "jobType": "Gardening",
-        "userName": "Stefanie Kemmer",
-        "date": "2027-03-13T20:41:56.831Z",
-        "userAvatar": "/assets/avatars/defaultAvatar.png",
-        "userRated": 1,
-        "userComment": "Dedico solutio amplexus sapiente calculus expedita comis solutio conventus laudantium. Vis tersus aperte summopere thymum. Spoliatio dolorum aliqua caveo virgo curia adsuesco alienus triumphus tepidus."
-      },
-      {
-        "jobType": "Plumbing",
-        "userName": "Conrad Schmeler",
-        "date": "2026-02-25T20:07:51.152Z",
-        "userAvatar": "/assets/avatars/defaultAvatar.png",
-        "userRated": 3,
-        "userComment": "Desolo coerceo tertius vilitas subiungo valde cinis cura culpa eius. Vito patruus carus adipisci. Tibi infit aedificium vae laboriosam tergum assentator adeo crepusculum."
-      },
-      {
-        "jobType": "Carpentry",
-        "userName": "Kristie Schmitt",
-        "date": "2026-12-29T17:30:40.850Z",
-        "userAvatar": "/assets/avatars/defaultAvatar.png",
-        "userRated": 2,
-        "userComment": "Creta summopere super. Cedo uterque sit paens deserunt vorago valens enim voluptate. Amicitia abeo conor credo depono."
-      },
-      {
-        "jobType": "Electrical",
-        "userName": "Harriet Heller",
-        "date": "2025-05-27T22:47:58.443Z",
-        "userAvatar": "/assets/avatars/defaultAvatar.png",
-        "userRated": 1,
-        "userComment": "Vorax utrimque amita atqui voluntarius eaque. Tum vicinus quae beatae patruus denique capitulus. Distinctio concedo sint concedo creptio vulariter."
-      },
-      {
-        "jobType": "Gardening",
-        "userName": "Rosie Wilkinson",
-        "date": "2026-02-25T14:28:57.348Z",
-        "userAvatar": "/assets/avatars/defaultAvatar.png",
-        "userRated": 4,
-        "userComment": "Acquiro fugit denique argentum caelum recusandae deorsum. Solio adversus curiositas contra substantia templum timor adhaero subiungo abbas. Via ademptio statim adicio vita claro colligo solum."
-      },
-      {
-        "jobType": "Plumbing",
-        "userName": "Jana Price Sr.",
-        "date": "2027-01-23T14:47:33.167Z",
-        "userAvatar": "/assets/avatars/defaultAvatar.png",
-        "userRated": 1,
-        "userComment": "Sed statim cotidie barba comminor cilicium credo vix. Verumtamen sursum amplitudo nihil candidus. Vinculum ultra delinquo cras urbanus desipio tenax totus defungo."
-      },
-      {
-        "jobType": "Carpentry",
-        "userName": "Jaiden Johnston",
-        "date": "2026-10-10T16:31:40.026Z",
-        "userAvatar": "/assets/avatars/defaultAvatar.png",
-        "userRated": 2,
-        "userComment": "Ea apto ater vere aveho triumphus ter cilicium toties. Crinis depraedor thesis aestus coerceo creator adsidue vitiosus compello stipes. Vinum viscus ventus cavus comprehendo spiculum."
-      },
-      {
-        "jobType": "Electrical",
-        "userName": "Lawrence Abernathy",
-        "date": "2026-05-02T06:09:28.218Z",
-        "userAvatar": "/assets/avatars/defaultAvatar.png",
-        "userRated": 2,
-        "userComment": "Ante cumque vulgaris averto vilis creator desipio canonicus. Contigo labore totus arbustum comes. Timidus crinis surgo arto explicabo suscipio."
-      },
-      {
-        "jobType": "Gardening",
-        "userName": "Heather Stark",
-        "date": "2027-03-24T22:06:46.476Z",
-        "userAvatar": "/assets/avatars/defaultAvatar.png",
-        "userRated": 5,
-        "userComment": "Tamisium magnam abeo denique spoliatio. Candidus laboriosam aiunt pauci tempora statim voro. Curtus defetiscor cotidie tertius."
-      },
-      {
-        "jobType": "Plumbing",
-        "userName": "Conrad Pacocha IV",
-        "date": "2025-09-05T15:33:51.286Z",
-        "userAvatar": "/assets/avatars/defaultAvatar.png",
-        "userRated": 2,
-        "userComment": "Damno cras taedium cometes vorago curto ventito arbustum denique decumbo. Uter depulso versus adeo officiis ulciscor. Taedium ubi amiculum comedo civis deripio vicinus solutio."
-      },
-      {
-        "jobType": "Carpentry",
-        "userName": "Alberta O'Keefe",
-        "date": "2027-04-04T15:25:14.453Z",
-        "userAvatar": "/assets/avatars/defaultAvatar.png",
-        "userRated": 5,
-        "userComment": "Bestia teres tantillus sunt tamen decerno cerno pecus. Deleo una supplanto eius defaeco video copia valde contabesco anser. Concido texo correptius maiores arcesso trucido sodalitas."
-      },
-      {
-        "jobType": "Electrical",
-        "userName": "Alberto Dare DDS",
-        "date": "2027-04-07T00:32:24.418Z",
-        "userAvatar": "/assets/avatars/defaultAvatar.png",
-        "userRated": 5,
-        "userComment": "Suadeo ver cauda iste esse ducimus tergum apto. Tenax degusto ex. Vesco porro deprimo suadeo delinquo statua."
-      },
-      {
-        "jobType": "Gardening",
-        "userName": "Wilbur Bernier-Lindgren",
-        "date": "2025-06-06T05:20:04.555Z",
-        "userAvatar": "/assets/avatars/defaultAvatar.png",
-        "userRated": 5,
-        "userComment": "Adimpleo cribro statua sit patruus terga bis. Defungo theologus bellicus creber sed sol video tamdiu accusamus comburo. Architecto ratione aveho alius."
+        "userComment": "The fence gate she built sticks and doesn't close properly. Still waiting on a fix."
       }
     ]
   },
   {
     "userID": 5169,
-    "name": "Katie Leannon",
+    "name": "Kevin Leannon",
     "avatar": "https://cdn.jsdelivr.net/gh/faker-js/assets-person-portrait/male/512/94.jpg",
     "price": 67,
     "workPhotos": [
-      "https://picsum.photos/seed/pfqiBMIo/800/800",
-      "https://picsum.photos/seed/XyFugZP3/800/800",
-      "https://picsum.photos/seed/787nV5Sl/800/800",
-      "https://picsum.photos/seed/Cdegs59F/800/800",
-      "https://picsum.photos/seed/VNoMIEsg/800/800",
-      "https://picsum.photos/seed/jMEWceCF/800/800",
-      "https://picsum.photos/seed/TAAu5Pyr/800/800",
-      "https://picsum.photos/seed/xXBI5ZvT/800/800",
-      "https://picsum.photos/seed/2D8zE79V/800/800",
-      "https://picsum.photos/seed/4LX7GwuE/800/800"
+      "https://production-next-images-cdn.thumbtack.com/i/477949785481674755/width/640.webp",
+      "https://production-next-images-cdn.thumbtack.com/i/477949792323313665/width/640.webp",
+      "https://production-next-images-cdn.thumbtack.com/i/473317519720079384/width/640.webp",
+      "https://production-next-images-cdn.thumbtack.com/i/473317517604929563/width/640.webp",
+      "https://production-next-images-cdn.thumbtack.com/i/473317516255182873/width/640.webp",
+      "https://production-next-images-cdn.thumbtack.com/i/473317511207182337/width/640.webp",
+      "https://production-next-images-cdn.thumbtack.com/i/473317510479200280/width/640.webp"
     ],
-    "aboutMe": "Carmen acies pax consectetur. Conduco condico vicissitudo taceo alius quasi arma absque. Explicabo vestrum titulus.\nAssumenda conqueror tristis adipiscor. Crapula argentum beatus vado voveo clarus. Pax voluptates perspiciatis demoror somnus acceptus conqueror talio.\nConatus surculus denego architecto. Conitor correptius supra quibusdam ambulo. Abeo commemoro deludo cedo tego adsum attonbitus.",
+    "aboutMe": "Hi there! I'm your go-to gardener for everything from routine lawn maintenance to creating your dream garden. With over 8 years of experience in landscape design and horticulture, I'm passionate about helping you nurture and beautify your outdoor spaces. I offer a wide range of services including garden design, lawn care, tree trimming, and seasonal planting. I believe every garden has potential, and I work with you to enhance your green space, whether it's a backyard retreat or a professional landscape. Let's make your garden flourish!",
     "averageRating": "4.9",
     "jobsCompleted": 67,
     "datesBooked": [],
@@ -919,859 +393,7 @@
         "date": "2026-08-09T18:41:21.728Z",
         "userAvatar": "/assets/avatars/defaultAvatar.png",
         "userRated": 3,
-        "userComment": "Usitas audax ustilo volo communis armarium capto pauper creta. Despecto trans combibo beatae suppono suggero. Cimentarius deleo fuga claro subseco."
-      },
-      {
-        "jobType": "Plumbing",
-        "userName": "Catharine Huel",
-        "date": "2026-03-10T04:31:53.040Z",
-        "userAvatar": "/assets/avatars/defaultAvatar.png",
-        "userRated": 5,
-        "userComment": "Adnuo sonitus curriculum amor textilis tutamen appello spiritus. Tantillus inventore advenio vinum uter arx cogo desolo. Nostrum despecto debitis ad comptus alias necessitatibus cohibeo aedificium."
-      },
-      {
-        "jobType": "Carpentry",
-        "userName": "Adeline Rau",
-        "date": "2026-01-16T10:20:53.834Z",
-        "userAvatar": "/assets/avatars/defaultAvatar.png",
-        "userRated": 3,
-        "userComment": "Acerbitas vesica circumvenio adaugeo nisi curriculum. Voco verbum auditor acceptus aeneus clibanus nulla altus tollo. Derideo a volup terreo voluptatem crur desipio callide tero antepono."
-      },
-      {
-        "jobType": "Electrical",
-        "userName": "Osborne Brown",
-        "date": "2027-02-19T14:37:00.206Z",
-        "userAvatar": "/assets/avatars/defaultAvatar.png",
-        "userRated": 2,
-        "userComment": "Dedecor undique angelus dolorem laborum abstergo talio sollicito. Decens tum attero crastinus quos sophismata. Delinquo vigor ait vulnus advenio cattus utroque caute aestivus."
-      },
-      {
-        "jobType": "Gardening",
-        "userName": "Jessica Smitham",
-        "date": "2026-06-19T13:58:22.179Z",
-        "userAvatar": "/assets/avatars/defaultAvatar.png",
-        "userRated": 5,
-        "userComment": "Et comedo trucido subseco comedo virtus. Defessus arguo curatio. Comis cresco toties thorax turpis usus coadunatio coruscus ipsam."
-      },
-      {
-        "jobType": "Plumbing",
-        "userName": "James Champlin",
-        "date": "2025-09-11T13:24:48.747Z",
-        "userAvatar": "/assets/avatars/defaultAvatar.png",
-        "userRated": 3,
-        "userComment": "Aestivus clamo ascisco degenero conscendo cubo decumbo deporto. Voluptatem acsi ante patior tamisium minima usitas. Accusator sophismata quod."
-      },
-      {
-        "jobType": "Carpentry",
-        "userName": "Colt Keeling",
-        "date": "2025-08-30T23:35:57.945Z",
-        "userAvatar": "/assets/avatars/defaultAvatar.png",
-        "userRated": 4,
-        "userComment": "Truculenter vaco delinquo repellendus thymbra. Caelestis dedico absconditus angelus ademptio tertius sopor. Porro caste adsidue balbus spes pectus usque."
-      },
-      {
-        "jobType": "Electrical",
-        "userName": "Alfonzo Weber",
-        "date": "2026-11-26T07:40:18.001Z",
-        "userAvatar": "/assets/avatars/defaultAvatar.png",
-        "userRated": 1,
-        "userComment": "Cribro bardus adstringo praesentium cornu denuncio quibusdam timidus. Sophismata fuga censura autem. Conscendo thesaurus audacia asper."
-      },
-      {
-        "jobType": "Gardening",
-        "userName": "Gabrielle Beier DDS",
-        "date": "2025-07-05T19:04:48.485Z",
-        "userAvatar": "/assets/avatars/defaultAvatar.png",
-        "userRated": 2,
-        "userComment": "Acerbitas eligendi suscipio aegrus. Circumvenio certe infit. Ara aro deripio."
-      },
-      {
-        "jobType": "Plumbing",
-        "userName": "Kara Rohan MD",
-        "date": "2025-05-15T16:31:43.260Z",
-        "userAvatar": "/assets/avatars/defaultAvatar.png",
-        "userRated": 5,
-        "userComment": "Depopulo argumentum aperte candidus suppellex averto balbus labore. Amet corpus saepe derelinquo ascit nobis amoveo blanditiis. Abundans trucido umbra abeo voluntarius."
-      },
-      {
-        "jobType": "Carpentry",
-        "userName": "Frankie Kreiger",
-        "date": "2026-11-15T08:21:34.561Z",
-        "userAvatar": "/assets/avatars/defaultAvatar.png",
-        "userRated": 4,
-        "userComment": "Undique sublime admoneo cervus voluptas. Sponte vir virgo verecundia damnatio adulatio. Ager comis officiis turba usque paens aestas tutamen utrum."
-      },
-      {
-        "jobType": "Electrical",
-        "userName": "Louis McGlynn PhD",
-        "date": "2026-08-14T15:27:36.611Z",
-        "userAvatar": "/assets/avatars/defaultAvatar.png",
-        "userRated": 1,
-        "userComment": "Triduana amor temperantia. Delectus arma surgo utroque assumenda totus clam. Surculus adversus volaticus vado carcer utroque."
-      },
-      {
-        "jobType": "Gardening",
-        "userName": "Maximilian Langworth",
-        "date": "2027-03-14T16:46:58.074Z",
-        "userAvatar": "/assets/avatars/defaultAvatar.png",
-        "userRated": 1,
-        "userComment": "Angustus aro supplanto conduco. Cribro agnitio doloremque. Tenax canis tabula vereor amplexus attero amplexus."
-      },
-      {
-        "jobType": "Plumbing",
-        "userName": "Carrie Collier",
-        "date": "2025-05-11T02:52:44.077Z",
-        "userAvatar": "/assets/avatars/defaultAvatar.png",
-        "userRated": 1,
-        "userComment": "Candidus acquiro illo pax vita. Beatae creo unus. Collum thema custodia amiculum vita ceno."
-      },
-      {
-        "jobType": "Carpentry",
-        "userName": "Ezekiel Bailey",
-        "date": "2026-01-22T17:49:08.131Z",
-        "userAvatar": "/assets/avatars/defaultAvatar.png",
-        "userRated": 3,
-        "userComment": "Soleo sapiente virga voro. Causa vos crustulum fugit culpo desipio conventus claudeo culpo. Cupio dolor ab patior cupiditate exercitationem umerus commodo sulum crepusculum."
-      },
-      {
-        "jobType": "Electrical",
-        "userName": "Estell Fadel",
-        "date": "2026-09-15T15:31:59.774Z",
-        "userAvatar": "/assets/avatars/defaultAvatar.png",
-        "userRated": 4,
-        "userComment": "Animadverto pauper tremo cuppedia dedecor angulus tremo turbo rem aurum. Adulatio urbanus avaritia tergeo vetus corrupti. Celer ante arca adipiscor asporto defendo."
-      },
-      {
-        "jobType": "Gardening",
-        "userName": "Christina Harvey-Swift",
-        "date": "2025-10-10T07:58:45.474Z",
-        "userAvatar": "/assets/avatars/defaultAvatar.png",
-        "userRated": 1,
-        "userComment": "Crastinus vester succedo absorbeo vomer correptius quo traho. Abeo tracto eum accendo adnuo qui tricesimus curiositas decimus totus. Vilitas thorax abbas verecundia corrigo placeat balbus utilis crudelis."
-      },
-      {
-        "jobType": "Plumbing",
-        "userName": "Daphney Cassin",
-        "date": "2026-12-12T11:59:00.191Z",
-        "userAvatar": "/assets/avatars/defaultAvatar.png",
-        "userRated": 5,
-        "userComment": "Basium facilis decet apto audacia. Dens considero votum adversus temporibus appositus asporto cena baiulus. Absque antiquus assumenda."
-      },
-      {
-        "jobType": "Carpentry",
-        "userName": "Gregg Legros-Hand",
-        "date": "2026-02-21T00:00:48.804Z",
-        "userAvatar": "/assets/avatars/defaultAvatar.png",
-        "userRated": 1,
-        "userComment": "Carcer tardus ullam nulla vigilo acceptus. Soluta vestigium tandem antepono ad compono clarus tersus. Pax terga commemoro creo vere advenio spiritus thorax non teres."
-      },
-      {
-        "jobType": "Electrical",
-        "userName": "Mr. Sherman Zemlak",
-        "date": "2025-12-11T12:57:49.373Z",
-        "userAvatar": "/assets/avatars/defaultAvatar.png",
-        "userRated": 2,
-        "userComment": "Congregatio demonstro congregatio clarus suscipio iure viduo tyrannus amissio volutabrum. Attero taedium verumtamen caecus amaritudo clam advenio vindico desolo. Amplus aspicio absconditus amissio casso velociter aliqua sono culpo."
-      },
-      {
-        "jobType": "Gardening",
-        "userName": "Tyrell Schimmel",
-        "date": "2026-08-02T22:50:11.715Z",
-        "userAvatar": "/assets/avatars/defaultAvatar.png",
-        "userRated": 5,
-        "userComment": "Aegrus color casus demoror. Eos dicta absque voluptate ara defetiscor. Summisse vox paens."
-      },
-      {
-        "jobType": "Plumbing",
-        "userName": "Sadie Hilll",
-        "date": "2026-07-19T06:38:46.531Z",
-        "userAvatar": "/assets/avatars/defaultAvatar.png",
-        "userRated": 3,
-        "userComment": "Casus decretum tabula carmen terra cui. Circumvenio calculus illo curo vos arguo cum. Ceno non approbo clibanus cervus alius clementia spiculum."
-      },
-      {
-        "jobType": "Carpentry",
-        "userName": "Enrique Block",
-        "date": "2026-06-26T06:21:11.871Z",
-        "userAvatar": "/assets/avatars/defaultAvatar.png",
-        "userRated": 1,
-        "userComment": "Theatrum similique balbus. Barba eaque perferendis vulgus catena confido tenuis assentator thesis. Suppono socius repudiandae accedo adduco adversus aliquid utor summisse."
-      },
-      {
-        "jobType": "Electrical",
-        "userName": "Keven Hagenes",
-        "date": "2025-12-04T03:59:14.968Z",
-        "userAvatar": "/assets/avatars/defaultAvatar.png",
-        "userRated": 4,
-        "userComment": "Vado degero asporto ventus. Id thesis velum agnosco vix decet pax varius canonicus tertius. Abutor earum supplanto audeo."
-      },
-      {
-        "jobType": "Gardening",
-        "userName": "Delfina Stokes",
-        "date": "2026-06-27T04:01:58.439Z",
-        "userAvatar": "/assets/avatars/defaultAvatar.png",
-        "userRated": 2,
-        "userComment": "Asporto spectaculum suus. Una bardus et spes vulnus. Stabilis tero absum caput spiculum cauda illo inflammatio qui."
-      },
-      {
-        "jobType": "Plumbing",
-        "userName": "Tierra Bauch",
-        "date": "2026-12-01T04:32:42.947Z",
-        "userAvatar": "/assets/avatars/defaultAvatar.png",
-        "userRated": 1,
-        "userComment": "Aut deripio turba audeo uter. Vel basium coniuratio. Alius altus dens adfectus delicate excepturi debeo conspergo appono tum."
-      },
-      {
-        "jobType": "Carpentry",
-        "userName": "Laurence Wintheiser",
-        "date": "2025-12-07T23:22:27.973Z",
-        "userAvatar": "/assets/avatars/defaultAvatar.png",
-        "userRated": 3,
-        "userComment": "Sperno acquiro defessus careo canis quas audio. Desolo territo depereo cupiditas. Considero acceptus amet libero ad sordeo abundans coadunatio."
-      },
-      {
-        "jobType": "Electrical",
-        "userName": "Silvia Cartwright",
-        "date": "2025-12-21T06:49:30.784Z",
-        "userAvatar": "/assets/avatars/defaultAvatar.png",
-        "userRated": 2,
-        "userComment": "Deripio armarium comes. Aetas trado vulnus. Conatus fuga depopulo atqui."
-      },
-      {
-        "jobType": "Gardening",
-        "userName": "Gage Maggio",
-        "date": "2025-12-30T18:12:34.266Z",
-        "userAvatar": "/assets/avatars/defaultAvatar.png",
-        "userRated": 2,
-        "userComment": "Adfero conforto vacuus. Articulus stella cogito temporibus molestiae veritas antiquus apparatus decens doloremque. Amitto cornu corpus tum contabesco decipio toties absconditus amet aggero."
-      },
-      {
-        "jobType": "Plumbing",
-        "userName": "Joy Hills",
-        "date": "2026-01-23T15:39:15.574Z",
-        "userAvatar": "/assets/avatars/defaultAvatar.png",
-        "userRated": 3,
-        "userComment": "Ara tego clam adiuvo dicta reiciendis constans tactus. Cursim confugo error creber tendo uberrime casso. Ambitus calamitas tricesimus catena vindico voluptatibus corroboro uxor."
-      },
-      {
-        "jobType": "Carpentry",
-        "userName": "Shakira Schowalter",
-        "date": "2027-03-24T07:47:56.556Z",
-        "userAvatar": "/assets/avatars/defaultAvatar.png",
-        "userRated": 5,
-        "userComment": "Vacuus vis assentator sed theca doloribus. Conculco addo iusto cubicularis cupiditate atque. Vulariter vallum ars attollo."
-      },
-      {
-        "jobType": "Electrical",
-        "userName": "Ray Cartwright-Pagac",
-        "date": "2025-10-24T22:23:25.805Z",
-        "userAvatar": "/assets/avatars/defaultAvatar.png",
-        "userRated": 2,
-        "userComment": "Audax degero qui curo voco repellendus culpa. Voluptates vulticulus compono cibus cui victus. Vinculum comes mollitia vito subseco certe."
-      },
-      {
-        "jobType": "Gardening",
-        "userName": "Octavia Walsh PhD",
-        "date": "2026-09-23T16:01:39.414Z",
-        "userAvatar": "/assets/avatars/defaultAvatar.png",
-        "userRated": 2,
-        "userComment": "Pel adimpleo corona. Addo statua ultio armarium claudeo argumentum. Arbitro pecto carbo tepesco."
-      },
-      {
-        "jobType": "Plumbing",
-        "userName": "Nora Schoen",
-        "date": "2027-01-28T22:58:24.094Z",
-        "userAvatar": "/assets/avatars/defaultAvatar.png",
-        "userRated": 1,
-        "userComment": "Talus cultellus ocer vulgus valeo. Vestigium aggero aperte defendo usitas sordeo crinis. Ventus tardus audax acies certe usitas canto tergiversatio."
-      },
-      {
-        "jobType": "Carpentry",
-        "userName": "Mrs. Violette Hackett V",
-        "date": "2025-10-20T01:35:24.754Z",
-        "userAvatar": "/assets/avatars/defaultAvatar.png",
-        "userRated": 2,
-        "userComment": "Occaecati cibus autem adsum cursus voluptates paulatim arguo audacia. Laudantium armarium crur alter alo. Sustineo adflicto patruus demitto vester atque."
-      },
-      {
-        "jobType": "Electrical",
-        "userName": "Joesph Walker",
-        "date": "2025-04-22T06:37:08.567Z",
-        "userAvatar": "/assets/avatars/defaultAvatar.png",
-        "userRated": 1,
-        "userComment": "Viduo cursus comes. Impedit non conforto ater umbra tamquam. Stipes asporto sapiente tabgo pauci temeritas accedo unde vindico caput."
-      },
-      {
-        "jobType": "Gardening",
-        "userName": "Jacklyn Gulgowski",
-        "date": "2026-01-27T10:18:22.413Z",
-        "userAvatar": "/assets/avatars/defaultAvatar.png",
-        "userRated": 1,
-        "userComment": "Attonbitus deprecator rem vestrum iusto. Utrimque soleo casus pariatur. Causa minima suggero adduco argumentum minus usque cruentus temperantia delectatio."
-      },
-      {
-        "jobType": "Plumbing",
-        "userName": "Danny Gutkowski",
-        "date": "2026-11-16T03:33:56.553Z",
-        "userAvatar": "/assets/avatars/defaultAvatar.png",
-        "userRated": 1,
-        "userComment": "Audio cum conatus minus similique ventito tracto. Caelum caste labore atqui dolores nemo utilis teneo adsum. Urbanus vulgaris adinventitias vetus speculum aurum perferendis teres cilicium."
-      },
-      {
-        "jobType": "Carpentry",
-        "userName": "Alan Nikolaus",
-        "date": "2025-04-18T18:30:16.640Z",
-        "userAvatar": "/assets/avatars/defaultAvatar.png",
-        "userRated": 5,
-        "userComment": "Praesentium agnitio denique alter tot defero suadeo torrens. Veritas amor hic uterque quaerat. Solum neque corrumpo color."
-      },
-      {
-        "jobType": "Electrical",
-        "userName": "Flossie Shields",
-        "date": "2025-11-12T05:00:26.857Z",
-        "userAvatar": "/assets/avatars/defaultAvatar.png",
-        "userRated": 3,
-        "userComment": "Solus vomer curia amiculum approbo centum. Aureus statim somnus tantillus decor commodi. Audio desipio aveho aegrus talio bellum aequitas vereor amicitia."
-      },
-      {
-        "jobType": "Gardening",
-        "userName": "Arlie Maggio-Streich",
-        "date": "2025-09-11T12:40:18.686Z",
-        "userAvatar": "/assets/avatars/defaultAvatar.png",
-        "userRated": 1,
-        "userComment": "Perferendis vespillo tabgo vinum paulatim vulgaris deprimo voluptatibus viriliter tristis. Reprehenderit creta thorax tunc aspernatur. Defessus angulus conduco vulticulus conventus cornu debeo."
-      },
-      {
-        "jobType": "Plumbing",
-        "userName": "Jeffrey Gerhold PhD",
-        "date": "2025-08-05T16:10:46.403Z",
-        "userAvatar": "/assets/avatars/defaultAvatar.png",
-        "userRated": 5,
-        "userComment": "Voro sustineo conventus timor. Adnuo colligo tergum. Cura velit amita conspergo excepturi architecto modi convoco thymbra tenetur."
-      },
-      {
-        "jobType": "Carpentry",
-        "userName": "Ernest Hudson",
-        "date": "2026-07-18T08:54:03.302Z",
-        "userAvatar": "/assets/avatars/defaultAvatar.png",
-        "userRated": 1,
-        "userComment": "Avarus deduco consuasor dolor sufficio catena enim aggredior. Cunabula tamquam vulariter accusantium sollers dedecor. Cur animadverto velit sublime accusator natus depulso umbra nihil."
-      },
-      {
-        "jobType": "Electrical",
-        "userName": "Ms. Katelynn Rowe",
-        "date": "2025-09-09T22:28:11.649Z",
-        "userAvatar": "/assets/avatars/defaultAvatar.png",
-        "userRated": 5,
-        "userComment": "Modi ceno animadverto possimus angulus adipisci constans tabesco voluptates admiratio. Quos audentia pecus vigilo vox. Autus velociter tamquam apparatus ventito vulticulus strues."
-      },
-      {
-        "jobType": "Gardening",
-        "userName": "Jeanette Spencer IV",
-        "date": "2026-07-27T21:56:03.512Z",
-        "userAvatar": "/assets/avatars/defaultAvatar.png",
-        "userRated": 2,
-        "userComment": "Ademptio defungo atqui tredecim vomica cuius tenuis arma cras. Quidem villa ustulo antepono corroboro trucido alter temeritas. Thema antiquus amplexus color cubo."
-      },
-      {
-        "jobType": "Plumbing",
-        "userName": "Bruce Leffler",
-        "date": "2026-08-03T14:39:45.601Z",
-        "userAvatar": "/assets/avatars/defaultAvatar.png",
-        "userRated": 3,
-        "userComment": "Torrens vicissitudo ultio totus convoco. Consuasor terebro amor vilicus demens dolore tot capitulus eum voluptates. Supplanto dapifer sollers conculco acsi."
-      },
-      {
-        "jobType": "Carpentry",
-        "userName": "Kendall Morissette",
-        "date": "2025-08-09T10:56:32.950Z",
-        "userAvatar": "/assets/avatars/defaultAvatar.png",
-        "userRated": 5,
-        "userComment": "Vos cupio ter. Curriculum appello summa suasoria adinventitias adulescens. Aegrus decumbo somniculosus culpo creator totidem demitto."
-      },
-      {
-        "jobType": "Electrical",
-        "userName": "Verna Collier PhD",
-        "date": "2026-11-08T22:43:03.919Z",
-        "userAvatar": "/assets/avatars/defaultAvatar.png",
-        "userRated": 4,
-        "userComment": "Via possimus ipsa crebro condico sublime. Textor tempus volva curiositas aestus accommodo triduana laborum. Cornu speciosus debeo desipio aufero coma arcus vulnus comptus curtus."
-      },
-      {
-        "jobType": "Gardening",
-        "userName": "Kelley Jacobi",
-        "date": "2026-12-08T04:56:18.763Z",
-        "userAvatar": "/assets/avatars/defaultAvatar.png",
-        "userRated": 5,
-        "userComment": "Colo taceo repudiandae vociferor vulnus vereor asporto. Caelestis voluptas thermae terror collum ambulo. Abbas tristis cometes voluptas succedo sumptus decipio vero templum."
-      },
-      {
-        "jobType": "Plumbing",
-        "userName": "Mercedes Hyatt",
-        "date": "2026-09-04T16:16:52.461Z",
-        "userAvatar": "/assets/avatars/defaultAvatar.png",
-        "userRated": 5,
-        "userComment": "Tumultus thesis quidem dedecor vesica caecus in tum uterque. Avarus ademptio ars. Velociter necessitatibus surculus currus pecto pariatur est."
-      },
-      {
-        "jobType": "Carpentry",
-        "userName": "Kyra Botsford",
-        "date": "2026-03-18T13:07:51.563Z",
-        "userAvatar": "/assets/avatars/defaultAvatar.png",
-        "userRated": 1,
-        "userComment": "Triduana utilis tibi accusantium saepe versus apparatus centum. Synagoga reiciendis calcar cupiditas. Temperantia vinum cupressus cum."
-      },
-      {
-        "jobType": "Electrical",
-        "userName": "Queenie Vandervort",
-        "date": "2026-02-27T23:22:09.436Z",
-        "userAvatar": "/assets/avatars/defaultAvatar.png",
-        "userRated": 3,
-        "userComment": "Vir tribuo nesciunt ex iusto architecto cursim delibero desidero defessus. Theatrum cometes combibo ater ademptio occaecati utilis contabesco aeger. Comis auditor sonitus corporis cuius amoveo capitulus."
-      },
-      {
-        "jobType": "Gardening",
-        "userName": "Mr. Earnest Schinner",
-        "date": "2026-09-11T17:00:01.579Z",
-        "userAvatar": "/assets/avatars/defaultAvatar.png",
-        "userRated": 3,
-        "userComment": "Ciminatio conatus attonbitus patruus utor ullus rem carcer. Suus vergo arcus talio ventito patrocinor aetas quas super. Canonicus timidus vigor adeptio tempore tandem."
-      },
-      {
-        "jobType": "Plumbing",
-        "userName": "Lafayette Blanda PhD",
-        "date": "2026-08-01T15:17:38.303Z",
-        "userAvatar": "/assets/avatars/defaultAvatar.png",
-        "userRated": 1,
-        "userComment": "Aetas tero arguo vomito creo totidem varius summa. Temeritas delego alius voro. Eius pax vicinus pariatur voluptates stips."
-      },
-      {
-        "jobType": "Carpentry",
-        "userName": "Elroy Witting",
-        "date": "2026-12-08T06:38:42.443Z",
-        "userAvatar": "/assets/avatars/defaultAvatar.png",
-        "userRated": 5,
-        "userComment": "Absconditus consequatur caritas cras magnam claro amplus. Catena umerus degenero ciminatio tendo barba aperio tremo versus avaritia. Itaque perspiciatis supellex utilis coepi."
-      },
-      {
-        "jobType": "Electrical",
-        "userName": "Eunice Friesen",
-        "date": "2026-09-07T02:29:17.431Z",
-        "userAvatar": "/assets/avatars/defaultAvatar.png",
-        "userRated": 5,
-        "userComment": "Cresco ab speculum. Terror angulus voro careo vilitas avaritia quo acerbitas blanditiis voluptate. Attonbitus solitudo omnis contigo avarus aetas adficio vis."
-      },
-      {
-        "jobType": "Gardening",
-        "userName": "Connie Gutmann",
-        "date": "2026-06-11T02:11:41.849Z",
-        "userAvatar": "/assets/avatars/defaultAvatar.png",
-        "userRated": 5,
-        "userComment": "Vallum bis adficio conculco depereo thymbra rerum. Porro vulgo turpis vulgo acquiro amaritudo tolero adsum conicio. Cum teneo conatus magni repellendus veniam."
-      },
-      {
-        "jobType": "Plumbing",
-        "userName": "Walter Tillman-O'Keefe",
-        "date": "2026-11-09T13:50:40.338Z",
-        "userAvatar": "/assets/avatars/defaultAvatar.png",
-        "userRated": 3,
-        "userComment": "Corona corona vilis accendo. Quidem vitium sed corpus. Audax tener acquiro celebrer cedo tibi sustineo calculus."
-      },
-      {
-        "jobType": "Carpentry",
-        "userName": "Adaline Kunze",
-        "date": "2027-02-21T21:11:43.420Z",
-        "userAvatar": "/assets/avatars/defaultAvatar.png",
-        "userRated": 3,
-        "userComment": "Acies nulla cohaero. Carcer vester tutis adopto commemoro cenaculum patria debeo absens defleo. Addo adamo nisi surgo vitae utor ab corona."
-      },
-      {
-        "jobType": "Electrical",
-        "userName": "Mr. Philip Reinger",
-        "date": "2025-10-04T05:40:56.439Z",
-        "userAvatar": "/assets/avatars/defaultAvatar.png",
-        "userRated": 1,
-        "userComment": "Pax ratione aer currus tum error caput surgo demulceo. Celer admitto volup voveo vulgaris blanditiis degenero valeo conduco. Crastinus valde advoco atqui nemo neque aggero alveus recusandae carbo."
-      },
-      {
-        "jobType": "Gardening",
-        "userName": "Mr. Bridie Toy II",
-        "date": "2026-07-20T03:40:05.421Z",
-        "userAvatar": "/assets/avatars/defaultAvatar.png",
-        "userRated": 3,
-        "userComment": "Aureus vinitor ultra anser tollo audio. Amplus voluptatibus cras. Venia derideo sustineo cervus capillus aureus consectetur templum."
-      },
-      {
-        "jobType": "Plumbing",
-        "userName": "Nichole Fay",
-        "date": "2025-05-09T19:34:00.991Z",
-        "userAvatar": "/assets/avatars/defaultAvatar.png",
-        "userRated": 4,
-        "userComment": "Supra cursus abundans. Cognatus quo nesciunt truculenter tenetur adulatio studio subvenio. Absum temptatio vos comes cohibeo ea creber."
-      },
-      {
-        "jobType": "Carpentry",
-        "userName": "Bessie Hauck",
-        "date": "2025-10-24T00:27:51.337Z",
-        "userAvatar": "/assets/avatars/defaultAvatar.png",
-        "userRated": 4,
-        "userComment": "Tenetur bardus caelum victus strues. Excepturi caecus auctor desparatus patrocinor. Doloribus thalassinus corrupti."
-      },
-      {
-        "jobType": "Electrical",
-        "userName": "Judy Moen",
-        "date": "2026-11-17T18:40:36.257Z",
-        "userAvatar": "/assets/avatars/defaultAvatar.png",
-        "userRated": 3,
-        "userComment": "Calamitas cum cenaculum. Adsuesco accommodo doloremque ustilo. Ater vociferor canonicus tondeo comis cervus."
-      },
-      {
-        "jobType": "Gardening",
-        "userName": "Jonathon Leffler",
-        "date": "2025-11-26T09:18:26.487Z",
-        "userAvatar": "/assets/avatars/defaultAvatar.png",
-        "userRated": 3,
-        "userComment": "Eligendi defero urbs maiores error dolore tempore acidus stabilis vesper. Volutabrum canonicus vetus necessitatibus. Surgo sophismata vilitas tabgo tergeo dedecor valeo."
-      },
-      {
-        "jobType": "Plumbing",
-        "userName": "Norbert Larkin MD",
-        "date": "2026-01-01T14:04:06.810Z",
-        "userAvatar": "/assets/avatars/defaultAvatar.png",
-        "userRated": 3,
-        "userComment": "Ver coma aegrus cotidie tristis. Cicuta aliqua hic subito numquam delectatio. Suscipio ventosus ascit veniam dapifer."
-      },
-      {
-        "jobType": "Carpentry",
-        "userName": "Dr. Kraig Yost",
-        "date": "2026-12-06T10:02:58.875Z",
-        "userAvatar": "/assets/avatars/defaultAvatar.png",
-        "userRated": 3,
-        "userComment": "Benevolentia tracto quae. Attollo sophismata atavus vilis aperte ultio defleo acquiro damnatio aro. Absens pauci solium thalassinus decet corporis."
-      }
-    ]
-  },
-  {
-    "userID": 359,
-    "name": "Mr. Stuart Lockman-Howe",
-    "avatar": "https://cdn.jsdelivr.net/gh/faker-js/assets-person-portrait/male/512/7.jpg",
-    "price": 15,
-    "workPhotos": [
-      "https://picsum.photos/seed/TnwZekqi/800/800",
-      "https://picsum.photos/seed/mgotXgUE/800/800",
-      "https://picsum.photos/seed/Vw82clj5/800/800",
-      "https://picsum.photos/seed/4bI0QCKC/800/800",
-      "https://picsum.photos/seed/xsJye9FJ/800/800",
-      "https://picsum.photos/seed/BDuXn2qE/800/800",
-      "https://picsum.photos/seed/zoNJALbn/800/800",
-      "https://picsum.photos/seed/om8EIaT1/800/800",
-      "https://picsum.photos/seed/QStOJ7S6/800/800"
-    ],
-    "aboutMe": "Aperiam viridis tener. Nobis commodo clarus vicissitudo sapiente conor viduo nisi caelestis illum. Damnatio atrocitas umbra.\nAsporto dignissimos accusantium sulum asporto succurro uredo thymum. Candidus dignissimos curso templum concedo ago assumenda appono. Torrens torrens omnis alter.",
-    "averageRating": "4.9",
-    "jobsCompleted": 15,
-    "datesBooked": [],
-    "ratings": [
-      {
-        "jobType": "Gardening",
-        "userName": "Kory Maggio",
-        "date": "2026-06-30T01:23:33.108Z",
-        "userAvatar": "/assets/avatars/defaultAvatar.png",
-        "userRated": 3,
-        "userComment": "Teres advoco adaugeo aro. Speculum suadeo tamisium tabgo amplexus aduro vorago conforto atavus adicio. Vindico suscipio tui voluptates arca degero crur tendo."
-      },
-      {
-        "jobType": "Plumbing",
-        "userName": "Marcia Nitzsche",
-        "date": "2026-10-13T12:20:46.594Z",
-        "userAvatar": "/assets/avatars/defaultAvatar.png",
-        "userRated": 3,
-        "userComment": "Infit talis aequitas sumptus denique vigilo trepide comparo. Autem usitas denuo triumphus unde vinco bibo perspiciatis. Adiuvo vesco illo condico hic texo accedo denuncio."
-      },
-      {
-        "jobType": "Carpentry",
-        "userName": "Rosalia Casper",
-        "date": "2025-05-12T13:30:19.158Z",
-        "userAvatar": "/assets/avatars/defaultAvatar.png",
-        "userRated": 3,
-        "userComment": "Color cultellus tego. Complectus argumentum templum pel magnam. Thesis cupiditas teres."
-      },
-      {
-        "jobType": "Electrical",
-        "userName": "Rhonda Lang",
-        "date": "2025-10-12T07:56:27.888Z",
-        "userAvatar": "/assets/avatars/defaultAvatar.png",
-        "userRated": 3,
-        "userComment": "Earum corrumpo censura solutio dignissimos tibi ex tendo vulnero tepidus. Cui administratio demens delicate vespillo verecundia. Cresco soleo amoveo utroque deorsum sed patrocinor."
-      },
-      {
-        "jobType": "Gardening",
-        "userName": "Magnolia Breitenberg",
-        "date": "2026-06-24T02:11:10.427Z",
-        "userAvatar": "/assets/avatars/defaultAvatar.png",
-        "userRated": 3,
-        "userComment": "Arma vinco odit ante vorax celebrer aduro tenus voluntarius. Depono suffoco vis ventus. Damno cibo aperio totam viduo."
-      },
-      {
-        "jobType": "Plumbing",
-        "userName": "Tristian Feeney",
-        "date": "2025-11-11T14:45:45.797Z",
-        "userAvatar": "/assets/avatars/defaultAvatar.png",
-        "userRated": 5,
-        "userComment": "Reiciendis cumque officiis vorago attonbitus decor decretum. Adsuesco tersus cattus necessitatibus statua stipes stillicidium arbustum socius cuppedia. Sui solus adicio ater deinde sordeo subiungo tyrannus capillus."
-      },
-      {
-        "jobType": "Carpentry",
-        "userName": "Bertram Lang",
-        "date": "2025-09-27T06:17:41.123Z",
-        "userAvatar": "/assets/avatars/defaultAvatar.png",
-        "userRated": 1,
-        "userComment": "Aperte vallum sed articulus supra cohors exercitationem alveus conicio vinculum. Super sapiente auctus substantia creator demoror audentia bonus temptatio. Stips curiositas aqua beatus alo."
-      },
-      {
-        "jobType": "Electrical",
-        "userName": "Dewey Leffler MD",
-        "date": "2026-05-15T19:12:21.222Z",
-        "userAvatar": "/assets/avatars/defaultAvatar.png",
-        "userRated": 3,
-        "userComment": "Cilicium comes accusamus. Dolorum saepe cras exercitationem. Dedico ante labore qui."
-      },
-      {
-        "jobType": "Gardening",
-        "userName": "Schuyler Shanahan",
-        "date": "2025-10-16T00:51:03.870Z",
-        "userAvatar": "/assets/avatars/defaultAvatar.png",
-        "userRated": 5,
-        "userComment": "Astrum delego sum triduana communis audio. Esse conitor quam theologus. Bestia cinis thermae deleo valeo volubilis desino odio derideo tenax."
-      },
-      {
-        "jobType": "Plumbing",
-        "userName": "Coy Fadel",
-        "date": "2026-06-23T21:46:39.681Z",
-        "userAvatar": "/assets/avatars/defaultAvatar.png",
-        "userRated": 1,
-        "userComment": "Absorbeo defero venustas adsum contabesco colo deleo. Adimpleo traho trado vorago decumbo vesica ventito tricesimus. Virgo fugiat surgo admoneo arbor voluptas totam vespillo alo urbanus."
-      },
-      {
-        "jobType": "Carpentry",
-        "userName": "Everett Dare",
-        "date": "2026-09-18T13:06:32.959Z",
-        "userAvatar": "/assets/avatars/defaultAvatar.png",
-        "userRated": 4,
-        "userComment": "Vita decumbo conforto currus. Spiritus amaritudo angustus celebrer vitiosus depereo et video. Tutamen aliquam benigne corrumpo statim thesaurus traho."
-      },
-      {
-        "jobType": "Electrical",
-        "userName": "Giovanny Jaskolski",
-        "date": "2026-02-25T22:16:11.334Z",
-        "userAvatar": "/assets/avatars/defaultAvatar.png",
-        "userRated": 2,
-        "userComment": "Basium decor urbs harum administratio rerum animi conscendo. Capto suppellex damnatio celer defungo succedo arto centum corrigo. Ait utpote benevolentia carcer cornu ubi summa."
-      },
-      {
-        "jobType": "Gardening",
-        "userName": "Krista Kohler",
-        "date": "2025-10-19T08:10:15.815Z",
-        "userAvatar": "/assets/avatars/defaultAvatar.png",
-        "userRated": 2,
-        "userComment": "Angulus auxilium pectus perferendis. Pariatur aestivus aro cruciamentum cenaculum candidus cupiditas aliquid talio. Cilicium creo fugit esse atqui varius ara venio."
-      },
-      {
-        "jobType": "Plumbing",
-        "userName": "Estell Huels",
-        "date": "2026-03-05T07:25:09.364Z",
-        "userAvatar": "/assets/avatars/defaultAvatar.png",
-        "userRated": 5,
-        "userComment": "Avaritia coniecto ater amet vix stips ademptio angustus carcer. Nobis vulnus amicitia. Natus annus quod dolor cribro verto."
-      },
-      {
-        "jobType": "Carpentry",
-        "userName": "Beverly Conn",
-        "date": "2025-08-31T09:17:39.695Z",
-        "userAvatar": "/assets/avatars/defaultAvatar.png",
-        "userRated": 2,
-        "userComment": "Solvo uter paens aufero. Torqueo aetas creator vinculum carmen laborum spero sunt calamitas. Congregatio theca catena vigilo ubi ubi caelestis uxor."
-      }
-    ]
-  },
-  {
-    "userID": 981,
-    "name": "Eileen Ledner",
-    "avatar": "https://cdn.jsdelivr.net/gh/faker-js/assets-person-portrait/female/512/61.jpg",
-    "price": 25,
-    "workPhotos": [
-      "https://picsum.photos/seed/1OUUM9We/800/800",
-      "https://picsum.photos/seed/q6pvgrYy/800/800",
-      "https://picsum.photos/seed/zqMNIbTM/800/800",
-      "https://picsum.photos/seed/gl9UtJiI/800/800",
-      "https://picsum.photos/seed/tAPgK9aQ/800/800",
-      "https://picsum.photos/seed/Em7xn9dN/800/800",
-      "https://picsum.photos/seed/NpHLdwlJ/800/800"
-    ],
-    "aboutMe": "Administratio assumenda copiose. Cribro color cumque crapula decimus. Delectus defungo veritatis desidero.",
-    "averageRating": "4.9",
-    "jobsCompleted": 25,
-    "datesBooked": [],
-    "ratings": [
-      {
-        "jobType": "Gardening",
-        "userName": "Alejandro Ankunding",
-        "date": "2027-04-07T01:06:56.821Z",
-        "userAvatar": "/assets/avatars/defaultAvatar.png",
-        "userRated": 4,
-        "userComment": "Defessus succedo numquam conor vulgo. Patria architecto tumultus. Patruus amo textor carus theca."
-      },
-      {
-        "jobType": "Plumbing",
-        "userName": "Miss Alaina Dickinson",
-        "date": "2027-01-18T13:50:32.984Z",
-        "userAvatar": "/assets/avatars/defaultAvatar.png",
-        "userRated": 4,
-        "userComment": "Careo carus tremo audeo cena talus abstergo cerno solvo. Damno cogo animus tamquam dolorum considero desparatus decet. Contra ut vigilo contabesco alii est demulceo ait credo."
-      },
-      {
-        "jobType": "Carpentry",
-        "userName": "Hershel Osinski",
-        "date": "2025-09-29T21:12:33.828Z",
-        "userAvatar": "/assets/avatars/defaultAvatar.png",
-        "userRated": 4,
-        "userComment": "Voluptates civitas baiulus cicuta vespillo unus crebro. Vilis certe colligo id dedico tutis talio admoneo. Acceptus ustilo centum commodi demulceo vita vulgaris venia."
-      },
-      {
-        "jobType": "Electrical",
-        "userName": "Kelvin Kohler",
-        "date": "2025-08-10T18:55:22.010Z",
-        "userAvatar": "/assets/avatars/defaultAvatar.png",
-        "userRated": 2,
-        "userComment": "Sponte tactus cubitum curto ambitus curiositas una maxime curiositas. Claro carus certus cilicium usque xiphias coerceo. Cursus maiores unde expedita ventito desidero vestrum terebro corpus statim."
-      },
-      {
-        "jobType": "Gardening",
-        "userName": "Joann Hartmann",
-        "date": "2026-11-23T02:07:10.194Z",
-        "userAvatar": "/assets/avatars/defaultAvatar.png",
-        "userRated": 2,
-        "userComment": "Tersus curvo curriculum depopulo stella delicate demonstro theatrum. Deleo accusamus tempora ad compono audeo vado curatio. Rem somnus tredecim patior suadeo magnam demergo."
-      },
-      {
-        "jobType": "Plumbing",
-        "userName": "Ashlee Hand",
-        "date": "2025-09-09T02:41:19.999Z",
-        "userAvatar": "/assets/avatars/defaultAvatar.png",
-        "userRated": 5,
-        "userComment": "Thymbra concido amicitia vero vicissitudo demergo. Tumultus placeat succedo commodi sollicito molestiae. Ullam vergo debilito arto valetudo tardus temperantia."
-      },
-      {
-        "jobType": "Carpentry",
-        "userName": "Raina Pouros",
-        "date": "2026-11-16T15:07:12.132Z",
-        "userAvatar": "/assets/avatars/defaultAvatar.png",
-        "userRated": 5,
-        "userComment": "Iste admitto dolore cogito vomica taceo vox maiores omnis. Conturbo vinculum porro arca abscido vel tyrannus varius. Usitas vesco somnus apto caute suscipio talio nobis pecco."
-      },
-      {
-        "jobType": "Electrical",
-        "userName": "Oran Macejkovic",
-        "date": "2026-04-13T11:44:02.838Z",
-        "userAvatar": "/assets/avatars/defaultAvatar.png",
-        "userRated": 1,
-        "userComment": "Contabesco curo unde demergo degenero. Deporto coma atqui maxime tepesco vorax validus delibero. Molestiae laudantium ultra neque."
-      },
-      {
-        "jobType": "Gardening",
-        "userName": "Shawna Bayer II",
-        "date": "2026-11-05T00:24:04.078Z",
-        "userAvatar": "/assets/avatars/defaultAvatar.png",
-        "userRated": 1,
-        "userComment": "Sto nemo demonstro subnecto vergo colo aperte. Desparatus centum vehemens explicabo demergo versus asperiores confido beatus averto. Comparo comburo exercitationem tunc vulariter avaritia."
-      },
-      {
-        "jobType": "Plumbing",
-        "userName": "Vivian Mertz",
-        "date": "2025-04-15T14:46:30.859Z",
-        "userAvatar": "/assets/avatars/defaultAvatar.png",
-        "userRated": 1,
-        "userComment": "Vilitas doloribus adulescens. Cetera somniculosus tumultus conatus coaegresco dedecor speculum damnatio vigor. Aptus crudelis aequitas depono dolore."
-      },
-      {
-        "jobType": "Carpentry",
-        "userName": "Marta Abbott",
-        "date": "2026-03-08T21:39:21.342Z",
-        "userAvatar": "/assets/avatars/defaultAvatar.png",
-        "userRated": 3,
-        "userComment": "Addo conduco dens optio aliquam aestas voluptatum sordeo sulum. Statim amplus illo talus tredecim exercitationem. Sui commodi id somnus alveus suggero repellat in."
-      },
-      {
-        "jobType": "Electrical",
-        "userName": "Alonzo Collier",
-        "date": "2025-08-21T12:06:43.801Z",
-        "userAvatar": "/assets/avatars/defaultAvatar.png",
-        "userRated": 3,
-        "userComment": "Vilis doloribus tamquam. Aureus adhuc corrumpo thymum comparo suspendo cunabula compello bene desolo. Ulterius voluptate acsi."
-      },
-      {
-        "jobType": "Gardening",
-        "userName": "Mr. Hayley Parker",
-        "date": "2026-03-06T14:12:03.161Z",
-        "userAvatar": "/assets/avatars/defaultAvatar.png",
-        "userRated": 3,
-        "userComment": "Tersus tamisium cedo. Centum aspernatur coerceo. Creator clamo summisse debitis."
-      },
-      {
-        "jobType": "Plumbing",
-        "userName": "Ms. Marilie Champlin",
-        "date": "2027-03-09T14:41:58.724Z",
-        "userAvatar": "/assets/avatars/defaultAvatar.png",
-        "userRated": 4,
-        "userComment": "Natus decumbo aliquid molestiae amicitia aro suadeo cunae. Cognomen canonicus sint compello confero. Rem strues rem auxilium custodia videlicet absque."
-      },
-      {
-        "jobType": "Carpentry",
-        "userName": "Oswaldo Towne",
-        "date": "2025-08-11T05:59:17.408Z",
-        "userAvatar": "/assets/avatars/defaultAvatar.png",
-        "userRated": 2,
-        "userComment": "Ea ventus comminor tui pariatur tutis tamisium capillus ab. Substantia centum annus desino bardus talis abbas. Clementia amicitia placeat canto dolorum curso denego vulnus cribro."
-      },
-      {
-        "jobType": "Electrical",
-        "userName": "Brooke Sawayn",
-        "date": "2026-01-12T05:25:27.988Z",
-        "userAvatar": "/assets/avatars/defaultAvatar.png",
-        "userRated": 2,
-        "userComment": "Tabesco turbo coadunatio laboriosam blanditiis. Reiciendis charisma conculco. Defluo facilis conqueror tepesco solvo uter amplus."
-      },
-      {
-        "jobType": "Gardening",
-        "userName": "Verdie Bernhard",
-        "date": "2025-12-30T17:09:56.570Z",
-        "userAvatar": "/assets/avatars/defaultAvatar.png",
-        "userRated": 5,
-        "userComment": "Coniuratio cometes derelinquo. Turba tactus templum dicta amoveo bardus repellendus infit utpote. Canis sursum demulceo solum."
-      },
-      {
-        "jobType": "Plumbing",
-        "userName": "Demetris Dicki IV",
-        "date": "2026-06-02T08:45:03.109Z",
-        "userAvatar": "/assets/avatars/defaultAvatar.png",
-        "userRated": 3,
-        "userComment": "Maxime antepono adsum alioqui aspicio aspernatur. Curriculum creator sunt decipio cibus tenax tandem causa tenus thesis. Ascit creptio condico ea somnus argumentum."
-      },
-      {
-        "jobType": "Carpentry",
-        "userName": "Damon Lockman",
-        "date": "2027-01-24T21:39:47.241Z",
-        "userAvatar": "/assets/avatars/defaultAvatar.png",
-        "userRated": 5,
-        "userComment": "Nesciunt cedo timor. Undique vel quisquam compello denuncio patria casus certe abeo deduco. Canis voluptatem vitium vester incidunt amicitia desidero."
-      },
-      {
-        "jobType": "Electrical",
-        "userName": "Anahi Roberts",
-        "date": "2026-08-05T13:30:31.030Z",
-        "userAvatar": "/assets/avatars/defaultAvatar.png",
-        "userRated": 2,
-        "userComment": "Aestivus aureus considero curso cotidie amaritudo armarium nihil temeritas tracto. Crudelis varius ultra sponte deputo vinitor bene. Absque contabesco caecus deripio amissio artificiose ter."
+        "userComment": "Mowed and edged the lawn fine but missed a few spots along the fence line."
       },
       {
         "jobType": "Gardening",
@@ -1779,31 +401,31 @@
         "date": "2027-03-21T14:42:06.511Z",
         "userAvatar": "/assets/avatars/defaultAvatar.png",
         "userRated": 2,
-        "userComment": "Complectus consectetur ipsum conforto argentum thorax vivo. Auditor suffragium cursim aperte tres. Non vigor carmen illo delectatio uredo comprehendo tactus similique."
+        "userComment": "Trimmed the hedges unevenly. Had to go back and fix them myself. Expected better."
       },
       {
-        "jobType": "Plumbing",
+        "jobType": "Gardening",
         "userName": "Nora Wehner",
         "date": "2025-12-13T16:17:22.858Z",
         "userAvatar": "/assets/avatars/defaultAvatar.png",
         "userRated": 5,
-        "userComment": "Conventus cognomen vehemens adeo cui urbanus ascisco cresco defungo conscendo. Ulciscor uberrime vergo casus aiunt. Dolore uter suffoco similique cariosus accusamus turpis cur trans conitor."
+        "userComment": "Kevin completely redesigned my backyard and it looks amazing. Super knowledgeable and creative."
       },
       {
-        "jobType": "Carpentry",
+        "jobType": "Gardening",
         "userName": "Barry D'Amore",
         "date": "2026-08-21T16:53:29.365Z",
         "userAvatar": "/assets/avatars/defaultAvatar.png",
         "userRated": 5,
-        "userComment": "Decimus textus adamo denique cibus templum tamisium degusto villa delego. Repudiandae undique numquam alienus sophismata non. Ater cotidie cruciamentum cultellus appositus."
+        "userComment": "Seasonal planting done perfectly. My front yard has never looked this good. Highly recommend."
       },
       {
-        "jobType": "Electrical",
+        "jobType": "Gardening",
         "userName": "Mrs. Mariane Stehr",
         "date": "2026-10-16T03:24:57.125Z",
         "userAvatar": "/assets/avatars/defaultAvatar.png",
         "userRated": 3,
-        "userComment": "Atqui illo ustulo vir. Appositus depopulo termes cohors quam. Causa peior inflammatio."
+        "userComment": "Decent lawn care service. Reliable but nothing above and beyond. Fair price though."
       },
       {
         "jobType": "Gardening",
@@ -1811,7 +433,7 @@
         "date": "2025-08-28T16:57:24.395Z",
         "userAvatar": "/assets/avatars/defaultAvatar.png",
         "userRated": 4,
-        "userComment": "Eius subito ter amicitia adipisci cotidie absens. Similique asporto vomer vulnus eveniet amaritudo clamo. Quas casus stella certus ultio vitium suadeo sollers veniam."
+        "userComment": "Trimmed the trees in my backyard and cleaned everything up nicely. Would hire again."
       }
     ]
   },
@@ -1830,7 +452,7 @@
       "https://picsum.photos/seed/FJovAvWC/800/800",
       "https://picsum.photos/seed/U4Kv8fqL/800/800"
     ],
-    "aboutMe": "Saepe admoveo voro. Angelus subvenio vinitor cauda. Facilis conforto curo uxor verbera compello.\nComplectus currus vespillo ars tenax magni sonitus caritas officia stillicidium. Stipes verbum suffragium supplanto aspernatur beneficium doloribus. Auxilium venio contego cauda concedo audax.",
+    "aboutMe": "I am a seasoned carpenter with a keen eye for design and detail. I’ve been in the business for over 14 years, offering everything from custom cabinetry to home renovations. I believe that well-crafted woodwork adds warmth and character to any space, and I love collaborating with clients to bring their ideas to life. Whether you need a new set of stairs, custom doors, or a complete kitchen overhaul, I have the experience and tools to get the job done. Let’s turn your home improvement ideas into a reality with beautiful, functional carpentry.",
     "averageRating": "4.9",
     "jobsCompleted": 92,
     "datesBooked": [],
@@ -2589,7 +1211,7 @@
       "https://picsum.photos/seed/fYRiF3LG/800/800",
       "https://picsum.photos/seed/Zf5KH1qd/800/800"
     ],
-    "aboutMe": "Depromo bonus conspergo statua decretum debilito atavus. Solus thymum eius cito terra aliquid vitium tondeo. Atavus utique patria curso solutio apto fuga versus tenetur.\nTripudio vulgaris cruentus. Desolo solitudo inventore est clamo earum. Delego vesper arcesso viridis conspergo arceo vinco.",
+    "aboutMe": "I have over 12 years of service in the industry. I specialize in residential and commercial electrical installations, repairs, and upgrades. From installing new lighting fixtures to rewiring homes and troubleshooting electrical issues, I ensure that all projects meet safety standards and are completed on time. I’m passionate about making sure your electrical systems are efficient, safe, and up to date, and I take great care to communicate clearly with my clients throughout the process. Let’s get your electrical needs taken care of with a professional you can trust!",
     "averageRating": "4.9",
     "jobsCompleted": 86,
     "datesBooked": [],
@@ -3301,7 +1923,7 @@
       "https://picsum.photos/seed/smhL0G6l/800/800",
       "https://picsum.photos/seed/7hjMpDhY/800/800"
     ],
-    "aboutMe": "Comptus fugiat infit quae alveus tamisium. Deputo tibi denuncio suadeo tantum virtus assentator. Adficio suscipit urbs.\nUtique talis nihil conturbo. Cicuta demitto aedificium conventus conturbo deputo laborum. Tyrannus ars voluptatibus contra vindico spiculum aro vestrum.\nOfficia celo volva atque. Fugit porro cauda tripudio. Decimus arbustum expedita officia.",
+    "aboutMe": "I am a passionate carpenter who’s been in the trade for 20 years. I take pride in creating functional and aesthetically pleasing woodwork for homes and businesses alike. Whether you're looking for custom furniture, built-in shelving, or a full home renovation, I have the skillset and attention to detail needed to bring your vision to life. My work is rooted in craftsmanship, and I focus on high-quality materials to ensure that every piece I create lasts for years to come. If you need a reliable carpenter, I’d love to help you build something special.",
     "averageRating": "4.9",
     "jobsCompleted": 108,
     "datesBooked": [],
@@ -4186,7 +2808,7 @@
       "https://picsum.photos/seed/DZFZikMF/800/800",
       "https://picsum.photos/seed/sHLVGann/800/800"
     ],
-    "aboutMe": "Illum termes asporto commodi verumtamen. Corroboro cui subvenio enim cometes. Volva aqua termes crapula adamo adinventitias aranea stips.\nTestimonium defaeco vereor blanditiis nostrum tabula. Statim corrigo adinventitias talio auxilium damno. Volutabrum accusator aveho harum aggredior error.",
+    "aboutMe": "Kentos is a trusted and certified electrician with over 15 years of experience in providing electrical services to homeowners and businesses. He specializes in electrical installations, repairs, and troubleshooting, always prioritizing safety and quality.",
     "averageRating": "4.9",
     "jobsCompleted": 79,
     "datesBooked": [],
@@ -4842,7 +3464,7 @@
       "https://picsum.photos/seed/9ywnkbDJ/800/800",
       "https://picsum.photos/seed/vqbECq6w/800/800"
     ],
-    "aboutMe": "Tabula voluptates repudiandae thymum delectatio capto toties coniuratio. Aufero allatus ter dicta. Amo ipsa desparatus.\nMaiores conturbo tempus communis. Decretum concedo ea cunctatio theatrum casus infit subito sapiente. Aedificium aqua catena currus tollo contra claudeo deleo thesaurus.",
+    "aboutMe": "With over 9 years of transforming outdoor spaces. I believe in creating gardens that not only look stunning but also thrive in your local environment. Whether you’re looking for a complete garden makeover, seasonal lawn care, or a customized plant plan, I’ll work with you to design a garden that fits your style, budget, and needs. From pruning and mulching to landscape design and installation, I offer a full range of gardening services to help your garden flourish year-round. Let’s bring your dream garden to life!",
     "averageRating": "4.9",
     "jobsCompleted": 108,
     "datesBooked": [],
