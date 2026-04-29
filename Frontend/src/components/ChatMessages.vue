@@ -151,7 +151,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, nextTick } from 'vue'
+import { ref, computed, nextTick, watch, onMounted, onUnmounted } from 'vue'
 
 // --- shadcn-vue Components ---
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
@@ -164,13 +164,16 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
 // --- Lucide Icons ---
 import { ChevronLeft, MoreVertical, Phone, Plus, ArrowRight, User } from 'lucide-vue-next'
 
+// --- Storage Key ---
+const STORAGE_KEY = 'quick-fix-chats-data'
+
 // --- State ---
 const selectedChatId = ref<number | null>(null)
 const newMessage = ref('')
 const messagesScrollArea = ref<InstanceType<typeof ScrollArea> | null>(null)
 
-// --- Mock Data ---
-const chats = ref([
+// --- Default Mock Data ---
+const defaultChats = [
   {
     id: 1,
     name: 'Joseph D.',
@@ -207,13 +210,49 @@ const chats = ref([
       { id: 2, sender: 'me', text: 'Acknowledge. Checking the logs now.' }
     ]
   }
-])
+]
 
+// --- Initialization Logic ---
+const loadChats = () => {
+  const savedData = localStorage.getItem(STORAGE_KEY)
+  if (savedData) {
+    try {
+      return JSON.parse(savedData)
+    } catch (e) {
+      console.error('Failed to parse chat data from local storage', e)
+      return defaultChats
+    }
+  }
+  return defaultChats
+}
 
+// Reactive chats array loaded synchronously
+const chats = ref(loadChats())
+
+// --- Persistence Logic ---
+// Watch for deep changes in the chats array and save to local storage automatically
+const onStorageChange = (event: StorageEvent) => {
+  if (event.key === STORAGE_KEY && event.newValue) {
+    chats.value = JSON.parse(event.newValue)
+  }
+}
+
+onMounted(() => {
+  window.addEventListener('storage', onStorageChange)
+})
+
+onUnmounted(() => {
+  window.removeEventListener('storage', onStorageChange)
+})
+
+// Auto-save whenever chats change
+watch(chats, (newVal) => {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(newVal))
+}, { deep: true })
 
 // --- Computed ---
 const activeChat = computed(() => {
-  return chats.value.find(c => c.id === selectedChatId.value) || null
+  return chats.value.find((c: any) => c.id === selectedChatId.value) || null
 })
 
 // --- Methods ---
