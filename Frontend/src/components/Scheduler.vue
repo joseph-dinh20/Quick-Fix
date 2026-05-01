@@ -30,8 +30,6 @@ import {
 } from "@/components/ui/card";
 import { ref, watch, computed } from "vue";
 
-const { provider } = defineProps(["provider"]);
-
 const todayDate = today(getLocalTimeZone());
 const nextDay = todayDate.add({ days: 1 });
 const selectedDate = ref();
@@ -56,6 +54,25 @@ watch(selectedDate, () => {
 function routeToPayment() {
   window.location.hash = "#/Payment";
 }
+
+function isDateUnavailable(date) {
+  const jsDate = date.toDate(getLocalTimeZone());
+  const day = jsDate.getDay();
+
+  // Disable specific dates
+  const disabledDates = [
+      "2026-05-06",
+      "2026-05-07", 
+      "2026-05-08",
+      "2026-05-09",
+      "2026-05-10",
+      "2026-05-12"
+  ];
+
+  const formatted = jsDate.toISOString().split("T")[0];
+  return disabledDates.includes(formatted);
+}
+
 </script>
 
 <template>
@@ -109,6 +126,8 @@ function routeToPayment() {
                 layout="month-and-year"
                 :minValue="nextDay"
                 :numberOfMonths="1"
+                :is-date-disabled="isDateUnavailable"
+                :is-date-unavailable="isDateUnavailable"
                 initial-focus
               />
             </PopoverContent>
@@ -181,4 +200,11 @@ function routeToPayment() {
 :deep([data-disabled]) {
   cursor: not-allowed;
 }
+
+:deep([data-unavailable]) {
+  text-decoration: line-through;
+
+}
+
+
 </style>
