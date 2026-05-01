@@ -30,6 +30,7 @@ import {
 } from "@/components/ui/card";
 import { ref, watch, computed } from "vue";
 
+const { provider } = defineProps(["provider"]);
 const todayDate = today(getLocalTimeZone());
 const nextDay = todayDate.add({ days: 1 });
 const selectedDate = ref();
