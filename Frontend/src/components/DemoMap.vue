@@ -19,23 +19,28 @@
             <button
               @click="switchView('providers')"
               :class="activeView === 'providers' ? activeTab : inactiveTab"
+              class="flex items-center gap-2"
             >
-              🛠️ Providers
+              <Wrench class="w-4 h-4" />
+              Providers
             </button>
 
             <button
               @click="switchView('jobs')"
               :class="activeView === 'jobs' ? activeTab : inactiveTab"
+              class="flex items-center gap-2"
             >
-              💼 Jobs
+              <Briefcase class="w-4 h-4" />
+              Jobs
             </button>
           </div>
 
           <div class="flex flex-col sm:flex-row gap-3">
             <button
               @click="useMyLocation"
-              class="px-4 py-2 rounded-xl bg-purple-600 text-white font-semibold hover:bg-purple-700 transition"
+              class="px-4 py-2 rounded-xl bg-purple-600 text-white font-semibold hover:bg-purple-700 transition flex items-center justify-center gap-2"
             >
+              <MapPin class="w-4 h-4" />
               Use My Location
             </button>
 
@@ -53,12 +58,23 @@
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mt-5">
-          <input
-            v-model="searchQuery"
-            type="text"
-            placeholder="Search name, job, service, or city..."
-            class="border border-slate-300 rounded-xl px-4 py-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
+          <div class="flex gap-2">
+            <input
+              v-model="searchQuery"
+              @keyup.enter="handleSearchLocation"
+              type="text"
+              placeholder="Search name, job, service, or city..."
+              class="border border-slate-300 rounded-xl px-4 py-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+
+            <button
+              @click="handleSearchLocation"
+              class="px-4 py-2 rounded-xl bg-blue-600 text-white font-semibold hover:bg-blue-700 transition flex items-center gap-2"
+            >
+              <Search class="w-4 h-4" />
+              Search
+            </button>
+          </div>
 
           <select
             v-model="selectedService"
@@ -140,14 +156,16 @@
                   </p>
                 </div>
 
-                <div class="text-xl">
-                  {{ activeView === 'providers' ? '🛠️' : '💼' }}
+                <div class="text-slate-500">
+                  <Wrench v-if="activeView === 'providers'" class="w-5 h-5" />
+                  <Briefcase v-else class="w-5 h-5" />
                 </div>
               </div>
 
               <div class="mt-3 flex items-center justify-between">
-                <span v-if="activeView === 'providers'" class="text-sm font-semibold text-slate-700">
-                  ⭐ {{ item.averageRating }}
+                <span v-if="activeView === 'providers'" class="text-sm font-semibold text-slate-700 flex items-center gap-1">
+                  <Star class="w-4 h-4" />
+                  {{ item.averageRating }}
                 </span>
 
                 <span v-else class="text-sm font-semibold text-slate-700">
@@ -207,7 +225,10 @@
             ×
           </button>
 
-          <p class="text-sm font-semibold text-blue-600">Selected Job</p>
+          <p class="text-sm font-semibold text-blue-600 flex items-center gap-2">
+            <Briefcase class="w-4 h-4" />
+            Selected Job
+          </p>
 
           <h2 class="text-2xl font-bold text-slate-900 mt-1 pr-8">
             {{ selectedJobForPopup.title }}
@@ -217,7 +238,8 @@
             {{ selectedJobForPopup.service }}
           </p>
 
-          <p class="text-slate-500 mt-1">
+          <p class="text-slate-500 mt-1 flex items-center gap-1">
+            <MapPin class="w-4 h-4" />
             {{ selectedJobForPopup.city }} · {{ getDistanceMiles(selectedJobForPopup).toFixed(1) }} miles away
           </p>
 
@@ -270,6 +292,14 @@
 import { ref, computed, onMounted, watch } from "vue";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
+
+import {
+  Wrench,
+  Briefcase,
+  MapPin,
+  Search,
+  Star,
+} from "lucide-vue-next";
 
 import Provider from "@/components/Provider.vue";
 import Scheduler from "@/components/Scheduler.vue";
@@ -334,6 +364,19 @@ const fallbackCoords = [
   { lat: 33.8847, lng: -118.4109 },
 ];
 
+const cityCoordinates = {
+  "long beach": { city: "Long Beach", lat: 33.7701, lng: -118.1937 },
+  "san pedro": { city: "San Pedro", lat: 33.7361, lng: -118.2922 },
+  "wilmington": { city: "Wilmington", lat: 33.7858, lng: -118.2645 },
+  "carson": { city: "Carson", lat: 33.8317, lng: -118.2817 },
+  "lakewood": { city: "Lakewood", lat: 33.8536, lng: -118.1339 },
+  "torrance": { city: "Torrance", lat: 33.8358, lng: -118.3406 },
+  "lomita": { city: "Lomita", lat: 33.7922, lng: -118.3151 },
+  "gardena": { city: "Gardena", lat: 33.8883, lng: -118.3089 },
+  "redondo beach": { city: "Redondo Beach", lat: 33.8492, lng: -118.3884 },
+  "manhattan beach": { city: "Manhattan Beach", lat: 33.8847, lng: -118.4109 },
+};
+
 const mapProviders = computed(() => {
   return providers.value.map((provider, index) => {
     const coords = getFallbackCoords(index);
@@ -388,12 +431,14 @@ const services = computed(() => {
 const filteredItems = computed(() => {
   return currentItems.value.filter((item) => {
     const nameOrTitle = activeView.value === "providers" ? item.name : item.title;
-    const query = searchQuery.value.toLowerCase();
+    const query = searchQuery.value.toLowerCase().trim();
 
     const matchesSearch =
+      !query ||
       nameOrTitle.toLowerCase().includes(query) ||
       item.service.toLowerCase().includes(query) ||
-      item.city.toLowerCase().includes(query);
+      item.city.toLowerCase().includes(query) ||
+      item.state.toLowerCase().includes(query);
 
     const matchesService =
       selectedService.value === "All" || item.service === selectedService.value;
@@ -439,8 +484,70 @@ function switchView(view) {
   selectedService.value = "All";
 }
 
+function handleSearchLocation() {
+  const query = searchQuery.value.toLowerCase().trim();
+
+  if (!query) return;
+
+  const cityMatch = cityCoordinates[query];
+
+  if (cityMatch) {
+    userLocation.value = {
+      id: "user-location",
+      city: cityMatch.city,
+      lat: cityMatch.lat,
+      lng: cityMatch.lng,
+    };
+
+    selectedItem.value = null;
+    selectedJobForPopup.value = null;
+    selectedProviderForDetail.value = null;
+    selectedProviderForScheduler.value = null;
+    schedulerOpen.value = false;
+
+    refreshMap();
+    return;
+  }
+
+  const itemMatch = currentItems.value.find((item) => {
+    return (
+      item.city.toLowerCase().includes(query) ||
+      item.service.toLowerCase().includes(query) ||
+      (activeView.value === "providers"
+        ? item.name.toLowerCase().includes(query)
+        : item.title.toLowerCase().includes(query))
+    );
+  });
+
+  if (itemMatch) {
+    userLocation.value = {
+      id: "user-location",
+      city: itemMatch.city,
+      lat: itemMatch.lat,
+      lng: itemMatch.lng,
+    };
+
+    selectedItem.value = itemMatch;
+    refreshMap();
+    focusItem(itemMatch);
+  }
+}
+
 function createIcon(type) {
-  const emoji = type === "provider" ? "🛠️" : "💼";
+  const iconSvg =
+    type === "provider"
+      ? `
+        <svg xmlns="http://www.w3.org/2000/svg" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.4-3.4a6 6 0 0 1-7.9 7.9l-6.9 6.9a2.1 2.1 0 0 1-3-3l6.9-6.9a6 6 0 0 1 7.9-7.9l-3.4 3.4z"/>
+        </svg>
+      `
+      : `
+        <svg xmlns="http://www.w3.org/2000/svg" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M16 20V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
+          <rect width="20" height="14" x="2" y="6" rx="2"/>
+        </svg>
+      `;
+
   const borderColor = type === "provider" ? "#2563eb" : "#059669";
 
   return L.divIcon({
@@ -451,13 +558,12 @@ function createIcon(type) {
         display:flex;
         align-items:center;
         justify-content:center;
-        font-size:18px;
         background:white;
         border:3px solid ${borderColor};
         border-radius:50%;
         box-shadow:0 4px 10px rgba(15,23,42,0.35);
       ">
-        ${emoji}
+        ${iconSvg}
       </div>
     `,
     className: "",
@@ -476,14 +582,16 @@ function createUserIcon() {
         display:flex;
         align-items:center;
         justify-content:center;
-        font-size:18px;
         background:#7c3aed;
         color:white;
         border:3px solid white;
         border-radius:50%;
         box-shadow:0 4px 10px rgba(15,23,42,0.35);
       ">
-        📍
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"/>
+          <circle cx="12" cy="10" r="3"/>
+        </svg>
       </div>
     `,
     className: "",
@@ -534,7 +642,7 @@ function addMarkers() {
 
     const title = type === "provider" ? item.name : item.title;
     const distance = getDistanceMiles(item).toFixed(1);
-    const detailText = type === "provider" ? `⭐ ${item.averageRating}` : item.budgetDisplay;
+    const detailText = type === "provider" ? `Rating: ${item.averageRating}` : item.budgetDisplay;
 
     marker.bindPopup(`
       <div style="min-width:210px;font-family:Arial,sans-serif">
@@ -662,24 +770,24 @@ function useMyLocation() {
   }
 
   navigator.geolocation.getCurrentPosition(
-    (position) => {
-      userLocation.value = {
-        id: "user-location",
-        city: "Your Current Location",
-        lat: position.coords.latitude,
-        lng: position.coords.longitude,
-      };
+      (position) => {
+        userLocation.value = {
+          id: "user-location",
+          city: "Your Current Location",
+          lat: position.coords.latitude,
+          lng: position.coords.longitude,
+        };
 
-      selectedItem.value = null;
-      selectedJobForPopup.value = null;
-      selectedProviderForDetail.value = null;
-      selectedProviderForScheduler.value = null;
-      schedulerOpen.value = false;
-      refreshMap();
-    },
-    () => {
-      alert("Could not access your location. Using Long Beach as default.");
-    }
+        selectedItem.value = null;
+        selectedJobForPopup.value = null;
+        selectedProviderForDetail.value = null;
+        selectedProviderForScheduler.value = null;
+        schedulerOpen.value = false;
+        refreshMap();
+      },
+      () => {
+        alert("Could not access your location. Using Long Beach as default.");
+      }
   );
 }
 
@@ -695,8 +803,8 @@ function getDistanceMiles(item) {
   const lngDiff = lng2 - lng1;
 
   const a =
-    Math.sin(latDiff / 2) * Math.sin(latDiff / 2) +
-    Math.cos(lat1) *
+      Math.sin(latDiff / 2) * Math.sin(latDiff / 2) +
+      Math.cos(lat1) *
       Math.cos(lat2) *
       Math.sin(lngDiff / 2) *
       Math.sin(lngDiff / 2);
@@ -743,7 +851,16 @@ onMounted(async () => {
   refreshMap();
 });
 
-watch([activeView, searchQuery, selectedService, radiusMiles, mapProviders, mapJobs], () => {
+watch([activeView, selectedService, radiusMiles, mapProviders, mapJobs], () => {
+  selectedItem.value = null;
+  selectedJobForPopup.value = null;
+  selectedProviderForDetail.value = null;
+  selectedProviderForScheduler.value = null;
+  schedulerOpen.value = false;
+  refreshMap();
+});
+
+watch(searchQuery, () => {
   selectedItem.value = null;
   selectedJobForPopup.value = null;
   selectedProviderForDetail.value = null;
