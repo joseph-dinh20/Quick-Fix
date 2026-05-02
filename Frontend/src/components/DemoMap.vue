@@ -2,7 +2,7 @@
   <div class="min-h-screen bg-slate-50 p-6">
     <div class="max-w-7xl mx-auto">
       <div class="mb-6">
-        <p class="text-sm font-semibold text-blue-600 uppercase tracking-wide">
+        <p class="text-sm font-semibold text-green-600 uppercase tracking-wide">
           QuickFix Location Search
         </p>
         <h1 class="text-3xl font-bold text-slate-900 mt-1">
@@ -44,9 +44,17 @@
               Use My Location
             </button>
 
+            <button
+              @click="goToListingsPage"
+              class="px-4 py-2 rounded-xl bg-green-600 text-white font-semibold hover:bg-green-700 transition flex items-center justify-center gap-2"
+            >
+              <List class="w-4 h-4" />
+              Normal Listings View
+            </button>
+
             <select
               v-model="radiusMiles"
-              class="border border-slate-300 rounded-xl px-4 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+              class="border border-slate-300 rounded-xl px-4 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-green-500"
             >
               <option :value="5">Within 5 miles</option>
               <option :value="10">Within 10 miles</option>
@@ -63,13 +71,13 @@
               v-model="searchQuery"
               @keyup.enter="handleSearchLocation"
               type="text"
-              placeholder="Search name, job, service, or city..."
-              class="border border-slate-300 rounded-xl px-4 py-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder="Search city, name, job, or service..."
+              class="border border-slate-300 rounded-xl px-4 py-2 w-full focus:outline-none focus:ring-2 focus:ring-green-500"
             />
 
             <button
               @click="handleSearchLocation"
-              class="px-4 py-2 rounded-xl bg-blue-600 text-white font-semibold hover:bg-blue-700 transition flex items-center gap-2"
+              class="px-4 py-2 rounded-xl bg-green-600 text-white font-semibold hover:bg-green-700 transition flex items-center gap-2"
             >
               <Search class="w-4 h-4" />
               Search
@@ -78,7 +86,7 @@
 
           <select
             v-model="selectedService"
-            class="border border-slate-300 rounded-xl px-4 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+            class="border border-slate-300 rounded-xl px-4 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-green-500"
           >
             <option value="All">All Services</option>
             <option v-for="service in services" :key="service" :value="service">
@@ -142,8 +150,8 @@
               v-for="item in filteredItems"
               :key="`${activeView}-${item.id}`"
               @click="focusItem(item)"
-              class="border rounded-xl p-4 mb-3 cursor-pointer transition hover:shadow-sm hover:border-blue-300"
-              :class="selectedItem && selectedItem.id === item.id ? 'border-blue-500 bg-blue-50' : 'border-slate-200 bg-white'"
+              class="border rounded-xl p-4 mb-3 cursor-pointer transition hover:shadow-sm hover:border-green-300"
+              :class="selectedItem && selectedItem.id === item.id ? 'border-green-500 bg-green-50' : 'border-slate-200 bg-white'"
             >
               <div class="flex justify-between gap-3">
                 <div>
@@ -174,9 +182,9 @@
 
                 <button
                   @click.stop="openItem(item)"
-                  class="text-sm font-semibold text-blue-600 hover:text-blue-700"
+                  class="text-sm font-semibold text-green-600 hover:text-green-700"
                 >
-                  {{ activeView === 'providers' ? 'View Provider' : 'View Job' }}
+                  {{ activeView === 'providers' ? 'View Provider' : 'Apply to Job' }}
                 </button>
               </div>
             </div>
@@ -225,7 +233,7 @@
             ×
           </button>
 
-          <p class="text-sm font-semibold text-blue-600 flex items-center gap-2">
+          <p class="text-sm font-semibold text-green-600 flex items-center gap-2">
             <Briefcase class="w-4 h-4" />
             Selected Job
           </p>
@@ -256,9 +264,9 @@
           <div class="flex gap-3 mt-6">
             <button
               @click="goToJobsPage"
-              class="flex-1 px-5 py-2 rounded-xl bg-blue-600 text-white font-semibold hover:bg-blue-700 transition"
+              class="flex-1 px-5 py-2 rounded-xl bg-green-600 text-white font-semibold hover:bg-green-700 transition"
             >
-              View Job
+              Apply to Job
             </button>
 
             <button
@@ -299,6 +307,7 @@ import {
   MapPin,
   Search,
   Star,
+  List,
 } from "lucide-vue-next";
 
 import Provider from "@/components/Provider.vue";
@@ -346,7 +355,7 @@ let userMarker = null;
 let radiusCircle = null;
 
 const activeTab =
-  "px-4 py-2 rounded-lg bg-white text-blue-600 font-semibold shadow-sm";
+  "px-4 py-2 rounded-lg bg-white text-green-600 font-semibold shadow-sm";
 
 const inactiveTab =
   "px-4 py-2 rounded-lg text-slate-600 font-semibold hover:text-slate-900";
@@ -367,12 +376,12 @@ const fallbackCoords = [
 const cityCoordinates = {
   "long beach": { city: "Long Beach", lat: 33.7701, lng: -118.1937 },
   "san pedro": { city: "San Pedro", lat: 33.7361, lng: -118.2922 },
-  "wilmington": { city: "Wilmington", lat: 33.7858, lng: -118.2645 },
-  "carson": { city: "Carson", lat: 33.8317, lng: -118.2817 },
-  "lakewood": { city: "Lakewood", lat: 33.8536, lng: -118.1339 },
-  "torrance": { city: "Torrance", lat: 33.8358, lng: -118.3406 },
-  "lomita": { city: "Lomita", lat: 33.7922, lng: -118.3151 },
-  "gardena": { city: "Gardena", lat: 33.8883, lng: -118.3089 },
+  wilmington: { city: "Wilmington", lat: 33.7858, lng: -118.2645 },
+  carson: { city: "Carson", lat: 33.8317, lng: -118.2817 },
+  lakewood: { city: "Lakewood", lat: 33.8536, lng: -118.1339 },
+  torrance: { city: "Torrance", lat: 33.8358, lng: -118.3406 },
+  lomita: { city: "Lomita", lat: 33.7922, lng: -118.3151 },
+  gardena: { city: "Gardena", lat: 33.8883, lng: -118.3089 },
   "redondo beach": { city: "Redondo Beach", lat: 33.8492, lng: -118.3884 },
   "manhattan beach": { city: "Manhattan Beach", lat: 33.8847, lng: -118.4109 },
 };
@@ -414,7 +423,7 @@ const mapJobs = computed(() => {
       service: getJobService(job),
       lat: Number(job.latitude ?? job.lat ?? coords.lat),
       lng: Number(job.longitude ?? job.lng ?? coords.lng),
-      budgetDisplay: job.budget ? `$${job.budget}` : "$0",
+      budgetDisplay: formatBudget(job.budget ?? job.budgetDisplay),
     };
   });
 });
@@ -448,6 +457,18 @@ const filteredItems = computed(() => {
     return matchesSearch && matchesService && insideRadius;
   });
 });
+
+function formatBudget(budget) {
+  if (!budget) return "$0";
+
+  const budgetString = String(budget).trim();
+
+  if (budgetString.startsWith("$")) {
+    return budgetString;
+  }
+
+  return `$${budgetString}`;
+}
 
 function getFallbackCoords(index) {
   return fallbackCoords[index % fallbackCoords.length];
@@ -499,12 +520,7 @@ function handleSearchLocation() {
       lng: cityMatch.lng,
     };
 
-    selectedItem.value = null;
-    selectedJobForPopup.value = null;
-    selectedProviderForDetail.value = null;
-    selectedProviderForScheduler.value = null;
-    schedulerOpen.value = false;
-
+    closeAllPopups();
     refreshMap();
     return;
   }
@@ -537,18 +553,16 @@ function createIcon(type) {
   const iconSvg =
     type === "provider"
       ? `
-        <svg xmlns="http://www.w3.org/2000/svg" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <svg xmlns="http://www.w3.org/2000/svg" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
           <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.4-3.4a6 6 0 0 1-7.9 7.9l-6.9 6.9a2.1 2.1 0 0 1-3-3l6.9-6.9a6 6 0 0 1 7.9-7.9l-3.4 3.4z"/>
         </svg>
       `
       : `
-        <svg xmlns="http://www.w3.org/2000/svg" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <svg xmlns="http://www.w3.org/2000/svg" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
           <path d="M16 20V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
           <rect width="20" height="14" x="2" y="6" rx="2"/>
         </svg>
       `;
-
-  const borderColor = type === "provider" ? "#2563eb" : "#059669";
 
   return L.divIcon({
     html: `
@@ -559,7 +573,7 @@ function createIcon(type) {
         align-items:center;
         justify-content:center;
         background:white;
-        border:3px solid ${borderColor};
+        border:3px solid #16a34a;
         border-radius:50%;
         box-shadow:0 4px 10px rgba(15,23,42,0.35);
       ">
@@ -582,7 +596,7 @@ function createUserIcon() {
         display:flex;
         align-items:center;
         justify-content:center;
-        background:#7c3aed;
+        background:#16a34a;
         color:white;
         border:3px solid white;
         border-radius:50%;
@@ -623,8 +637,8 @@ function updateUserLocationVisuals() {
 
   radiusCircle = L.circle([userLocation.value.lat, userLocation.value.lng], {
     radius: radiusMiles.value * 1609.34,
-    color: "#7c3aed",
-    fillColor: "#7c3aed",
+    color: "#16a34a",
+    fillColor: "#16a34a",
     fillOpacity: 0.08,
     weight: 2,
   }).addTo(map);
@@ -655,14 +669,14 @@ function addMarkers() {
           style="
             width:100%;
             padding:8px 10px;
-            background:#2563eb;
+            background:#16a34a;
             color:white;
             border:none;
             border-radius:10px;
             cursor:pointer;
             font-weight:700;
           ">
-          ${type === "provider" ? "View Provider" : "View Job"}
+          ${type === "provider" ? "View Provider" : "Apply to Job"}
         </button>
       </div>
     `);
@@ -738,6 +752,14 @@ function openItem(item) {
   }
 }
 
+function closeAllPopups() {
+  selectedItem.value = null;
+  selectedJobForPopup.value = null;
+  selectedProviderForDetail.value = null;
+  selectedProviderForScheduler.value = null;
+  schedulerOpen.value = false;
+}
+
 function closeJobPopup() {
   selectedJobForPopup.value = null;
 }
@@ -748,7 +770,13 @@ function closeProviderPopup() {
 
 function handleProviderSelect() {
   selectedProviderForScheduler.value = selectedProviderForDetail.value;
-  schedulerOpen.value = true;
+
+  // Fixes visual bug by closing profile popup before opening scheduler.
+  selectedProviderForDetail.value = null;
+
+  setTimeout(() => {
+    schedulerOpen.value = true;
+  }, 50);
 }
 
 function handleProviderClickCapture(event) {
@@ -763,6 +791,11 @@ function goToJobsPage() {
   window.location.hash = "/DemoJobListings";
 }
 
+function goToListingsPage() {
+  window.location.hash =
+    activeView.value === "providers" ? "/ProviderList" : "/DemoJobListings";
+}
+
 function useMyLocation() {
   if (!navigator.geolocation) {
     alert("Geolocation is not supported by this browser.");
@@ -770,24 +803,20 @@ function useMyLocation() {
   }
 
   navigator.geolocation.getCurrentPosition(
-      (position) => {
-        userLocation.value = {
-          id: "user-location",
-          city: "Your Current Location",
-          lat: position.coords.latitude,
-          lng: position.coords.longitude,
-        };
+    (position) => {
+      userLocation.value = {
+        id: "user-location",
+        city: "Your Current Location",
+        lat: position.coords.latitude,
+        lng: position.coords.longitude,
+      };
 
-        selectedItem.value = null;
-        selectedJobForPopup.value = null;
-        selectedProviderForDetail.value = null;
-        selectedProviderForScheduler.value = null;
-        schedulerOpen.value = false;
-        refreshMap();
-      },
-      () => {
-        alert("Could not access your location. Using Long Beach as default.");
-      }
+      closeAllPopups();
+      refreshMap();
+    },
+    () => {
+      alert("Could not access your location. Using Long Beach as default.");
+    }
   );
 }
 
@@ -803,8 +832,8 @@ function getDistanceMiles(item) {
   const lngDiff = lng2 - lng1;
 
   const a =
-      Math.sin(latDiff / 2) * Math.sin(latDiff / 2) +
-      Math.cos(lat1) *
+    Math.sin(latDiff / 2) * Math.sin(latDiff / 2) +
+    Math.cos(lat1) *
       Math.cos(lat2) *
       Math.sin(lngDiff / 2) *
       Math.sin(lngDiff / 2);
@@ -852,20 +881,12 @@ onMounted(async () => {
 });
 
 watch([activeView, selectedService, radiusMiles, mapProviders, mapJobs], () => {
-  selectedItem.value = null;
-  selectedJobForPopup.value = null;
-  selectedProviderForDetail.value = null;
-  selectedProviderForScheduler.value = null;
-  schedulerOpen.value = false;
+  closeAllPopups();
   refreshMap();
 });
 
 watch(searchQuery, () => {
-  selectedItem.value = null;
-  selectedJobForPopup.value = null;
-  selectedProviderForDetail.value = null;
-  selectedProviderForScheduler.value = null;
-  schedulerOpen.value = false;
+  closeAllPopups();
   refreshMap();
 });
 </script>
