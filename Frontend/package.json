@@ -20,6 +20,7 @@
     "clsx": "^2.1.1",
     "combobox": "^1.0.1",
     "embla-carousel-vue": "^8.6.0",
+    "leaflet": "^1.9.4",
     "lucide-vue-next": "^0.563.0",
     "pinia": "^3.0.4",
     "pnpm": "^10.30.2",
