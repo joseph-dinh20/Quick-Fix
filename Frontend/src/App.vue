@@ -21,6 +21,7 @@ import Hello4 from "@/components/Hello4.vue";
 import JoinUs from "./components/JoinUs.vue";
 import Settings from "./components/Settings.vue";
 import DemoLocation from "./components/DemoLocation.vue";
+import DemoMap from "./components/DemoMap.vue"; // ✅ ADDED
 import DemoCreateJob from "./components/DemoCreateJob.vue";
 import DemoCreateJob2 from "./components/DemoCreateJob2.vue";
 import DemoMyJobs from "./components/DemoMyJobs.vue";
@@ -93,6 +94,7 @@ const routes = {
   "/JoinUs": JoinUs,
   "/Settings": Settings,
   "/DemoLocation": DemoLocation,
+  "/DemoMap": DemoMap, // ✅ ADDED
   "/DemoCreateJob": DemoCreateJob,
   "/DemoCreateJob2": DemoCreateJob2,
   "/DemoMyJobs": DemoMyJobs,
@@ -134,14 +136,12 @@ async function handleLoginSuccess() {
     <div v-else class="flex flex-col items-center w-full">
       <Header />
 
-      <div v-if="!isLoggedIn" class="mb-6 flex gap-3"> 
-        <!-- <a class="underline" href="#/Login">Login</a> -->
-        <!-- <a class="underline" href="#/Signup">Signup</a> -->
-      </div> 
-      
-      <div v-else class="mb-6 flex gap-3 items-center"> 
-        <span class="text-sm">{{ user.email }}</span> 
-        <a class="underline cursor-pointer" @click="logout">Logout</a> 
+      <div v-if="!isLoggedIn" class="mb-6 flex gap-3">
+      </div>
+
+      <div v-else class="mb-6 flex gap-3 items-center">
+        <span class="text-sm">{{ user.email }}</span>
+        <a class="underline cursor-pointer" @click="logout">Logout</a>
       </div>
 
       <div class="w-full">
