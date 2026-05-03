@@ -166,8 +166,16 @@
                 </div>
 
                 <div class="text-slate-500">
-                  <Wrench v-if="activeView === 'providers'" class="w-5 h-5" />
-                  <Briefcase v-else class="w-5 h-5" />
+                  <!-- <Wrench v-if="activeView === 'providers'" class="w-5 h-5" />
+                  <Briefcase v-else class="w-5 h-5" /> -->
+                              <Button
+              variant="link"
+              @click="toggle(job)"
+              class="h-auto p-0 text-xs font-medium decoration-1 underline-offset-4 text-slate-500 hover:text-slate-800 font-semibold"
+            >
+              <Bookmark></Bookmark>
+              Save
+            </Button>
                 </div>
               </div>
 
@@ -315,6 +323,7 @@ import {
 import Provider from "@/components/Provider.vue";
 import Scheduler from "@/components/Scheduler.vue";
 import fallbackJobs from "../data/mapJobs.json";
+import { toggleFavoriteJob } from "@/services/api";
 
 import {
   Dialog,
@@ -460,6 +469,15 @@ const filteredItems = computed(() => {
     return matchesSearch && matchesService && insideRadius;
   });
 });
+
+async function toggle(job) {
+  try {
+    const res = await toggleFavoriteJob(job.id);
+    job.is_favorited = res.data.favorited;
+  } catch (err) {
+    console.error(err);
+  }
+}
 
 function formatBudget(budget) {
   if (!budget) return "$0";
