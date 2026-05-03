@@ -36,17 +36,18 @@
           </div>
 
           <div class="flex flex-col sm:flex-row gap-3">
-            <button
+            <Button
               @click="useMyLocation"
-              class="px-4 py-2 rounded-xl bg-purple-600 text-white font-semibold hover:bg-purple-700 transition flex items-center justify-center gap-2"
+              class="px-4 py-2 rounded-xl bg-violet-600 text-white font-semibold hover:bg-violet-700 transition flex items-center justify-center gap-2"
             >
               <MapPin class="w-4 h-4" />
               Use My Location
             </button>
 
-            <button
+            <Button
+              variant="outline"
               @click="goToListingsPage"
-              class="px-4 py-2 rounded-xl bg-green-600 text-white font-semibold hover:bg-green-700 transition flex items-center justify-center gap-2"
+              class="px-4 py-2 rounded-xl text-primary font-semibold flex items-center justify-center gap-2 border-primary transition-all duration-300 ease-in-out hover:bg-primary hover:text-white hover:border-transparent"
             >
               <List class="w-4 h-4" />
               Normal Listings View
@@ -75,9 +76,9 @@
               class="border border-slate-300 rounded-xl px-4 py-2 w-full focus:outline-none focus:ring-2 focus:ring-green-500"
             />
 
-            <button
+            <Button
               @click="handleSearchLocation"
-              class="px-4 py-2 rounded-xl bg-green-600 text-white font-semibold hover:bg-green-700 transition flex items-center gap-2"
+              class="px-4 py-2 rounded-xl font-semibold transition flex items-center gap-2"
             >
               <Search class="w-4 h-4" />
               Search
@@ -150,8 +151,8 @@
               v-for="item in filteredItems"
               :key="`${activeView}-${item.id}`"
               @click="focusItem(item)"
-              class="border rounded-xl p-4 mb-3 cursor-pointer transition hover:shadow-sm hover:border-green-300"
-              :class="selectedItem && selectedItem.id === item.id ? 'border-green-500 bg-green-50' : 'border-slate-200 bg-white'"
+              class="border rounded-xl p-4 mb-3 cursor-pointer transition hover:shadow-sm hover:border-primary"
+              :class="selectedItem && selectedItem.id === item.id ? 'border-primary bg-green-50' : 'border-slate-200 bg-white'"
             >
               <div class="flex justify-between gap-3">
                 <div>
@@ -262,12 +263,12 @@
           </div>
 
           <div class="flex gap-3 mt-6">
-            <button
+            <Button
               @click="goToJobsPage"
-              class="flex-1 px-5 py-2 rounded-xl bg-green-600 text-white font-semibold hover:bg-green-700 transition"
+              class="flex-1 px-5 py-2 rounded-xl text-white font-semibold transition"
             >
               Apply to Job
-            </button>
+            </Button>
 
             <button
               @click="closeJobPopup"
@@ -308,6 +309,7 @@ import {
   Search,
   Star,
   List,
+  Bookmark
 } from "lucide-vue-next";
 
 import Provider from "@/components/Provider.vue";
@@ -321,6 +323,7 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button"
 
 import { userListStore } from "@/store/userList";
 import { storeToRefs } from "pinia";
