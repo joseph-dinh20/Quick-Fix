@@ -63,6 +63,7 @@ async function login() {
     // success
     $toast.success(res.data?.message || "Login success")
     emit("login-success")
+    window.location.href = "/"
     return res.data
   } catch (err) {
     const msg =
