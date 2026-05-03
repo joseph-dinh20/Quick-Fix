@@ -113,7 +113,7 @@
                 <NavigationMenuContent
                   class="absolute top-full mt-1 w-48 bg-white rounded-lg shadow-lg border z-50 p-1 flex flex-col"
                 >
-                  <NavigationMenuListItem class="py-1.5" href="#/DemoJobListings" title="Your Jobs" />
+                  <NavigationMenuListItem class="py-1.5" href="#/DemoMyJobs" title="Your Jobs" />
                   <NavigationMenuListItem class="py-1.5" href="#/DemoJobListings" title="Your Applications" />
                   <NavigationMenuListItem class="py-1.5" href="#/ChatMessages" title="Messages" />
                   <NavigationMenuListItem class="py-1.5" href="#/Profile" title="Provider Profile" />
@@ -147,9 +147,10 @@
       </NavigationMenuRoot>
 
       <Toaster />
+      <Separator class="mb-4 border-t border-gray-200" />
+
     </header>
 
-    <Separator class="mb-10" />
   </div>
 </template>
 
