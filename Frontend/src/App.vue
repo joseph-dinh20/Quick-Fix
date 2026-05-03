@@ -38,6 +38,7 @@ import ReviewProvider from "./components/ReviewProvider.vue";
 
 import { me, initCsrf, logout as apiLogout } from "@/services/api.js";
 import { Toaster } from "@/components/ui/sonner";
+import NavigationBar from "./components/NavigationBar.vue";
 
 const user = ref(null);
 const loadingUser = ref(true);
@@ -106,7 +107,8 @@ const routes = {
   "/Scheduler": Scheduler,
   "/ReportForm": ReportForm,
   "/DemoAssignedJobs": DemoAssignedJobs,
-  "/ReviewProvider": ReviewProvider
+  "/ReviewProvider": ReviewProvider,
+  "/NavigationBar": NavigationBar,
 };
 
 const currentPath = ref(window.location.hash);
@@ -137,16 +139,14 @@ function handleLogout() {
     <div v-if="loadingUser">Loading...</div>
 
     <div v-else class="flex flex-col items-center w-full">
-      <Header />
+      <NavigationBar
+      :is="currentView" 
+      :is-logged-in="isLoggedIn"
+      :user="user"
+      @login-success="handleLoginSuccess"
+      @logout-success="handleLogout" 
+      />
 
-      <div v-if="!isLoggedIn" class="mb-6 flex gap-3"> 
-        <!-- <a class="underline" href="#/Login">Login</a> -->
-        <!-- <a class="underline" href="#/Signup">Signup</a> -->
-      </div> 
-      
-      <div v-else class="mb-6 flex gap-3 items-center"> 
-        <span class="text-sm">{{ user.email }}</span> 
-      </div>
 
       <div class="w-full">
         <component 
