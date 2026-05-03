@@ -125,7 +125,7 @@
             </p>
           </div>
 
-          <div id="map" class="h-[620px] w-full"></div>
+          <div id="map" class="h-[620px] w-full z-0"></div>
         </div>
 
         <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
@@ -281,7 +281,7 @@
     </div>
 
     <Dialog v-model:open="schedulerOpen">
-      <DialogContent class="max-w-md p-0 border-0">
+      <DialogContent class="max-w-md p-0 border-0 z-[2000]">
         <DialogHeader class="sr-only">
           <DialogTitle>Schedule</DialogTitle>
           <DialogDescription>Select a date and time</DialogDescription>
@@ -758,14 +758,29 @@ function closeAllPopups() {
   selectedProviderForDetail.value = null;
   selectedProviderForScheduler.value = null;
   schedulerOpen.value = false;
+
+  // Close any open Leaflet popups
+  if (map) {
+    map.closePopup();
+  }
 }
 
 function closeJobPopup() {
   selectedJobForPopup.value = null;
+
+  // Close any open Leaflet popups
+  if (map) {
+    map.closePopup();
+  }
 }
 
 function closeProviderPopup() {
   selectedProviderForDetail.value = null;
+
+  // Close any open Leaflet popups
+  if (map) {
+    map.closePopup();
+  }
 }
 
 function handleProviderSelect() {
@@ -773,6 +788,11 @@ function handleProviderSelect() {
 
   // Fixes visual bug by closing profile popup before opening scheduler.
   selectedProviderForDetail.value = null;
+
+  // Close any open Leaflet popups
+  if (map) {
+    map.closePopup();
+  }
 
   setTimeout(() => {
     schedulerOpen.value = true;
@@ -888,5 +908,11 @@ watch([activeView, selectedService, radiusMiles, mapProviders, mapJobs], () => {
 watch(searchQuery, () => {
   closeAllPopups();
   refreshMap();
+});
+
+watch(schedulerOpen, (newVal) => {
+  if (!newVal && map) {
+    map.invalidateSize();
+  }
 });
 </script>
