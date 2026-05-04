@@ -52,7 +52,7 @@
             </NavigationMenuItem>
 
             <NavigationMenuItem>
-              <NavigationMenuTriggerNav
+              <NavigationMenuTriggerNav v-if="isCustomer"
                 :show-chevron="false"
                 class="text-grass11 hover:bg-green3 group flex items-center gap-1 rounded px-3 h-12 text-sm font-medium transition-colors"
                 @click="navigateTo(isLoggedIn ? '#/DemoCreateJob' : '#/Login')"
@@ -63,23 +63,23 @@
             </NavigationMenuItem>
 
             <NavigationMenuItem v-if="isLoggedIn">
-              <NavigationMenuTriggerNav
+              <NavigationMenuTriggerNav v-if="isCustomer"
                 :show-chevron="false"
                 class="text-grass11 hover:bg-green3 group flex items-center gap-1 rounded px-3 h-12 text-sm font-medium transition-colors"
                 @click="navigateTo('#/FavoriteProvider')"
               >
-                <Bookmark :stroke-width="1.5" class="w-4 h-4" />
+                <Bookmark :stroke-width="1.5" class="w-4 h-4"/>
                 Saved Providers
               </NavigationMenuTriggerNav>
             </NavigationMenuItem>
 
             <NavigationMenuItem v-if="isLoggedIn">
-              <NavigationMenuTriggerNav
+              <NavigationMenuTriggerNav v-if="isProvider"
                 :show-chevron="false"
                 class="text-grass11 hover:bg-green3 group flex items-center gap-1 rounded px-3 h-12 text-sm font-medium transition-colors"
                 @click="navigateTo('#/DemoSavedJobs')"
               >
-                <Bookmark :stroke-width="1.5" class="w-4 h-4" />
+                <Bookmark :stroke-width="1.5" class="w-4 h-4"/>
                 Saved Jobs
               </NavigationMenuTriggerNav>
             </NavigationMenuItem>
@@ -96,6 +96,7 @@
                   :show-chevron="false"
                   class="text-grass11 hover:bg-green3 rounded px-3 h-12 text-sm font-medium transition-colors"
                   @click="navigateTo('#/JoinUs')"
+                  v-if="isCustomer"
                 >
                   Join Us
                 </NavigationMenuTriggerNav>
@@ -113,13 +114,21 @@
                 <NavigationMenuContent
                   class="absolute top-full mt-1 w-48 bg-white rounded-lg shadow-lg border z-50 p-1 flex flex-col"
                 >
-                  <NavigationMenuListItem class="py-1.5" href="#/DemoMyJobs" title="Your Jobs" />
-                  <NavigationMenuListItem class="py-1.5" href="#/DemoJobListings" title="Your Applications" />
+                  <NavigationMenuListItem class="py-1.5" href="#/DemoMyJobs" title="Your Jobs" v-if="isCustomer"/>
+                  <NavigationMenuListItem class="py-1.5" href="/" title="Your Applications" v-if="isProvider"/>
                   <NavigationMenuListItem class="py-1.5" href="#/OrderHistory" title="Order History" />
                   <NavigationMenuListItem class="py-1.5" href="#/ChatMessages" title="Messages" />
-                  <NavigationMenuListItem class="py-1.5" href="#/Profile" title="Provider Profile" />
+                  <NavigationMenuListItem v-if="isProvider" class="py-1.5" href="#/Profile" title="Provider Profile" />
                   <NavigationMenuListItem class="py-1.5" href="#/Settings" title="Settings" />
-                  <NavigationMenuListItem class="py-1.5" title="Log Out" @click="logout" />
+                  <li class="py-1.5">
+                    <button
+                      type="button"
+                      @click="logout"
+                      class="w-full text-left rounded-md px-3 py-1.5 text-sm transition-colors hover:bg-red-100 hover:text-red-700"
+                    >
+                      Log Out
+                    </button>
+                  </li>
                 </NavigationMenuContent>
 
               </NavigationMenuItem>
@@ -147,7 +156,6 @@
         </NavigationMenuList>
       </NavigationMenuRoot>
 
-      <Toaster />
       <Separator class="mb-4 border-t border-gray-200" />
 
     </header>
@@ -199,18 +207,16 @@ const props = defineProps({
 });
 
 const user = computed(() => props.user ?? { name: "Profile", username: "Profile" });
-
-
 const emit = defineEmits(["logout-success"]);
 
 async function logout() {
+  const name = userStore.currentUser?.name;
   try {
     await initCsrf();
     await apiLogout();
   } catch (err) {
     console.error("Logout error:", err);
   }
-  const name = userStore.currentUser?.name;
   userStore.logout();
   $toast.success(name ? `Goodbye, ${name}!` : "Logged out");
   localStorage.clear();
