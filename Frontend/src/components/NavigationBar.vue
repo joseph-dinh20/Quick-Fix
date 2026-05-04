@@ -156,7 +156,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed, watch } from "vue";
 import LogoImage from "@/assets/icons/logo.png";
 import NavigationMenuListItem from "./ui/navigation-menu/NavigationMenuListItem.vue";
 import NavigationMenuTriggerDropdown from "./ui/navigation-menu/NavigationMenuTrigger.vue";
@@ -182,9 +182,14 @@ const props = defineProps({
   },
   user: {
     type: Object,
-    default: {}
+    default: () => ({
+      name: "Profile",
+      username: "Profile"
+    })
   }
 });
+
+const user = computed(() => props.user ?? { name: "Profile", username: "Profile" });
 
 
 const emit = defineEmits(["logout-success"]);
@@ -207,9 +212,15 @@ const navigateTo = (path) => {
   window.location.hash = path;
 };
 
-onMounted( () => {
-  user.username = user.name;
-});
+watch(
+  () => props.user,
+  (newUser) => {
+    if (newUser) {
+      user.value = newUser;
+    }
+  },
+  { immediate: true } 
+);
 </script>
 
 <style scoped>
