@@ -150,7 +150,7 @@ function handleLogout() {
       />
 
 
-      <div class="w-full">
+      <div class="w-full mt-10">
         <component 
           :is="currentView" 
           :is-logged-in="isLoggedIn"

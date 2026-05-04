@@ -106,7 +106,7 @@
                   :show-chevron="true"
                   class="h-12 px-3 text-grass11 hover:bg-green3 rounded text-sm font-medium transition-colors"
                 >
-                  <CircleUserRound :stroke-width="1.5" class="w-4 h-4" />
+                  <CircleUserRound :stroke-width="1.5" class="w-4 h-4 mr-1" />
                   {{ user.username || "Account" }}
                 </NavigationMenuTriggerDropdown>
 
@@ -115,6 +115,7 @@
                 >
                   <NavigationMenuListItem class="py-1.5" href="#/DemoMyJobs" title="Your Jobs" />
                   <NavigationMenuListItem class="py-1.5" href="#/DemoJobListings" title="Your Applications" />
+                  <NavigationMenuListItem class="py-1.5" href="/" title="Order History" />
                   <NavigationMenuListItem class="py-1.5" href="#/ChatMessages" title="Messages" />
                   <NavigationMenuListItem class="py-1.5" href="#/Profile" title="Provider Profile" />
                   <NavigationMenuListItem class="py-1.5" href="#/Settings" title="Settings" />
