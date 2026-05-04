@@ -16,7 +16,7 @@
             <NavigationMenuItem>
               <div
                 @click="navigateTo('/')"
-                class="flex items-center h-14 cursor-pointer overflow-hidden"
+                class="flex items-center h-16 cursor-pointer overflow-hidden"
               >
                 <img
                   :src="LogoImage"
