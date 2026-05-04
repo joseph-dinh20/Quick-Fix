@@ -37,6 +37,10 @@ const passwordForm = ref({ newPassword: '', confirmPassword: '' })
 const passwordError = ref('')
 const passwordSuccess = ref('')
 
+const navigateTo = (path) => {
+  window.location.hash = path;
+};
+
 // Load user data on mount
 onMounted(async () => {
   try {
@@ -134,13 +138,17 @@ const scrollToSection = (id) => {
                 </nav>
 
                 <div class="space-y-3">
-                    <Button class="w-full text-white font-bold h-12">
+                    <Button class="w-full text-white font-bold h-12"
+                    @click="navigateTo('#/DemoJobListings')"
+                    >
                         <Search class="w-4 h-4 mr-2" />
-                        FIND WORK
+                        Find Work
                     </Button>
-                    <Button variant="outline" class="w-full font-bold h-12 border-primary text-primary hover:bg-primary hover:text-primary-foreground border-2">
+                    <Button variant="outline" class="w-full font-bold h-12 border-primary text-primary hover:bg-primary hover:text-primary-foreground border-2"
+                    @click="navigateTo('#/DemoCreateJob')"
+                    >
                         <PlusCircle class="w-4 h-4 mr-2" />
-                        MAKE A JOB
+                        Make a Job
                     </Button>
                 </div>
             </aside>

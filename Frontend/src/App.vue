@@ -28,6 +28,7 @@ import ChatMessages from "./components/ChatMessages.vue";
 import Settings from "./components/Settings.vue";
 import Scheduler from "./components/Scheduler.vue";
 import DemoMap from "./components/DemoMap.vue";
+import BecomeFixer from "./components/BecomeFixer.vue";
 import { useUserStore } from "@/store/userStore";
 
 const userStore = useUserStore();
@@ -117,6 +118,7 @@ const routes = {
   "/NavigationBar": NavigationBar,
   "/DemoMap": DemoMap,
   "/Settings": Settings,
+  "/BecomeFixer": BecomeFixer,
 };
 
 const currentPath = ref(window.location.hash);
