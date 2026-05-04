@@ -1,0 +1,32 @@
+[
+  {
+    "id": 1,
+    "title": "Fix leaking sink",
+    "service": "Plumbing",
+    "city": "Long Beach",
+    "lat": 33.7705,
+    "lng": -118.1912,
+    "budget": "$150",
+    "distance": "1.2 miles"
+  },
+  {
+    "id": 2,
+    "title": "Install ceiling fan",
+    "service": "Electrical",
+    "city": "Wilmington",
+    "lat": 33.7866,
+    "lng": -118.2641,
+    "budget": "$220",
+    "distance": "2.9 miles"
+  },
+  {
+    "id": 3,
+    "title": "Patch drywall hole",
+    "service": "Drywall",
+    "city": "San Pedro",
+    "lat": 33.7367,
+    "lng": -118.2926,
+    "budget": "$100",
+    "distance": "3.7 miles"
+  }
+]

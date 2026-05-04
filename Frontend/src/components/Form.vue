@@ -1,11 +1,10 @@
+<!-- NOTE: Form.vue -->
 <script setup>
 import { toTypedSchema } from "@vee-validate/zod";
 import { Check, Circle, Dot } from "lucide-vue-next";
-import { ref } from "vue";
+import { ref, onMounted, useTemplateRef } from "vue";
 import * as z from "zod";
 import { Button } from "@/components/ui/button";
-import { h } from "vue";
-import { toast } from "vue-sonner";
 
 import {
   Form,
@@ -17,14 +16,6 @@ import {
 } from "@/components/ui/form";
 
 import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import {
   Stepper,
   StepperDescription,
@@ -47,7 +38,16 @@ import {
 
 import { Textarea } from "@/components/ui/textarea";
 
-// a list of schemas formSchema[0,1,2...]
+// NOTE: Global state management
+import { useOrderStore } from "@/store/orderStore";
+import { useUserStore } from "@/store/userStore";
+
+const orderStore = useOrderStore();
+const userStore = useUserStore();
+
+// Ref to the vee-validate <Form> so we can call setFieldValue after mount
+const formRef = useTemplateRef("formRef");
+
 const formSchema = [
   z.object({
     address: z
@@ -56,7 +56,6 @@ const formSchema = [
     apartment: z.string().optional(),
   }),
   z.object({
-    // plan: z.string({ message: 'You must select a subscription plan to continue.' }).min(1, { message: 'You must select a subscription plan to continue.' }),
     plan: z.enum(["small", "medium", "large"], {
       message: "you must select an option.",
     }),
@@ -68,25 +67,11 @@ const formSchema = [
   }),
 ];
 
-// step index to know which step we're at along
-// with array of steps object steps[0,1,2..]
 const stepIndex = ref(1);
 const steps = [
-  {
-    step: 1,
-    title: "Service Location",
-    description: "Provide an address",
-  },
-  {
-    step: 2,
-    title: "Job Length",
-    description: "How big is the job?",
-  },
-  {
-    step: 3,
-    title: "Additional Information",
-    description: "job description",
-  },
+  { step: 1, title: "Service Location", description: "Provide an address" },
+  { step: 2, title: "Job Length", description: "How big is the job?" },
+  { step: 3, title: "Additional Information", description: "job description" },
 ];
 
 const plans = [
@@ -107,39 +92,42 @@ const plans = [
   },
 ];
 
-// NOTE: if submit is valid, route to -> ProviderList.vue page
-// Keep in mind if onSubmit is valid, then we keep the data to the payment page.
-// Once the user submits the payment, all data will be stored to backend.
+// On mount, prefill address + apartment from the logged-in user's saved profile.
+// If not logged in, leave the form empty.
+onMounted(() => {
+  if (!formRef.value) return;
+  if (!userStore.isLoggedIn) return;
+
+  const savedAddress = userStore.currentUser?.address || "";
+  const savedApartment = userStore.currentUser?.apartment || "";
+
+  if (savedAddress) {
+    formRef.value.setFieldValue("address", savedAddress);
+  }
+  if (savedApartment) {
+    formRef.value.setFieldValue("apartment", savedApartment);
+  }
+});
+
 function onSubmit(values) {
-  // toast("You submitted the following values:", {
-  //   description: h(
-  //     "pre",
-  //     {
-  //       class:
-  //         "bg-code text-code-foreground mt-2 w-[320px] overflow-x-auto rounded-md p-4",
-  //     },
-  //     h("code", JSON.stringify(values, null, 2)),
-  //   ),
-  //   position: "bottom-right",
-  //   class: "flex flex-col gap-2",
-  //   style: {
-  //     "--border-radius": "calc(var(--radius)  + 4px)",
-  //   },
-  // });
-  console.log(JSON.stringify(values));
+  // Save form data to the in-progress order
+  orderStore.setFormData(values);
+
+  // Persist most-recent address to the logged-in user's profile.
+  // saveAddress is a no-op if the user isn't logged in.
+  userStore.saveAddress(values.address, values.apartment);
+
   window.location.hash = "#/ProviderList";
 }
 </script>
 
 <template>
-  <div class="max-w-150 px-10 py-10 mx-auto mt-10">
+  <div class="mx-auto mt-10 max-w-150 px-10 py-10">
     <Form
+      ref="formRef"
       v-slot="{ meta, values, validate }"
       as=""
       keep-values
-      :initial-values="{
-        apartment: '',
-      }"
       :validation-schema="toTypedSchema(formSchema[stepIndex - 1])"
     >
       <Stepper
@@ -165,7 +153,7 @@ function onSubmit(values) {
             }
           "
         >
-          <div class="flex w-full flex-start gap-10">
+          <div class="flex-start flex w-full gap-10">
             <StepperItem
               v-for="(step, index) in steps"
               :key="step.step"
@@ -175,7 +163,7 @@ function onSubmit(values) {
             >
               <StepperSeparator
                 v-if="step.step !== steps[steps.length - 1].step"
-                class="absolute left-[calc(50%+20px)] right-[calc(-90%+10px)] top-5 block h-0.5 shrink-0 rounded-full bg-muted group-data-[state=completed]:bg-primary"
+                class="bg-muted group-data-[state=completed]:bg-primary absolute top-5 right-[calc(-90%+10px)] left-[calc(50%+20px)] block h-0.5 shrink-0 rounded-full"
               />
 
               <StepperTrigger as-child>
@@ -186,10 +174,10 @@ function onSubmit(values) {
                       : 'outline'
                   "
                   size="icon"
-                  class="z-10 rounded-full shrink-0"
+                  class="z-10 shrink-0 rounded-full"
                   :class="[
                     state === 'active' &&
-                      'ring-2 ring-ring ring-offset-2 ring-offset-background',
+                      'ring-ring ring-offset-background ring-2 ring-offset-2',
                   ]"
                   :disabled="
                     state !== 'completed' &&
@@ -212,7 +200,7 @@ function onSubmit(values) {
                 </StepperTitle>
                 <StepperDescription
                   :class="[state === 'active' && 'text-primary']"
-                  class="sr-only text-xs text-muted-foreground transition md:not-sr-only lg:text-sm"
+                  class="text-muted-foreground sr-only text-xs transition md:not-sr-only lg:text-sm"
                 >
                   {{ step.description }}
                 </StepperDescription>
@@ -220,14 +208,14 @@ function onSubmit(values) {
             </StepperItem>
           </div>
 
-          <div class="flex flex-col gap-4 mt-20">
+          <div class="mt-20 flex flex-col gap-4">
             <template v-if="stepIndex === 1">
               <Card>
                 <CardHeader>
                   <CardTitle>Service Location</CardTitle>
-                  <CardDescription
-                    >Where should the provider show up?</CardDescription
-                  >
+                  <CardDescription>
+                    Where should the provider show up?
+                  </CardDescription>
                 </CardHeader>
                 <CardContent class="flex flex-col gap-6">
                   <FormField v-slot="{ componentField: field }" name="address">
@@ -286,9 +274,9 @@ function onSubmit(values) {
                 <CardContent>
                   <FormField v-slot="{ componentField }" name="plan">
                     <FormItem>
-                      <FormLabel class="text-sm text-muted-foreground">
-                        How long does the task take?</FormLabel
-                      >
+                      <FormLabel class="text-muted-foreground text-sm">
+                        How long does the task take?
+                      </FormLabel>
                       <FormControl>
                         <RadioGroup
                           :model-value="componentField.modelValue"
@@ -303,7 +291,7 @@ function onSubmit(values) {
                             @click="
                               componentField['onUpdate:modelValue'](plan.id)
                             "
-                            class="justify-between cursor-pointer hover:bg-muted flex items-center space-x-3 border rounded-lg p-3"
+                            class="hover:bg-muted flex cursor-pointer items-center justify-between space-x-3 rounded-lg border p-3"
                             v-bind:class="{
                               'border-green-500 bg-green-50':
                                 componentField.modelValue === plan.id,
@@ -313,7 +301,7 @@ function onSubmit(values) {
                               <FormLabel class="text-base font-medium">
                                 {{ plan.title }}
                               </FormLabel>
-                              <FormLabel class="text-sm text-muted-foreground">
+                              <FormLabel class="text-muted-foreground text-sm">
                                 {{ plan.description }}
                               </FormLabel>
                             </div>
@@ -381,43 +369,11 @@ function onSubmit(values) {
                   >
                     Back
                   </Button>
-                  <Button type="submit" class="cursor-pointer"> Submit </Button>
+                  <Button type="submit" class="cursor-pointer">Submit</Button>
                 </CardFooter>
               </Card>
             </template>
           </div>
-
-          <!-- WARN: Old prev and next buttons that were displayed outside of the card -->
-          <!-- <div class="flex items-center justify-between mt-4"> -->
-          <!-- <Button -->
-          <!--   :disabled="isPrevDisabled" -->
-          <!--   variant="outline" -->
-          <!--   size="sm" -->
-          <!--   @click="prevStep()" -->
-          <!-- > -->
-          <!--   Back -->
-          <!-- </Button> -->
-          <!-- <div class="flex items-center gap-3"> -->
-          <!--   <Button -->
-          <!--     class="cursor-pointer" -->
-          <!--     v-if="stepIndex !== 3" -->
-          <!--     :type="meta.valid ? 'button' : 'submit'" -->
-          <!--     :disabled="isNextDisabled" -->
-          <!--     size="sm" -->
-          <!--     @click="meta.valid && nextStep()" -->
-          <!--   > -->
-          <!--     Next -->
-          <!--   </Button> -->
-          <!--   <Button -->
-          <!--     v-if="stepIndex === 3" -->
-          <!--     size="sm" -->
-          <!--     type="submit" -->
-          <!--     class="cursor-pointer" -->
-          <!--   > -->
-          <!--     Submit -->
-          <!--   </Button> -->
-          <!-- </div> -->
-          <!-- </div> -->
         </form>
       </Stepper>
     </Form>

@@ -1,0 +1,32 @@
+[
+  {
+    "id": 1,
+    "name": "Harbor Handyman",
+    "service": "General Repair",
+    "city": "Long Beach",
+    "lat": 33.7701,
+    "lng": -118.1937,
+    "rating": 4.8,
+    "distance": "1.8 miles"
+  },
+  {
+    "id": 2,
+    "name": "South Bay Plumbing",
+    "service": "Plumbing",
+    "city": "San Pedro",
+    "lat": 33.7361,
+    "lng": -118.2922,
+    "rating": 4.7,
+    "distance": "3.4 miles"
+  },
+  {
+    "id": 3,
+    "name": "Wilmington Electric",
+    "service": "Electrical",
+    "city": "Wilmington",
+    "lat": 33.7858,
+    "lng": -118.2645,
+    "rating": 4.9,
+    "distance": "2.6 miles"
+  }
+]
