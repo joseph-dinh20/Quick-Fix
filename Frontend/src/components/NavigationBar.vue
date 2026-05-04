@@ -175,6 +175,15 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Bookmark, CircleUserRound, CirclePlus, Search } from "lucide-vue-next";
 
+import { storeToRefs } from "pinia";
+import { useUserStore } from "@/store/userStore";
+import "vue-toast-notification/dist/theme-sugar.css";
+import { useToast } from "vue-toast-notification";
+
+const userStore = useUserStore();
+const { isLoggedIn, isCustomer, isProvider } = storeToRefs(userStore);
+const $toast = useToast();
+
 const props = defineProps({
   isLoggedIn: {
     type: Boolean,
@@ -201,9 +210,11 @@ async function logout() {
   } catch (err) {
     console.error("Logout error:", err);
   }
-
+  const name = userStore.currentUser?.name;
+  userStore.logout();
+  $toast.success(name ? `Goodbye, ${name}!` : "Logged out");
   localStorage.clear();
-  emit("logout-success");
+  // emit("logout-success");
   navigateTo("/");
 }
 
