@@ -36,17 +36,18 @@
           </div>
 
           <div class="flex flex-col sm:flex-row gap-3">
-            <button
+            <Button
               @click="useMyLocation"
-              class="px-4 py-2 rounded-xl bg-purple-600 text-white font-semibold hover:bg-purple-700 transition flex items-center justify-center gap-2"
+              class="px-4 py-2 rounded-xl bg-violet-600 text-white font-semibold hover:bg-violet-700 transition flex items-center justify-center gap-2"
             >
               <MapPin class="w-4 h-4" />
               Use My Location
             </button>
 
-            <button
+            <Button
+              variant="outline"
               @click="goToListingsPage"
-              class="px-4 py-2 rounded-xl bg-green-600 text-white font-semibold hover:bg-green-700 transition flex items-center justify-center gap-2"
+              class="px-4 py-2 rounded-xl text-primary font-semibold flex items-center justify-center gap-2 border-primary transition-all duration-300 ease-in-out hover:bg-primary hover:text-white hover:border-transparent"
             >
               <List class="w-4 h-4" />
               Normal Listings View
@@ -72,12 +73,12 @@
               @keyup.enter="handleSearchLocation"
               type="text"
               placeholder="Search city, name, job, or service..."
-              class="border border-slate-300 rounded-xl px-4 py-2 w-full focus:outline-none focus:ring-2 focus:ring-green-500"
+              class="border border-slate-300 rounded-xl px-4 py-2 w-full focus:outline-none focus:ring-2 focus:ring-primary"
             />
 
-            <button
+            <Button
               @click="handleSearchLocation"
-              class="px-4 py-2 rounded-xl bg-green-600 text-white font-semibold hover:bg-green-700 transition flex items-center gap-2"
+              class="px-4 py-2 rounded-xl font-semibold transition flex items-center gap-2"
             >
               <Search class="w-4 h-4" />
               Search
@@ -125,7 +126,7 @@
             </p>
           </div>
 
-          <div id="map" class="h-[620px] w-full"></div>
+          <div id="map" class="h-[620px] w-full z-0"></div>
         </div>
 
         <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
@@ -150,8 +151,8 @@
               v-for="item in filteredItems"
               :key="`${activeView}-${item.id}`"
               @click="focusItem(item)"
-              class="border rounded-xl p-4 mb-3 cursor-pointer transition hover:shadow-sm hover:border-green-300"
-              :class="selectedItem && selectedItem.id === item.id ? 'border-green-500 bg-green-50' : 'border-slate-200 bg-white'"
+              class="border rounded-xl p-4 mb-3 cursor-pointer transition hover:shadow-sm hover:border-primary"
+              :class="selectedItem && selectedItem.id === item.id ? 'border-primary bg-green-50' : 'border-slate-200 bg-white'"
             >
               <div class="flex justify-between gap-3">
                 <div>
@@ -165,8 +166,16 @@
                 </div>
 
                 <div class="text-slate-500">
-                  <Wrench v-if="activeView === 'providers'" class="w-5 h-5" />
-                  <Briefcase v-else class="w-5 h-5" />
+                  <!-- <Wrench v-if="activeView === 'providers'" class="w-5 h-5" />
+                  <Briefcase v-else class="w-5 h-5" /> -->
+                              <Button
+              variant="link"
+              @click="toggle(job)"
+              class="h-auto p-0 text-xs font-medium decoration-1 underline-offset-4 text-slate-500 hover:text-slate-800 font-semibold"
+            >
+              <Bookmark></Bookmark>
+              Save
+            </Button>
                 </div>
               </div>
 
@@ -262,12 +271,12 @@
           </div>
 
           <div class="flex gap-3 mt-6">
-            <button
+            <Button
               @click="goToJobsPage"
-              class="flex-1 px-5 py-2 rounded-xl bg-green-600 text-white font-semibold hover:bg-green-700 transition"
+              class="flex-1 px-5 py-2 rounded-xl text-white font-semibold transition"
             >
               Apply to Job
-            </button>
+            </Button>
 
             <button
               @click="closeJobPopup"
@@ -281,7 +290,7 @@
     </div>
 
     <Dialog v-model:open="schedulerOpen">
-      <DialogContent class="max-w-md p-0 border-0">
+      <DialogContent class="max-w-md p-0 border-0 z-[2000]">
         <DialogHeader class="sr-only">
           <DialogTitle>Schedule</DialogTitle>
           <DialogDescription>Select a date and time</DialogDescription>
@@ -308,11 +317,13 @@ import {
   Search,
   Star,
   List,
+  Bookmark
 } from "lucide-vue-next";
 
 import Provider from "@/components/Provider.vue";
 import Scheduler from "@/components/Scheduler.vue";
 import fallbackJobs from "../data/mapJobs.json";
+import { toggleFavoriteJob } from "@/services/api";
 
 import {
   Dialog,
@@ -321,6 +332,7 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button"
 
 import { userListStore } from "@/store/userList";
 import { storeToRefs } from "pinia";
@@ -335,6 +347,17 @@ const selectedJobForPopup = ref(null);
 const selectedProviderForDetail = ref(null);
 const selectedProviderForScheduler = ref(null);
 const schedulerOpen = ref(false);
+
+function parseInitialViewFromHash() {
+  const hash = window.location.hash || "";
+  const query = hash.split("?")[1] || "";
+  const params = new URLSearchParams(query);
+  const view = params.get("view");
+
+  if (view === "jobs" || view === "providers") {
+    activeView.value = view;
+  }
+}
 
 const searchQuery = ref("");
 const selectedService = ref("All");
@@ -457,6 +480,15 @@ const filteredItems = computed(() => {
     return matchesSearch && matchesService && insideRadius;
   });
 });
+
+async function toggle(job) {
+  try {
+    const res = await toggleFavoriteJob(job.id);
+    job.is_favorited = res.data.favorited;
+  } catch (err) {
+    console.error(err);
+  }
+}
 
 function formatBudget(budget) {
   if (!budget) return "$0";
@@ -758,14 +790,29 @@ function closeAllPopups() {
   selectedProviderForDetail.value = null;
   selectedProviderForScheduler.value = null;
   schedulerOpen.value = false;
+
+  // Close any open Leaflet popups
+  if (map) {
+    map.closePopup();
+  }
 }
 
 function closeJobPopup() {
   selectedJobForPopup.value = null;
+
+  // Close any open Leaflet popups
+  if (map) {
+    map.closePopup();
+  }
 }
 
 function closeProviderPopup() {
   selectedProviderForDetail.value = null;
+
+  // Close any open Leaflet popups
+  if (map) {
+    map.closePopup();
+  }
 }
 
 function handleProviderSelect() {
@@ -773,6 +820,11 @@ function handleProviderSelect() {
 
   // Fixes visual bug by closing profile popup before opening scheduler.
   selectedProviderForDetail.value = null;
+
+  // Close any open Leaflet popups
+  if (map) {
+    map.closePopup();
+  }
 
   setTimeout(() => {
     schedulerOpen.value = true;
@@ -869,6 +921,7 @@ async function fetchJobsForMap() {
 }
 
 onMounted(async () => {
+  parseInitialViewFromHash();
   await fetchJobsForMap();
 
   map = L.map("map").setView([userLocation.value.lat, userLocation.value.lng], 12);
@@ -888,5 +941,11 @@ watch([activeView, selectedService, radiusMiles, mapProviders, mapJobs], () => {
 watch(searchQuery, () => {
   closeAllPopups();
   refreshMap();
+});
+
+watch(schedulerOpen, (newVal) => {
+  if (!newVal && map) {
+    map.invalidateSize();
+  }
 });
 </script>

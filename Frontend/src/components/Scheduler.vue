@@ -158,7 +158,7 @@ function isDateUnavailable(date) {
                 }}
               </Button>
             </PopoverTrigger>
-            <PopoverContent class="w-auto p-0" align="start">
+            <PopoverContent class="w-auto p-0 z-[2500]" align="start">
               <Calendar
                 class="cursor-pointer"
                 v-model="selectedDate"
@@ -193,7 +193,7 @@ function isDateUnavailable(date) {
                 <SelectValue placeholder="Select a time window" />
               </div>
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent class="z-[2500]">
               <SelectGroup>
                 <SelectItem
                   v-for="item in timeOfDay"
