@@ -21,6 +21,7 @@ import Hello4 from "@/components/Hello4.vue";
 import JoinUs from "./components/JoinUs.vue";
 import Settings from "./components/Settings.vue";
 import DemoLocation from "./components/DemoLocation.vue";
+import DemoMap from "./components/DemoMap.vue"; // ✅ ADDED
 import DemoCreateJob from "./components/DemoCreateJob.vue";
 import DemoCreateJob2 from "./components/DemoCreateJob2.vue";
 import DemoMyJobs from "./components/DemoMyJobs.vue";
@@ -94,6 +95,7 @@ const routes = {
   "/JoinUs": JoinUs,
   "/Settings": Settings,
   "/DemoLocation": DemoLocation,
+  "/DemoMap": DemoMap, // ✅ ADDED
   "/DemoCreateJob": DemoCreateJob,
   "/DemoCreateJob2": DemoCreateJob2,
   "/DemoMyJobs": DemoMyJobs,
