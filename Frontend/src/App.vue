@@ -1,43 +1,19 @@
 <script setup>
-import { ref, computed, onMounted } from "vue";
-
+import { ref, computed } from "vue";
 import Header from "@/components/Header.vue";
 import Payment from "@/components/Payment.vue";
+import PaymentSuccess from "@/components/PaymentSuccess.vue";
+import OrderHistory from "@/components/OrderHistory.vue";
+import ProviderOrderHistory from "@/components/ProviderOrderHistory.vue";
 import Main from "@/components/Main.vue";
 import Login from "@/components/Login.vue";
 import Signup from "@/components/Signup.vue";
 import Form from "@/components/Form.vue";
 import Profile from "@/components/Profile.vue";
 import Test from "@/components/Test.vue";
-import Hello from "@/components/Hello.vue";
 import Temp from "@/components/Temp.vue";
-import Provider from "@/components/Provider.vue";
 import ProviderList from "@/components/ProviderList.vue";
-import ProviderTest from "@/components/ProviderTest.vue";
-import Hello1 from "@/components/Hello1.vue";
-import Hello2 from "@/components/Hello2.vue";
-import DemoProfile from "@/components/DemoProfile.vue";
-import Hello4 from "@/components/Hello4.vue";
-import JoinUs from "./components/JoinUs.vue";
-import Settings from "./components/Settings.vue";
-import DemoLocation from "./components/DemoLocation.vue";
-import DemoMap from "./components/DemoMap.vue"; // ✅ ADDED
-import DemoCreateJob from "./components/DemoCreateJob.vue";
-import DemoCreateJob2 from "./components/DemoCreateJob2.vue";
-import DemoMyJobs from "./components/DemoMyJobs.vue";
-import DemoJobListings from "./components/DemoJobListings.vue";
 import FavoriteProvider from "@/components/FavoriteProvider.vue";
-import DemoProvider from "./components/DemoProvider.vue";
-import DemoSavedJobs from "./components/DemoSavedJobs.vue";
-import DemoProviderList from "./components/DemoProviderList.vue";
-import DemoFavoriteProvider from "./components/DemoFavoriteProvider.vue";
-import Scheduler from "./components/Scheduler.vue";
-import ReportForm from "./components/ReportForm.vue";
-import BecomeFixer from './components/BecomeFixer.vue';
-import DemoAssignedJobs from './components/DemoAssignedJobs.vue';
-import ReviewProvider from "./components/ReviewProvider.vue";
-
-import { me, initCsrf, logout as apiLogout } from "@/services/api.js";
 import { Toaster } from "@/components/ui/sonner";
 import NavigationBar from "./components/NavigationBar.vue";
 
@@ -78,34 +54,17 @@ async function logout() {
 const routes = {
   "/": Main,
   "/Payment": Payment,
+  "/PaymentSuccess": PaymentSuccess,
+  "/OrderHistory": OrderHistory,
+  "/ProviderOrderHistory": ProviderOrderHistory,
   "/Login": Login,
   "/Signup": Signup,
   "/Form": Form,
   "/Profile": Profile,
   "/Test": Test,
   "/Temp": Temp,
-  "/Provider": Provider,
   "/ProviderList": ProviderList,
-  "/ProviderTest": ProviderTest,
-  "/Hello": Hello,
-  "/Hello1": Hello1,
-  "/Hello2": Hello2,
-  "/DemoProfile": DemoProfile,
-  "/Hello4": Hello4,
-  "/JoinUs": JoinUs,
-  "/Settings": Settings,
-  "/DemoLocation": DemoLocation,
-  "/DemoMap": DemoMap, // ✅ ADDED
-  "/DemoCreateJob": DemoCreateJob,
-  "/DemoCreateJob2": DemoCreateJob2,
-  "/DemoMyJobs": DemoMyJobs,
-  "/DemoJobListings": DemoJobListings,
   "/FavoriteProvider": FavoriteProvider,
-  "/DemoFavoriteProvider": DemoFavoriteProvider,
-  "/DemoProvider": DemoProvider,
-  "/BecomeFixer": BecomeFixer,
-  "/DemoSavedJobs": DemoSavedJobs,
-  "/DemoProviderList": DemoProviderList,
   "/Scheduler": Scheduler,
   "/ReportForm": ReportForm,
   "/DemoAssignedJobs": DemoAssignedJobs,
@@ -120,36 +79,21 @@ window.addEventListener("hashchange", () => {
 });
 
 const currentView = computed(() => {
-  const path = currentPath.value.replace(/^#/, "").split("?")[0] || "/";
-  return routes[path] || Main;
+  const path = currentPath.value.slice(1).split("?")[0] || "/";
+  return routes[path];
 });
-
-const isLoggedIn = computed(() => !!user.value);
-
-async function handleLoginSuccess() {
-  await refreshUser();
-}
-
-function handleLogout() {
-  user.value = null;
-  window.location.hash = "#/";
-}
 </script>
 
 <template>
-  <div class="flex flex-col items-center min-h-screen w-full">
-    <div v-if="loadingUser">Loading...</div>
-
-    <div v-else class="flex flex-col items-center w-full">
-      <NavigationBar
+  <div class="flex min-h-screen w-full flex-col items-center">
+    <NavigationBar
       :is="currentView" 
       :is-logged-in="isLoggedIn"
       :user="user"
       @login-success="handleLoginSuccess"
       @logout-success="handleLogout" 
       />
-
-
+    <div class="flex w-full flex-col items-center">
       <div class="w-full mt-10">
         <component 
           :is="currentView" 
@@ -160,7 +104,8 @@ function handleLogout() {
         />
       </div>
     </div>
-
     <Toaster />
   </div>
 </template>
+
+<style scoped></style>

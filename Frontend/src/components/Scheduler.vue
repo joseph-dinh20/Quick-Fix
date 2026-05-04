@@ -1,4 +1,4 @@
-<!-- Scheduler.vue -->
+<!-- NOTE: Scheduler.vue -->
 <script setup>
 import {
   DateFormatter,
@@ -28,10 +28,20 @@ import {
   CardContent,
   CardDescription,
 } from "@/components/ui/card";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import defaultAvatar from "@/assets/avatars/defaultAvatar.png";
 import { ref, watch, computed } from "vue";
+import "vue-toast-notification/dist/theme-sugar.css";
+import { useToast } from "vue-toast-notification";
+
+import { useOrderStore } from "@/store/orderStore";
+import { useUserStore } from "@/store/userStore";
+
+const orderStore = useOrderStore();
+const userStore = useUserStore();
+const $toast = useToast();
 
 const { provider } = defineProps(["provider"]);
-
 const todayDate = today(getLocalTimeZone());
 const nextDay = todayDate.add({ days: 1 });
 const selectedDate = ref();
@@ -43,9 +53,7 @@ const timeOfDay = [
 ];
 const selectedTime = ref();
 const isOpen = ref(false);
-const df = new DateFormatter("en-US", {
-  dateStyle: "long",
-});
+const df = new DateFormatter("en-US", { dateStyle: "long" });
 
 const isComplete = computed(() => selectedDate.value && selectedTime.value);
 
@@ -54,16 +62,58 @@ watch(selectedDate, () => {
 });
 
 function routeToPayment() {
+  // Save schedule data to the order store regardless — survives a login detour
+  orderStore.setSelectedProvider(provider);
+  orderStore.setSchedule(
+    selectedDate.value.toString(),
+    selectedTime.value.time,
+    selectedTime.value.text,
+  );
+
+  // Providers can't book services
+  if (userStore.isProvider) {
+    $toast.error(
+      "Providers can't book services. Please use a customer account.",
+    );
+    return;
+  }
+
+  if (!userStore.isLoggedIn) {
+    sessionStorage.setItem("redirectAfterLogin", "/Payment");
+    $toast.info("Please log in to continue with your booking.");
+    window.location.hash = "#/Login";
+    return;
+  }
+
   window.location.hash = "#/Payment";
 }
+
+function isDateUnavailable(date) {
+  const jsDate = date.toDate(getLocalTimeZone());
+  const day = jsDate.getDay();
+
+  // Disable specific dates
+  const disabledDates = [
+      "2026-05-06",
+      "2026-05-07", 
+      "2026-05-08",
+      "2026-05-09",
+      "2026-05-10",
+      "2026-05-12"
+  ];
+
+  const formatted = jsDate.toISOString().split("T")[0];
+  return disabledDates.includes(formatted);
+}
+
 </script>
 
 <template>
-  <div class="flex flex-col items-center py-10 px-4">
-    <Card class="w-full max-w-md shadow-lg border-0 ring-1 ring-border/50">
+  <div class="flex flex-col items-center px-4 py-10">
+    <Card class="ring-border/50 w-full max-w-md border-0 shadow-lg ring-1">
       <CardHeader class="pb-2">
         <div
-          class="flex items-center gap-2 text-green-600 text-sm font-medium mb-2"
+          class="mb-2 flex items-center gap-2 text-sm font-medium text-green-600"
         >
           <CalendarIcon class="size-4" />
           Scheduling
@@ -74,20 +124,27 @@ function routeToPayment() {
         <CardDescription>
           Choose when you'd like the contractor to arrive.
         </CardDescription>
+        <div class="mt-5 flex items-center gap-5">
+          <Avatar class="scale-[1.3]">
+            <AvatarImage :src="provider.avatar" alt="provider photo" />
+            <AvatarFallback><img :src="defaultAvatar" /></AvatarFallback>
+          </Avatar>
+          <span class="text-lg font-semibold">{{ provider.name }}</span>
+        </div>
       </CardHeader>
 
       <CardContent class="flex flex-col gap-6 pt-4">
         <!-- Date -->
         <div class="flex flex-col gap-2">
-          <label class="text-sm font-medium flex items-center gap-2">
-            <CalendarIcon class="size-4 text-muted-foreground" />
+          <label class="flex items-center gap-2 text-sm font-medium">
+            <CalendarIcon class="text-muted-foreground size-4" />
             Date
           </label>
           <Popover v-model:open="isOpen">
             <PopoverTrigger as-child>
               <Button
                 variant="outline"
-                class="cursor-pointer w-full justify-start font-normal"
+                class="w-full cursor-pointer justify-start font-normal"
                 :class="!selectedDate && 'text-muted-foreground'"
               >
                 <CheckCircle2
@@ -109,6 +166,8 @@ function routeToPayment() {
                 layout="month-and-year"
                 :minValue="nextDay"
                 :numberOfMonths="1"
+                :is-date-disabled="isDateUnavailable"
+                :is-date-unavailable="isDateUnavailable"
                 initial-focus
               />
             </PopoverContent>
@@ -117,19 +176,19 @@ function routeToPayment() {
 
         <!-- Time -->
         <div class="flex flex-col gap-2">
-          <label class="text-sm font-medium flex items-center gap-2">
-            <Clock class="size-4 text-muted-foreground" />
+          <label class="flex items-center gap-2 text-sm font-medium">
+            <Clock class="text-muted-foreground size-4" />
             Time of day
           </label>
           <Select v-model="selectedTime">
             <SelectTrigger
-              class="cursor-pointer w-full h-11"
+              class="h-11 w-full cursor-pointer"
               :class="!selectedTime && 'text-muted-foreground'"
             >
               <div class="flex items-center gap-2">
                 <CheckCircle2
                   v-if="selectedTime"
-                  class="size-4 text-green-500 shrink-0"
+                  class="size-4 shrink-0 text-green-500"
                 />
                 <SelectValue placeholder="Select a time window" />
               </div>
@@ -139,26 +198,25 @@ function routeToPayment() {
                 <SelectItem
                   v-for="item in timeOfDay"
                   :key="item.time"
-                  :value="item.time"
+                  :value="item"
                   class="cursor-pointer"
                 >
                   <span class="font-medium">{{ item.time }}</span>
                   <span class="text-muted-foreground ml-1">
-                    ({{ item.text }})</span
-                  >
+                    ({{ item.text }})
+                  </span>
                 </SelectItem>
               </SelectGroup>
             </SelectContent>
           </Select>
         </div>
 
-        <!-- Confirm -->
         <CardDescription>
           Your contractor will reach out to you to confirm exact details.
         </CardDescription>
         <Button
           @click="routeToPayment"
-          class="cursor-pointer rounded-3xl w-40 self-center"
+          class="w-40 cursor-pointer self-center rounded-3xl"
           :disabled="!isComplete"
         >
           Confirm Schedule
@@ -169,7 +227,6 @@ function routeToPayment() {
 </template>
 
 <style scoped>
-/* NOTE: This is needed to disable the default behavior of ui/Calendar component feature */
 :deep([data-today]:not([data-selected])) {
   background: transparent;
 }
@@ -181,4 +238,11 @@ function routeToPayment() {
 :deep([data-disabled]) {
   cursor: not-allowed;
 }
+
+:deep([data-unavailable]) {
+  text-decoration: line-through;
+
+}
+
+
 </style>
