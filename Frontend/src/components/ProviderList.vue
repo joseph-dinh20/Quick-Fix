@@ -341,6 +341,11 @@ const profileOpen = ref({});
 const schedulerOpen = ref(false);
 const selectedProvider = ref(null);
 
+
+const navigate = (hash) => {
+  window.location.hash = hash;
+};
+
 function handleSelect(provider, index) {
   profileOpen.value[index] = false;
   selectedProvider.value = provider;
@@ -351,6 +356,18 @@ function handleSelect(provider, index) {
 </script>
 
 <template>
+    <div class="flex justify-evenly items-center mb-8">
+    <h1 class="text-3xl font-extrabold">
+      Find work
+    </h1>
+    
+    <Button variant="ghost" size="icon"     class="text-slate-700"
+    @click="navigate('#/DemoMap')"
+    >
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21"></polygon><line x1="9" x2="9" y1="3" y2="18"></line><line x1="15" x2="15" y1="6" y2="21"></line></svg>
+      
+    </Button>
+  </div>
   <div>
     <div
       v-for="(provider, index) in providers"

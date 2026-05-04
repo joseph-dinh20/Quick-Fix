@@ -73,7 +73,7 @@
               @keyup.enter="handleSearchLocation"
               type="text"
               placeholder="Search city, name, job, or service..."
-              class="border border-slate-300 rounded-xl px-4 py-2 w-full focus:outline-none focus:ring-2 focus:ring-green-500"
+              class="border border-slate-300 rounded-xl px-4 py-2 w-full focus:outline-none focus:ring-2 focus:ring-primary"
             />
 
             <Button
@@ -347,6 +347,17 @@ const selectedJobForPopup = ref(null);
 const selectedProviderForDetail = ref(null);
 const selectedProviderForScheduler = ref(null);
 const schedulerOpen = ref(false);
+
+function parseInitialViewFromHash() {
+  const hash = window.location.hash || "";
+  const query = hash.split("?")[1] || "";
+  const params = new URLSearchParams(query);
+  const view = params.get("view");
+
+  if (view === "jobs" || view === "providers") {
+    activeView.value = view;
+  }
+}
 
 const searchQuery = ref("");
 const selectedService = ref("All");
@@ -910,6 +921,7 @@ async function fetchJobsForMap() {
 }
 
 onMounted(async () => {
+  parseInitialViewFromHash();
   await fetchJobsForMap();
 
   map = L.map("map").setView([userLocation.value.lat, userLocation.value.lng], 12);
