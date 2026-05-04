@@ -34,11 +34,21 @@ import Provider from "@/components/Provider.vue";
 import Scheduler from "@/components/Scheduler.vue";
 
 import { useProviderProfileStore } from "@/store/providerProfileStore";
+import { useProviderRatingsStore } from "@/store/providerRatingsStore";
 
 const providerProfileStore = useProviderProfileStore();
+const ratingsStore = useProviderRatingsStore();
 
 // Reactively merged: any saved edit reflects automatically.
 const providers = computed(() => providerProfileStore.getMergedProviders());
+
+// Helpers for live rating display
+function liveAverage(provider) {
+  return ratingsStore.getAverageFor(provider.userID) || "—";
+}
+function liveReviewCount(provider) {
+  return ratingsStore.getRatingsFor(provider.userID).length;
+}
 
 const profileOpen = ref({});
 const schedulerOpen = ref(false);
@@ -70,8 +80,8 @@ function handleSelect(provider, index) {
               <CardDescription class="mt-1">
                 <Badge variant="outline">
                   <img class="inline-block w-4 align-top" :src="starIcon" />
-                  {{ provider.averageRating }}
-                  ({{ provider.ratings.length }}) reviews
+                  {{ liveAverage(provider) }}
+                  ({{ liveReviewCount(provider) }}) reviews
                 </Badge>
               </CardDescription>
 
