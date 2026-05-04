@@ -24,9 +24,10 @@ import JoinUs from "./components/JoinUs.vue";
 import DemoCreateJob from "./components/DemoCreateJob.vue";
 import DemoMyJobs from "./components/DemoMyJobs.vue";
 import ReviewProvider from "./components/ReviewProvider.vue";
-import ChatMessages from "./components/ChatMessages.vue"
+import ChatMessages from "./components/ChatMessages.vue";
 import Settings from "./components/Settings.vue";
 import Scheduler from "./components/Scheduler.vue";
+import DemoMap from "./components/DemoMap.vue";
 import { useUserStore } from "@/store/userStore";
 
 const userStore = useUserStore();
@@ -107,13 +108,14 @@ const routes = {
   "/ReportForm": ReportForm,
   "/DemoAssignedJobs": DemoAssignedJobs,
   "/ReviewProvider": ReviewProvider,
-  "/ChatMessages": ChatMessages
+  "/ChatMessages": ChatMessages,
   "/DemoSavedJobs": DemoSavedJobs,
   "/DemoCreateJob": DemoCreateJob,
   "/DemoJobListings": DemoJobListings,
   "/DemoMyJobs": DemoMyJobs,
   "/ReviewProvider": ReviewProvider,
   "/NavigationBar": NavigationBar,
+  "/DemoMap": DemoMap,
   "/Settings": Settings,
 };
 
