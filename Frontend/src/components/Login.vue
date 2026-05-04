@@ -1,7 +1,5 @@
+<!-- NOTE: Login.vue -->
 <script setup>
-// import type { HTMLAttributes } from "vue"
-import { cn } from "@/lib/utils";
-import { initCsrf, login as apiLogin } from "@/services/api"
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -20,69 +18,41 @@ import { Input } from "@/components/ui/input";
 import "vue-toast-notification/dist/theme-sugar.css";
 import { useToast } from "vue-toast-notification";
 import { ref } from "vue";
+import { useUserStore } from "@/store/userStore";
 
+const userStore = useUserStore();
+const $toast = useToast();
 
-async function getData() {
-  const $toast = useToast()
-  // geting the total users stored in server.js
-  const url = "http://localhost:8080/users"
-  try {
-    const response = await fetch(url)
+const email = ref("");
+const password = ref("");
 
-    if (!response.ok) {
-      throw new Erorr('Response Stat: ${response.status}')
-    }
-    const result = await response.json()
-    let instance = $toast.success(JSON.stringify(result))
-    console.log(result)
+function login() {
+  const result = userStore.login(email.value, password.value);
+
+  if (!result.success) {
+    $toast.error(result.message);
+    return;
   }
-  catch (error) {
-    console.error(error.message)
+
+  $toast.success(result.message);
+
+  // Providers always go to their booking inbox
+  if (userStore.isProvider) {
+    sessionStorage.removeItem("redirectAfterLogin"); // clear any stale customer redirect
+    window.location.hash = "/ProviderOrderHistory";
+    return;
   }
+
+  // Customers: honor any saved redirect, else go home
+  const redirect = sessionStorage.getItem("redirectAfterLogin");
+  sessionStorage.removeItem("redirectAfterLogin");
+  window.location.hash = redirect || "/";
 }
-
-const emit = defineEmits(['login-success'])
-const email = ref('')
-const password = ref('')
-
-function quickLogin() {
-  emit('login-success')
-}
-async function login() {
-  const $toast = useToast()
-
-  try {
-    // get CSRF cookie + header set for axios
-    await initCsrf()
-
-    const res = await apiLogin({
-      email: email.value,
-      password: password.value,
-    })
-
-    // success
-    $toast.success(res.data?.message || "Login success")
-    emit("login-success")
-    return res.data
-  } catch (err) {
-    const msg =
-      err?.response?.data?.error ||
-      err?.response?.data?.detail ||
-      err?.message ||
-      "Login failed"
-
-    $toast.error(msg)
-    console.error("Login Failed:", err?.response?.data || err)
-    throw err
-  }
-}
-
 </script>
 
 <template>
   <div class="login-root flex flex-col items-center gap-6">
-    <!-- <Card class="text-green-900 font-normal"> -->
-    <Card class="">
+    <Card>
       <CardHeader>
         <CardTitle>Login to your account</CardTitle>
         <CardDescription>
@@ -90,13 +60,10 @@ async function login() {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <!-- <form> -->
-        <!-- the @submit.prevent stops the page to be reloaded -->
-        <!-- reference https://vuejs.org/guide/essentials/event-handling -->
         <form @submit.prevent="login">
           <FieldGroup>
             <Field>
-              <FieldLabel for="email"> Email </FieldLabel>
+              <FieldLabel for="email">Email</FieldLabel>
               <Input
                 id="email"
                 type="email"
@@ -107,10 +74,7 @@ async function login() {
             </Field>
             <Field>
               <div class="flex items-center">
-                <FieldLabel for="password"> Password </FieldLabel>
-                <!-- <a href="#" class="ml-auto inline-block text-sm underline-offset-4 hover:underline"> -->
-                <!--   Forgot your password? -->
-                <!-- </a> -->
+                <FieldLabel for="password">Password</FieldLabel>
               </div>
               <Input
                 id="password"
@@ -121,21 +85,15 @@ async function login() {
               />
             </Field>
             <Field>
-              <!-- <Button type="submit" @click="login"> -->
-              <Button type="submit"> Login </Button>
-              <!-- <Button variant="outline" type="button"> -->
-              <!--   Login with Google -->
-              <!-- </Button> -->
+              <Button type="submit">Login</Button>
               <FieldDescription class="text-center">
                 Don't have an account?
-                <a href="#/Signup"> Sign up </a>
+                <a href="#/Signup">Sign up</a>
               </FieldDescription>
             </Field>
           </FieldGroup>
         </form>
       </CardContent>
     </Card>
-    <!-- <Button @click="quickLogin">Bypass Login</Button> -->
   </div>
 </template>
-
