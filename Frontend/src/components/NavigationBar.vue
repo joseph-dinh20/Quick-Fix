@@ -16,12 +16,12 @@
             <NavigationMenuItem>
               <div
                 @click="navigateTo('/')"
-                class="flex items-center h-12 cursor-pointer"
+                class="flex items-center h-14 cursor-pointer overflow-hidden"
               >
                 <img
                   :src="LogoImage"
                   alt="Logo"
-                  class="h-12 w-auto"
+                  class="w-auto "
                 />
               </div>
             </NavigationMenuItem>
@@ -115,7 +115,10 @@
                   class="absolute top-full mt-1 w-48 bg-white rounded-lg shadow-lg border z-50 p-1 flex flex-col"
                 >
                   <NavigationMenuListItem class="py-1.5" href="#/DemoMyJobs" title="Your Jobs" v-if="isCustomer"/>
-                  <NavigationMenuListItem class="py-1.5" href="/" title="Your Applications" v-if="isProvider"/>
+                  <NavigationMenuListItem class="py-1.5" href="/" title="Your Applications"
+                   v-if="isProvider"/>
+                  <NavigationMenuListItem class="py-1.5" href="/DemoAssignedJobs" title="Assigned Jobs"
+                   v-if="isProvider"/>
                   <NavigationMenuListItem class="py-1.5" href="#/OrderHistory" title="Order History" />
                   <NavigationMenuListItem class="py-1.5" href="#/ChatMessages" title="Messages" />
                   <NavigationMenuListItem v-if="isProvider" class="py-1.5" href="#/Profile" title="Provider Profile" />
@@ -206,7 +209,7 @@ const props = defineProps({
   }
 });
 
-const user = computed(() => props.user ?? { name: "Profile", username: "Profile" });
+const user = ref(props.user ?? { name: "Profile", username: "Profile" });
 const emit = defineEmits(["logout-success"]);
 
 async function logout() {
