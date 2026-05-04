@@ -159,6 +159,7 @@ export const useUserStore = defineStore(
         currentUser.value = {
           ...safeUser,
           name: savedProfile.name || safeUser.name,
+          username: savedProfile.name || safeUser.name,
           avatar: savedProfile.avatar || "",
           phone: savedProfile.phone || "",
           address: savedProfile.address || "",

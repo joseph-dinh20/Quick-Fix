@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed } from "vue";
+import { ref, computed, onMounted, watch } from "vue";
 import Header from "@/components/Header.vue";
 import Payment from "@/components/Payment.vue";
 import PaymentSuccess from "@/components/PaymentSuccess.vue";
@@ -16,14 +16,38 @@ import ProviderList from "@/components/ProviderList.vue";
 import FavoriteProvider from "@/components/FavoriteProvider.vue";
 import { Toaster } from "@/components/ui/sonner";
 import NavigationBar from "./components/NavigationBar.vue";
+import ReportForm from "./components/ReportForm.vue";
+import DemoAssignedJobs from "./components/DemoAssignedJobs.vue";
+import DemoSavedJobs from "./components/DemoSavedJobs.vue";
+import DemoJobListings from "./components/DemoJobListings.vue";
+import JoinUs from "./components/JoinUs.vue";
+import DemoCreateJob from "./components/DemoCreateJob.vue";
+import DemoMyJobs from "./components/DemoMyJobs.vue";
+import ReviewProvider from "./components/ReviewProvider.vue";
+import Settings from "./components/Settings.vue";
+import Scheduler from "./components/Scheduler.vue";
+import { useUserStore } from "@/store/userStore";
 
+const userStore = useUserStore();
 const user = ref(null);
 const loadingUser = ref(true);
+const isLoggedIn = ref(false);
+
+// Watch the userStore for changes
+watch(
+  () => userStore.currentUser,
+  (newUser) => {
+    user.value = newUser;
+    isLoggedIn.value = !!newUser;
+  },
+  { immediate: true }
+);
 
 async function refreshUser() {
   try {
     const res = await me();
     user.value = res.data;
+    isLoggedIn.value = true;
   } catch (err) {
     user.value = null;
   }
@@ -31,7 +55,7 @@ async function refreshUser() {
 
 onMounted(async () => {
   try {
-    await initCsrf();
+    // await initCsrf();
     await refreshUser();
   } finally {
     loadingUser.value = false;
@@ -51,6 +75,18 @@ async function logout() {
   window.location.hash = "/";
 }
 
+function handleLoginSuccess() {
+  // Update local state when login succeeds
+  user.value = userStore.currentUser;
+  isLoggedIn.value = true;
+}
+
+function handleLogout() {
+  // Update local state when logout succeeds
+  user.value = null;
+  isLoggedIn.value = false;
+}
+
 const routes = {
   "/": Main,
   "/Payment": Payment,
@@ -63,13 +99,19 @@ const routes = {
   "/Profile": Profile,
   "/Test": Test,
   "/Temp": Temp,
+  "/JoinUs": JoinUs,
   "/ProviderList": ProviderList,
   "/FavoriteProvider": FavoriteProvider,
   "/Scheduler": Scheduler,
   "/ReportForm": ReportForm,
   "/DemoAssignedJobs": DemoAssignedJobs,
+  "/DemoSavedJobs": DemoSavedJobs,
+  "/DemoCreateJob": DemoCreateJob,
+  "/DemoJobListings": DemoJobListings,
+  "/DemoMyJobs": DemoMyJobs,
   "/ReviewProvider": ReviewProvider,
   "/NavigationBar": NavigationBar,
+  "/Settings": Settings,
 };
 
 const currentPath = ref(window.location.hash);
