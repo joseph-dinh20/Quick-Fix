@@ -60,6 +60,7 @@ import { useUserStore } from "@/store/userStore";
 
 // ---------------------------------------------------
 
+const userStore = useUserStore();
 const jobStore = useJobStore();
 const { jobList } = storeToRefs(jobStore);
 
@@ -190,7 +191,7 @@ async function fetchJobs() {
         jobs.value = res.data;
     } catch (err) {
         console.error("Failed to fetch from backend, using fallback", err);
-        jobs.value = jobStore.getMergedJobs().map((job, index) => fallbackJob(job, index));
+        jobs.value = jobStore.getMergedJobs().filter(job => job.user_id === userStore.currentUser?.id).map((job, index) => fallbackJob(job, index));
     }
 }
 
