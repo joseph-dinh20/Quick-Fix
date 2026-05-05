@@ -399,6 +399,9 @@ onMounted(fetchJobs);
                     </CardContent>
                 </Card>
             </div>
+            <div v-else class="text-sm text-muted-foreground text-center mt-4">
+            No results found.
+          </div>
 
             <Dialog :open="isDialogOpen" @update:open="isDialogOpen = $event">
                 <DialogContent
