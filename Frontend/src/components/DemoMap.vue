@@ -69,10 +69,10 @@
         <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mt-5">
           <div class="flex gap-2">
             <input
-              v-model="searchQuery"
+              v-model="locationQuery"
               @keyup.enter="handleSearchLocation"
               type="text"
-              placeholder="Search city, name, job, or service..."
+              placeholder="Search city..."
               class="border border-slate-300 rounded-xl px-4 py-2 w-full focus:outline-none focus:ring-2 focus:ring-primary"
             />
 
@@ -186,7 +186,7 @@
                 </span>
 
                 <span v-else class="text-sm font-semibold text-slate-700">
-                  {{ item.budgetDisplay }}
+                  {{ item.budgetDisplay}}
                 </span>
 
                 <button
@@ -262,7 +262,7 @@
 
           <div class="mt-4 border-t border-slate-200 pt-4">
             <p class="font-semibold text-slate-800">
-              Budget: {{ selectedJobForPopup.budgetDisplay }}
+              Budget: {{ selectedJobForPopup.budgetDisplay || selectedJobForPopup.price }}
             </p>
 
             <p v-if="selectedJobForPopup.description" class="text-slate-600 mt-3">
@@ -338,8 +338,14 @@ import { userListStore } from "@/store/userList";
 import { storeToRefs } from "pinia";
 import { searchJobs } from "@/services/api";
 
+import { useJobStore } from "@/store/jobStore";
+import { useUserStore, ALL_USERS } from "@/store/userStore";
+
 const store = userListStore();
 const { providers } = storeToRefs(store);
+
+const jobStore = useJobStore();
+const { jobList } = storeToRefs(jobStore);
 
 const activeView = ref("providers");
 const selectedItem = ref(null);
@@ -359,7 +365,8 @@ function parseInitialViewFromHash() {
   }
 }
 
-const searchQuery = ref("");
+const searchQuery = ref(""); // for text
+const locationQuery = ref(""); // for location
 const selectedService = ref("All");
 const radiusMiles = ref(10);
 const jobs = ref([]);
@@ -439,14 +446,14 @@ const mapJobs = computed(() => {
 
     return {
       ...job,
-      id: job.id ?? index + 1,
+      id: job.id ?? job.job_id ?? index + 1,
       title: job.title || "Untitled Job",
       city: job.city || "Long Beach",
       state: job.state || "CA",
       service: getJobService(job),
       lat: Number(job.latitude ?? job.lat ?? coords.lat),
       lng: Number(job.longitude ?? job.lng ?? coords.lng),
-      budgetDisplay: formatBudget(job.budget ?? job.budgetDisplay),
+      budgetDisplay: formatBudget(job.budget ?? job.budgetDisplay ?? job.price),
     };
   });
 });
@@ -463,14 +470,12 @@ const services = computed(() => {
 const filteredItems = computed(() => {
   return currentItems.value.filter((item) => {
     const nameOrTitle = activeView.value === "providers" ? item.name : item.title;
-    const query = searchQuery.value.toLowerCase().trim();
-
+    const query = searchQuery.value.toLowerCase().trim(); 
     const matchesSearch =
       !query ||
       nameOrTitle.toLowerCase().includes(query) ||
       item.service.toLowerCase().includes(query) ||
-      item.city.toLowerCase().includes(query) ||
-      item.state.toLowerCase().includes(query);
+      item.city.toLowerCase().includes(query);
 
     const matchesService =
       selectedService.value === "All" || item.service === selectedService.value;
@@ -538,7 +543,7 @@ function switchView(view) {
 }
 
 function handleSearchLocation() {
-  const query = searchQuery.value.toLowerCase().trim();
+  const query = locationQuery.value.toLowerCase().trim();
 
   if (!query) return;
 
@@ -557,15 +562,9 @@ function handleSearchLocation() {
     return;
   }
 
-  const itemMatch = currentItems.value.find((item) => {
-    return (
-      item.city.toLowerCase().includes(query) ||
-      item.service.toLowerCase().includes(query) ||
-      (activeView.value === "providers"
-        ? item.name.toLowerCase().includes(query)
-        : item.title.toLowerCase().includes(query))
-    );
-  });
+  const itemMatch = currentItems.value.find(item =>
+    item.city?.toLowerCase().includes(query)
+  );
 
   if (itemMatch) {
     userLocation.value = {
@@ -574,10 +573,8 @@ function handleSearchLocation() {
       lat: itemMatch.lat,
       lng: itemMatch.lng,
     };
-
-    selectedItem.value = itemMatch;
+    closeAllPopups();
     refreshMap();
-    focusItem(itemMatch);
   }
 }
 
@@ -914,7 +911,7 @@ async function fetchJobsForMap() {
     }
   } catch (err) {
     console.error("Failed to load jobs for map, using fallback:", err);
-    jobs.value = fallbackJobs;
+    jobs.value = jobList.value;
   } finally {
     loadingJobs.value = false;
   }
