@@ -49,14 +49,17 @@ import { useOrderHistoryStore } from "@/store/orderHistoryStore";
 import { useProviderRatingsStore } from "@/store/providerRatingsStore";
 import { useProviderProfileStore } from "@/store/providerProfileStore";
 import { useUserStore } from "@/store/userStore";
+import { useReportsStore } from "@/store/reportsStore";
 import { storeToRefs } from "pinia";
 
 import Provider from "@/components/Provider.vue";
+import Report from "@/components/Report.vue";
 
 const historyStore = useOrderHistoryStore();
 const ratingsStore = useProviderRatingsStore();
 const providerProfileStore = useProviderProfileStore();
 const userStore = useUserStore();
+const reportsStore = useReportsStore();
 const { orders } = storeToRefs(historyStore);
 
 const removingId = ref(null);
@@ -169,6 +172,7 @@ function submitRating() {
 const providerDialogOpen = ref(false);
 const fullProfileOpen = ref(false);
 const activeProvider = ref(null);
+const activeProviderOrder = ref(null);
 
 function phoneFromProviderId(providerId) {
   if (!providerId) return "(555) 000-0000";
@@ -188,6 +192,7 @@ function openProviderDialog(order) {
 
   const merged = providerProfileStore.getMergedProvider(providerId);
   activeProvider.value = merged || order.provider;
+  activeProviderOrder.value = order;
   providerDialogOpen.value = true;
 }
 
@@ -207,6 +212,36 @@ const activeProviderEmail = computed(() => {
   if (!activeProvider.value) return "";
   return emailFromName(activeProvider.value.name);
 });
+
+// Live-merged rating for the contact dialog
+const activeProviderAverage = computed(() => {
+  if (!activeProvider.value) return "—";
+  return ratingsStore.getAverageFor(activeProvider.value.userID) || "—";
+});
+
+const activeProviderReviewCount = computed(() => {
+  if (!activeProvider.value) return 0;
+  return ratingsStore.getRatingsFor(activeProvider.value.userID).length;
+});
+
+// ===== Report flow =====
+const reportDialogOpen = ref(false);
+const reportOrder = ref(null);
+
+function openReportDialog(order) {
+  // Close the contact dialog first so they don't stack
+  providerDialogOpen.value = false;
+  reportOrder.value = order;
+  setTimeout(() => {
+    reportDialogOpen.value = true;
+  }, 150);
+}
+
+function reportButtonLabel(order) {
+  return reportsStore.hasReported(order.id, "customer-to-provider")
+    ? "View Report"
+    : "Report Provider";
+}
 </script>
 
 <template>
@@ -440,8 +475,8 @@ const activeProviderEmail = computed(() => {
             </div>
             <Badge variant="outline">
               <img class="inline-block w-4 align-top" :src="starIcon" />
-              {{ activeProvider.averageRating }}
-              ({{ activeProvider.ratings?.length || 0 }})
+              {{ activeProviderAverage }}
+              ({{ activeProviderReviewCount }})
             </Badge>
           </div>
 
@@ -476,7 +511,15 @@ const activeProviderEmail = computed(() => {
           </div>
         </div>
 
-        <DialogFooter>
+        <DialogFooter class="flex-col gap-2 sm:flex-row sm:justify-end">
+          <Button
+            v-if="activeProviderOrder"
+            variant="outline"
+            class="text-amber-700 hover:bg-amber-50 hover:text-amber-800"
+            @click="openReportDialog(activeProviderOrder)"
+          >
+            {{ reportButtonLabel(activeProviderOrder) }}
+          </Button>
           <Button variant="outline" @click="providerDialogOpen = false">
             Close
           </Button>
@@ -593,6 +636,13 @@ const activeProviderEmail = computed(() => {
         </DialogFooter>
       </DialogContent>
     </Dialog>
+
+    <!-- ===== Report Dialog ===== -->
+    <Report
+      v-model:open="reportDialogOpen"
+      :order="reportOrder"
+      direction="customer-to-provider"
+    />
   </div>
 </template>
 

@@ -12,6 +12,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Camera } from "lucide-vue-next";
 import { useUserStore } from "@/store/userStore";
 import { useToast } from "vue-toast-notification";
 
@@ -26,7 +27,7 @@ const form = reactive({
   apartment: "",
 });
 
-const email = ref(""); // read-only display
+const email = ref("");
 
 onMounted(() => {
   if (!userStore.currentUser) return;
@@ -38,7 +39,6 @@ onMounted(() => {
   email.value = userStore.currentUser.email || "";
 });
 
-// Soft cap to keep localStorage healthy
 const MAX_AVATAR_BYTES = 500 * 1024;
 
 function fileToBase64(file) {
@@ -87,8 +87,8 @@ function handleSave() {
     <Card class="max-w-200 min-w-150 p-6">
       <CardTitle class="flex justify-center text-2xl">My Profile</CardTitle>
 
-      <CardHeader class="flex flex-row items-center gap-6">
-        <Label for="avatar" class="cursor-pointer">
+      <CardHeader class="flex flex-col items-center gap-2">
+        <Label for="avatar" class="group relative cursor-pointer">
           <Input
             id="avatar"
             type="file"
@@ -96,15 +96,22 @@ function handleSave() {
             class="hidden"
             @change="handleAvatarUpload"
           />
-          <Avatar class="m-2 scale-[1.8]">
+          <Avatar
+            class="m-2 scale-[1.8] transition-opacity group-hover:opacity-60"
+          >
             <AvatarImage :src="form.avatar" alt="profile avatar" />
             <AvatarFallback>
               {{ form.name?.[0]?.toUpperCase() || "?" }}
             </AvatarFallback>
           </Avatar>
+          <div
+            class="pointer-events-none absolute inset-0 flex items-center justify-center opacity-0 transition-opacity group-hover:opacity-100"
+          >
+            <Camera class="size-5 text-white drop-shadow-md" />
+          </div>
         </Label>
-        <p class="text-muted-foreground text-sm">
-          Click avatar to upload a new image (PNG/JPEG, &lt;500KB)
+        <p class="text-muted-foreground text-xs">
+          Hover and click to change photo
         </p>
       </CardHeader>
 
