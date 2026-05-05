@@ -117,9 +117,10 @@
                   <NavigationMenuListItem class="py-1.5" href="#/DemoMyJobs" title="Your Jobs" v-if="isCustomer"/>
                   <NavigationMenuListItem class="py-1.5" href="/" title="Your Applications"
                    v-if="isProvider"/>
-                  <NavigationMenuListItem class="py-1.5" href="/DemoAssignedJobs" title="Assigned Jobs"
+                  <NavigationMenuListItem class="py-1.5" href="#/DemoAssignedJobs" title="Assigned Jobs"
                    v-if="isProvider"/>
-                  <NavigationMenuListItem class="py-1.5" href="#/OrderHistory" title="Order History" />
+                  <NavigationMenuListItem class="py-1.5" href="#/OrderHistory" title="Order History" v-if="isCustomer"/>
+                  <NavigationMenuListItem class="py-1.5" href="#/ProviderOrderHistory" title="Order History" v-if="isProvider"/>
                   <NavigationMenuListItem class="py-1.5" href="#/ChatMessages" title="Messages" />
                   <NavigationMenuListItem v-if="isProvider" class="py-1.5" href="#/Profile" title="Provider Profile" />
                   <NavigationMenuListItem class="py-1.5" href="#/Settings" title="Settings" />
