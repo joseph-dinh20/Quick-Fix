@@ -38,6 +38,19 @@ const debouncedQuery = ref('')
 const selectedService = ref(null)
 const isOpen = ref(false)
 
+const FALLBACK_SERVICES: Service[] = [
+  { id: 'plumbing', name: 'Plumbing' },
+  { id: 'electrical', name: 'Electrical' },
+  { id: 'cleaning', name: 'Cleaning' },
+  { id: 'landscaping', name: 'Landscaping' },
+  { id: 'painting', name: 'Painting' },
+  { id: 'carpentry', name: 'Carpentry' },
+  { id: 'hvac', name: 'HVAC' },
+  { id: 'pest_control', name: 'Pest Control' },
+  { id: 'moving', name: 'Moving' },
+  { id: 'handyman', name: 'Handyman' },
+]
+
 // --- Debounce ---
 let debounceTimer: ReturnType<typeof setTimeout> | null = null
 const DEBOUNCE_MS = 400
@@ -46,6 +59,10 @@ watch(searchQuery, (query) => {
   if (selectedService.value && query !== selectedService.value.name) {
     selectedService.value = null
     emit('update:modelValue', null)
+  }
+  // If no match selected but user typed something, emit the raw string
+  if (!selectedService.value && query.trim()) {
+    emit('update:modelValue', query.trim())
   }
   if (debounceTimer) clearTimeout(debounceTimer)
   debounceTimer = setTimeout(() => {
@@ -69,6 +86,7 @@ async function fetchServices() {
     services.value = await response.json()
   } catch (e) {
     error.value = 'Failed to load services.'
+    services.value = FALLBACK_SERVICES
   } finally {
     loading.value = false
   }

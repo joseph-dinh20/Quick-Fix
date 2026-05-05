@@ -28,7 +28,7 @@
             v-model="pendingLocation" placeholder="City, State, Zip Code"
           />
         </div>
-        <Button @click="searchJobs" class="w-full md:w-auto text-white rounded-full px-8 py-2.5">
+        <Button @click="searchJobsHandler" class="w-full md:w-auto text-white rounded-full px-8 py-2.5">
           Search
         </Button>
       </Card>
@@ -163,10 +163,10 @@
             <div class="flex flex-wrap gap-2 mt-2">
               <span
                 v-for="service in job.services"
-                :key="service.id"
+                :key="service.id || service"
                 class="text-xs bg-slate-100 px-2 py-1 rounded-md text-slate-600"
               >
-                {{ service.name }}
+                {{ service.name || service }}
               </span>
             </div>
           </div>
@@ -297,10 +297,10 @@
 
               <span
                 v-for="service in selectedJob.services"
-                :key="service.id"
+                :key="service.id || service"
                 class="text-xs bg-slate-100 px-2 py-1 rounded-md text-slate-600 ml-2"
               >
-                {{ service.name }}
+                {{ service.name || service }}
               </span>
             </div>
             
@@ -360,6 +360,8 @@ const selectedBudget = ref("");
 const selectedJobType = ref("");
 const selectedService = ref(null);
 
+const backendAvailable = ref(true);
+
 onMounted(() => {
   fetchServices();
   fetchJobs();
@@ -396,7 +398,38 @@ function getUserName(job) {
   return "Unknown User";
 }
 
-const filteredJobs = computed(() => jobs.value);
+const filteredJobs = computed(() => {
+  if (backendAvailable.value) return jobs.value; // backend already filtered
+
+  return jobs.value.filter(job => {
+    if (selectedService.value) {
+      const q = selectedService.value.toLowerCase();
+      if (!job.service?.toLowerCase().includes(q) && !job.title?.toLowerCase().includes(q)) return false;
+    }
+    if (searchLocation.value) {
+      const q = searchLocation.value.toLowerCase();
+      if (!job.city?.toLowerCase().includes(q) && !job.state?.toLowerCase().includes(q)) return false;
+    }
+    if (selectedBudget.value && (job.budget ?? 0) < Number(selectedBudget.value)) return false;
+    if (selectedJobType.value && job.request_type !== selectedJobType.value) return false;
+    if (selectedDistance.value) {
+      const dist = getDistanceMiles(33.7701, -118.1937, job.lat, job.lng);
+      if (dist > Number(selectedDistance.value)) return false;
+    }
+    return true;
+  });
+});
+
+
+function getDistanceMiles(lat1, lng1, lat2, lng2) {
+  const R = 3958.8; // Earth radius in miles
+  const dLat = (lat2 - lat1) * Math.PI / 180;
+  const dLng = (lng2 - lng1) * Math.PI / 180;
+  const a = Math.sin(dLat/2) ** 2 +
+    Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+    Math.sin(dLng/2) ** 2;
+  return R * 2 * Math.asin(Math.sqrt(a));
+}
 
 async function fetchServices() {
   const res = await fetch("http://localhost:8000/api/services/");
@@ -425,6 +458,7 @@ async function fetchJobs() {
   } catch (err) {
     console.error(err);
     jobs.value = jobList.value.map((job, index) => fallbackJob(job, index,{ lat: 33.7701, lng: -118.1937 }, getUserName));
+    backendAvailable.value = false;
   } finally {
     loading.value = false;
   }
@@ -469,7 +503,7 @@ function fallbackJob(job, index = 0, coords = { lat: 33.7701, lng: -118.1937 }, 
     provider_id: job.provider_id ?? 0,
     title: job.title || "Untitled Job",
     description: job.description || "No description provided",
-    service: job.service || "General",
+    services: [job.service] || ["General Repair"],
     budget: job.price ?? 0,
     city: job.city || "Long Beach",
     state: job.state || "California",
