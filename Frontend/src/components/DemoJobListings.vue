@@ -471,6 +471,8 @@ async function toggle(job) {
     job.is_favorited = res.data.favorited;
   } catch (err) {
     console.error(err);
+    jobStore.toggleFavorite(job.job_id);
+    job.is_favorited = jobStore.isFavorited(job.job_id);
   }
 }
 
@@ -514,7 +516,7 @@ function fallbackJob(job, index = 0, coords = { lat: 33.7701, lng: -118.1937 }, 
     urgency: job.urgency || "normal",
     deadline: job.date || new Date().toISOString(),
     request_type: job.request_type || "quote",
-    is_favorited: job.is_favorited ?? false,
+    is_favorited: jobStore.isFavorited(job.job_id) ?? false,
     
   };
 }

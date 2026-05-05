@@ -1,6 +1,7 @@
 // store/userStore.js
 import { defineStore } from "pinia";
 import { ref, computed } from "vue";
+import { useJobStore } from "@/store/jobStore";
 
 // Customer demo accounts
 const DEMO_CUSTOMERS = [
@@ -168,6 +169,8 @@ export const useUserStore = defineStore(
       } else {
         // Providers — provider profile data is in useProviderProfileStore
         currentUser.value = { ...safeUser };
+        const jobStore = useJobStore();
+        jobStore.loadFavorites();
       }
 
       return {

@@ -1,20 +1,38 @@
-// store/jobStore.js
 import { defineStore } from "pinia";
-import { ref, computed } from "vue";
+import { ref } from "vue";
 import jobsData from "@/store/data/jobs.json";
-
-
+import { useUserStore } from "@/store/userStore";
 
 export const useJobStore = defineStore(
   "job",
   () => {
     const jobList = ref(jobsData);
-
-    // User-created or edited jobs, keyed by job_id.
-    // Shape: { [jobId]: { ...jobData } }
     const edits = ref({});
+    const favorites = ref(new Set());
 
-    // Add or update a job
+    function getFavoritesKey() {
+      const userStore = useUserStore();
+      return `favoritedJobs_${userStore.currentUser?.id || 'guest'}`;
+    }
+
+    function loadFavorites() {
+      favorites.value = new Set(JSON.parse(localStorage.getItem(getFavoritesKey()) || '[]'));
+    }
+
+    function toggleFavorite(jobId) {
+      if (favorites.value.has(jobId)) {
+        favorites.value.delete(jobId);
+      } else {
+        favorites.value.add(jobId);
+      }
+      localStorage.setItem(getFavoritesKey(), JSON.stringify([...favorites.value]));
+    }
+
+    function isFavorited(jobId) {
+      console.log('Type:', typeof favorites.value, 'Value:', favorites.value);
+      return favorites.value.has(jobId);
+    }
+
     function saveJob(jobId, updates) {
       const existing = edits.value[jobId] || {};
       edits.value = {
@@ -23,45 +41,41 @@ export const useJobStore = defineStore(
       };
     }
 
-    // Get a merged job (seed + edits applied on top)
     function getMergedJob(jobId) {
       const seed = jobsData.find((j) => j.job_id === jobId);
       if (!seed) return null;
       const edit = edits.value[jobId] || {};
-      return {
-        ...seed,
-        ...edit,
-      };
+      return { ...seed, ...edit };
     }
 
-    // Get all merged jobs
     function getMergedJobs() {
       return jobsData.map((j) => getMergedJob(j.job_id));
     }
 
-    // Get jobs by user_id
     function getJobsByUser(userId) {
       return getMergedJobs().filter((job) => job.user_id === userId);
     }
 
-    // Get jobs by provider_id
     function getJobsByProvider(providerId) {
       return getMergedJobs().filter((job) => job.provider_id === providerId);
     }
 
-    // Get jobs by service type
     function getJobsByService(service) {
       return getMergedJobs().filter((job) => job.service === service);
     }
 
-    // Get jobs by urgency
     function getJobsByUrgency(urgency) {
       return getMergedJobs().filter((job) => job.urgency === urgency);
+    }
+
+    function getFavoritedJobs() {
+      return getMergedJobs().filter((job) => isFavorited(job.job_id));
     }
 
     return {
       jobList,
       edits,
+      favorites,
       saveJob,
       getMergedJob,
       getMergedJobs,
@@ -69,9 +83,15 @@ export const useJobStore = defineStore(
       getJobsByProvider,
       getJobsByService,
       getJobsByUrgency,
+      getFavoritedJobs,
+      loadFavorites,
+      toggleFavorite,
+      isFavorited,
     };
   },
-  {
-    persist: true,
-  },
+  { persist: 
+    {
+      pick: ["edits"],
+    },
+ }
 );

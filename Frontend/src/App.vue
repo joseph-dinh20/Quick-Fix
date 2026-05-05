@@ -30,11 +30,14 @@ import Scheduler from "./components/Scheduler.vue";
 import DemoMap from "./components/DemoMap.vue";
 import BecomeFixer from "./components/BecomeFixer.vue";
 import { useUserStore } from "@/store/userStore";
+import { useJobStore } from "@/store/jobStore";
 
+const jobStore = useJobStore();
 const userStore = useUserStore();
 const user = ref(null);
 const loadingUser = ref(true);
 const isLoggedIn = ref(false);
+const isProvider = ref(false);
 
 // Watch the userStore for changes
 watch(
@@ -42,6 +45,7 @@ watch(
   (newUser) => {
     user.value = newUser;
     isLoggedIn.value = !!newUser;
+    isProvider.value = user.value.userType == 'provider';
   },
   { immediate: true }
 );
@@ -62,6 +66,9 @@ onMounted(async () => {
     await refreshUser();
   } finally {
     loadingUser.value = false;
+  }
+  if (isProvider.value) {
+    jobStore.loadFavorites();
   }
 });
 

@@ -294,7 +294,8 @@ export default {
         const res = await toggleFavoriteJob(job.id);
         job.is_favorited = res.data.favorited;
       } catch (err) {
-        console.error(err);
+        this.jobStore.toggleFavorite(job.job_id);
+        job.is_favorited = this.jobStore.isFavorited(job.job_id);
       }
     },
 
