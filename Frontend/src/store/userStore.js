@@ -126,7 +126,7 @@ const DEMO_PROVIDERS = [
   },
 ];
 
-const ALL_USERS = [...DEMO_CUSTOMERS, ...DEMO_PROVIDERS];
+export const ALL_USERS = [...DEMO_CUSTOMERS, ...DEMO_PROVIDERS];
 
 export const useUserStore = defineStore(
   "user",
