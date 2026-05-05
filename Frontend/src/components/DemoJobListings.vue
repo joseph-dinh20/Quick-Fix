@@ -457,7 +457,8 @@ async function fetchJobs() {
     }));
   } catch (err) {
     console.error(err);
-    jobs.value = jobList.value.map((job, index) => fallbackJob(job, index,{ lat: 33.7701, lng: -118.1937 }, getUserName));
+    // jobs.value = getMergedJobs();
+    jobs.value = jobStore.getMergedJobs().map((job, index) => fallbackJob(job, index,{ lat: 33.7701, lng: -118.1937 }, getUserName));
     backendAvailable.value = false;
   } finally {
     loading.value = false;

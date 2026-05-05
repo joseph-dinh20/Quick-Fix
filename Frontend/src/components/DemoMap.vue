@@ -911,7 +911,7 @@ async function fetchJobsForMap() {
     }
   } catch (err) {
     console.error("Failed to load jobs for map, using fallback:", err);
-    jobs.value = jobList.value;
+    jobs.value = jobStore.getMergedJobs();
   } finally {
     loadingJobs.value = false;
   }

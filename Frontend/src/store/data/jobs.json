@@ -2,7 +2,7 @@
   {
     "job_id": "j_001",
     "user_id": "u_001",
-    "provider_id": 1413,
+    "provider_id": -1,
     "title": "Garden Maintenance Needed",
     "description": "Need help with heavy garden maintenance including mowing, trimming, and watering plants.",
     "service": "Gardening",
@@ -13,12 +13,13 @@
     "language": "English",
     "urgency": "flexible",
     "date": "2026-05-10T10:00:00.000Z",
-    "request_type": "service"
+    "request_type": "service",
+    "status": "Open"
   },
   {
     "job_id": "j_002",
     "user_id": "u_002",
-    "provider_id": 3421,
+    "provider_id": -1,
     "title": "Electrical Outlet Repair",
     "description": "Kitchen outlet stopped working, need an electrician to diagnose and fix the issue.",
     "service": "Electrical",
@@ -29,12 +30,13 @@
     "language": "English",
     "urgency": "soon",
     "date": "2026-05-12T14:30:00.000Z",
-    "request_type": "quote"
+    "request_type": "quote",
+    "status": "Open"
   },
   {
     "job_id": "j_003",
     "user_id": "u_003",
-    "provider_id": 5169,
+    "provider_id": -1,
     "title": "Bathroom Plumbing Fix",
     "description": "Leaky faucet in the bathroom needs to be repaired or replaced.",
     "service": "Plumbing",
@@ -45,12 +47,13 @@
     "language": "English",
     "urgency": "urgent",
     "date": "2026-05-08T09:00:00.000Z",
-    "request_type": "both"
+    "request_type": "both",
+    "status": "Open"
   },
   {
     "job_id": "j_004",
     "user_id": "u_004",
-    "provider_id": 359,
+    "provider_id": -1,
     "title": "Lawn Mowing Service",
     "description": "Large backyard needs mowing and edging. Approximately 2000 sq ft.",
     "service": "Gardening",
@@ -61,12 +64,14 @@
     "language": "English",
     "urgency": "flexible",
     "date": "2026-05-15T11:00:00.000Z",
-    "request_type": "service"
+    "request_type": "service",
+    "status": "Open"
+
   },
   {
     "job_id": "j_006",
     "user_id": "u_001",
-    "provider_id": 2193,
+    "provider_id": -1,
     "title": "Tree Trimming Service",
     "description": "Need professional tree trimming for overgrown branches in the front yard.",
     "service": "Gardening",
@@ -77,12 +82,14 @@
     "language": "English",
     "urgency": "flexible",
     "date": "2026-05-18T13:00:00.000Z",
-    "request_type": "service"
+    "request_type": "service",
+    "status": "Open"
+
   },
   {
     "job_id": "j_007",
     "user_id": "u_002",
-    "provider_id": 6231,
+    "provider_id": -1,
     "title": "Wiring Upgrade",
     "description": "Home office needs electrical wiring upgrade to support multiple devices.",
     "service": "Electrical",
@@ -93,12 +100,14 @@
     "language": "English",
     "urgency": "soon",
     "date": "2026-05-16T10:30:00.000Z",
-    "request_type": "both"
+    "request_type": "both",
+    "status": "Open"
+
   },
   {
     "job_id": "j_008",
     "user_id": "u_003",
-    "provider_id": 4734,
+    "provider_id": -1,
     "title": "Drain Cleaning",
     "description": "Kitchen sink drain is clogged and needs professional cleaning.",
     "service": "Plumbing",
@@ -109,6 +118,8 @@
     "language": "English",
     "urgency": "urgent",
     "date": "2026-05-09T15:45:00.000Z",
-    "request_type": "quote"
+    "request_type": "quote",
+    "status": "Open"
+
   }
 ]
