@@ -107,7 +107,7 @@
   {
     "job_id": "j_008",
     "user_id": "u_003",
-    "provider_id": -1,
+    "provider_id": 3749,
     "title": "Drain Cleaning",
     "description": "Kitchen sink drain is clogged and needs professional cleaning.",
     "service": "Plumbing",
@@ -119,7 +119,7 @@
     "urgency": "urgent",
     "date": "2026-05-09T15:45:00.000Z",
     "request_type": "quote",
-    "status": "Open"
+    "status": "in_progress"
 
   }
 ]
