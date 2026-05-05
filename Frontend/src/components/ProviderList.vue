@@ -34,8 +34,10 @@ import Provider from "@/components/Provider.vue";
 import Scheduler from "@/components/Scheduler.vue";
 
 import { useProviderProfileStore } from "@/store/providerProfileStore";
+import { useChatStore } from "@/store/chatStore";
 
 const providerProfileStore = useProviderProfileStore();
+const chatStore = useChatStore();
 
 // Reactively merged: any saved edit reflects automatically.
 const providers = computed(() => providerProfileStore.getMergedProviders());
@@ -43,7 +45,6 @@ const providers = computed(() => providerProfileStore.getMergedProviders());
 const profileOpen = ref({});
 const schedulerOpen = ref(false);
 const selectedProvider = ref(null);
-
 
 const navigate = (hash) => {
   window.location.hash = hash;
@@ -54,6 +55,23 @@ function handleSelect(provider, index) {
   selectedProvider.value = provider;
   schedulerOpen.value = true;
 }
+
+/**
+ * Opens an existing chat with this provider, or creates a new one, then
+ * navigates to the Messages view.
+ *
+ * The chat store:
+ *  1. Deduplicates — if a chat already exists for this provider it reuses it.
+ *  2. Snapshots all provider fields needed for the "View Provider" modal.
+ *  3. Stores the chat id so ChatMessages can auto-select it on mount.
+ *
+ * NOTE: Adjust the hash below ('#/Messages') to match your actual route.
+ */
+function openChat(provider) {
+  const chatId = chatStore.openOrCreateChat(provider);
+  chatStore.setPendingChat(chatId);
+  navigate("#/ChatMessages");
+}
 </script>
 
 <template>
@@ -62,11 +80,10 @@ function handleSelect(provider, index) {
       Find work
     </h1>
     
-    <Button variant="ghost" size="icon"     class="text-slate-700"
+    <Button variant="ghost" size="icon" class="text-slate-700"
     @click="navigate('#/DemoMap')"
     >
       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21"></polygon><line x1="9" x2="9" y1="3" y2="18"></line><line x1="15" x2="15" y1="6" y2="21"></line></svg>
-      
     </Button>
   </div>
   <div>
@@ -126,7 +143,35 @@ function handleSelect(provider, index) {
               </Dialog>
             </div>
           </div>
-          <CardTitle class="flex w-15 flex-col items-center">
+
+          <!-- ── Price + Message button ──────────────────────────────── -->
+          <CardTitle class="flex w-15 flex-col items-center gap-1">
+            <!--
+              Message button: clicking creates (or reuses) a chat for this
+              provider and navigates to the Messages view.
+            -->
+            <Button
+              variant="ghost"
+              size="icon"
+              class="text-slate-700 hover:bg-slate-100 hover:text-green-700"
+              :title="`Message ${provider.name}`"
+              @click="openChat(provider)"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+              </svg>
+            </Button>
+
             ${{ provider.price }}
             <CardDescription>per hour</CardDescription>
           </CardTitle>
