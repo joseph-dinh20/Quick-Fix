@@ -50,6 +50,7 @@ import { useProviderRatingsStore } from "@/store/providerRatingsStore";
 import { useProviderProfileStore } from "@/store/providerProfileStore";
 import { useUserStore } from "@/store/userStore";
 import { useReportsStore } from "@/store/reportsStore";
+import { useChatStore } from "@/store/chatStore";
 import { storeToRefs } from "pinia";
 
 import Provider from "@/components/Provider.vue";
@@ -60,6 +61,7 @@ const ratingsStore = useProviderRatingsStore();
 const providerProfileStore = useProviderProfileStore();
 const userStore = useUserStore();
 const reportsStore = useReportsStore();
+const chatStore = useChatStore();
 const { orders } = storeToRefs(historyStore);
 
 const removingId = ref(null);
@@ -241,6 +243,18 @@ function reportButtonLabel(order) {
   return reportsStore.hasReported(order.id, "customer-to-provider")
     ? "View Report"
     : "Report Provider";
+}
+
+const navigate = (hash) => { window.location.hash = hash; };
+
+function messageProvider(order) {
+  if (!userStore.currentUser) return;
+  const provider = activeProvider.value || order.provider;
+  if (!provider) return;
+  const chatId = chatStore.openOrCreateProviderChat(provider, userStore.currentUser);
+  chatStore.setPendingChat(chatId);
+  providerDialogOpen.value = false;
+  navigate("#/ChatMessages");
 }
 </script>
 
@@ -453,7 +467,7 @@ function reportButtonLabel(order) {
 
     <!-- ===== Provider Contact Dialog ===== -->
     <Dialog v-model:open="providerDialogOpen">
-      <DialogContent class="sm:max-w-md">
+      <DialogContent class="sm:max-w-md overflow-hidden">
         <DialogHeader>
           <DialogTitle>Provider Info</DialogTitle>
           <DialogDescription>
@@ -462,18 +476,18 @@ function reportButtonLabel(order) {
         </DialogHeader>
 
         <div v-if="activeProvider" class="space-y-4 py-2">
-          <div class="flex items-center gap-4">
-            <Avatar class="scale-[1.3]">
+          <div class="flex items-center gap-3 min-w-0">
+            <Avatar class="h-12 w-12 shrink-0">
               <AvatarImage :src="activeProvider.avatar" />
               <AvatarFallback><img :src="defaultAvatar" /></AvatarFallback>
             </Avatar>
-            <div class="flex-1">
-              <p class="text-lg font-semibold">{{ activeProvider.name }}</p>
+            <div class="flex-1 min-w-0">
+              <p class="text-lg font-semibold truncate">{{ activeProvider.name }}</p>
               <p class="text-muted-foreground text-sm">
                 ${{ (activeProvider.price ?? 0).toFixed(2) }}/hr
               </p>
             </div>
-            <Badge variant="outline">
+            <Badge variant="outline" class="shrink-0 whitespace-nowrap">
               <img class="inline-block w-4 align-top" :src="starIcon" />
               {{ activeProviderAverage }}
               ({{ activeProviderReviewCount }})
@@ -511,7 +525,7 @@ function reportButtonLabel(order) {
           </div>
         </div>
 
-        <DialogFooter class="flex-col gap-2 sm:flex-row sm:justify-end">
+        <DialogFooter class="flex flex-wrap gap-2 sm:justify-end">
           <Button
             v-if="activeProviderOrder"
             variant="outline"
@@ -520,8 +534,16 @@ function reportButtonLabel(order) {
           >
             {{ reportButtonLabel(activeProviderOrder) }}
           </Button>
-          <Button variant="outline" @click="providerDialogOpen = false">
-            Close
+          <Button
+            v-if="activeProvider"
+            variant="outline"
+            class="text-green-700 hover:bg-green-50 hover:text-green-800"
+            @click="messageProvider(activeProviderOrder)"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-1.5">
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+            </svg>
+            Message
           </Button>
           <Button @click="openFullProfile">View Full Profile</Button>
         </DialogFooter>
@@ -603,7 +625,7 @@ function reportButtonLabel(order) {
 
     <!-- ===== View Rating Dialog (already-rated orders) ===== -->
     <Dialog v-model:open="viewRatingDialogOpen">
-      <DialogContent class="sm:max-w-md">
+      <DialogContent class="sm:max-w-2xl">
         <DialogHeader>
           <DialogTitle>Your rating</DialogTitle>
           <DialogDescription>

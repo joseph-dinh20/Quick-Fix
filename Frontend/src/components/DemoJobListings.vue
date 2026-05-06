@@ -9,18 +9,11 @@
           @click="navigate('#/DemoMap?view=jobs')"
         >
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21"></polygon><line x1="9" x2="9" y1="3" y2="18"></line><line x1="15" x2="15" y1="6" y2="21"></line></svg>
-          
         </Button>
       </div>
 
       <Card class="flex flex-col md:flex-row items-center rounded-full p-2 mb-3 shadow-sm border-slate-200 gap-2 md:gap-0">
         <ServiceSearchSelect class="flex-1 px-4 w-50" v-model="pendingService" placeholder="Enter your task..." />
-        <!-- <div class="flex items-center flex-1 px-4 w-full">
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-slate-400 mr-3"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg>
-          <Input
-            v-model="titleSearch" placeholder="What do you need done?"
-          /> -->
-        <!-- </div> -->
         <div class="hidden md:block w-[1px] h-8 bg-slate-200"></div>
         <div class="flex items-center flex-1 px-4 w-full border-t md:border-none border-slate-100 pt-2 md:pt-0 mt-2 md:mt-0">
           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-slate-400 mr-3"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"></path><circle cx="12" cy="10" r="3"></circle></svg>
@@ -33,34 +26,8 @@
         </Button>
       </Card>
 
-      <!--<div class="flex flex-wrap gap-3 mb-10">
-        <Button
-          v-for="filter in ['Pay', 'Language', 'Urgency', 'Type', 'Credentials']"
-          :key="filter"
-          variant="outline"
-          @click="activeFilter = filter"
-          :class="activeFilter === filter ? 'bg-orange-100 border-orange-400' : ''"
-        >
-          {{ filter }}
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="ml-2 text-slate-500"><path d="m6 9 6 6 6-6"></path></svg>
-        </Button>
-      </div>-->
-
       <div class="flex flex-wrap gap-3 mb-10">
-        <!-- Category -->
-        <!-- <select v-model="selectedCategory" class="border p-2 rounded">
-          <option value="">All Categories</option>
-          <option
-            v-for="service in services"
-            :key="service.id"
-            :value="service.id"
-          >
-            {{ service.name }}
-          </option>
-        </select> -->
-
-        <!-- Distance -->
-         <Select v-model="pendingDistance">
+        <Select v-model="pendingDistance">
           <SelectTrigger class="border p-2 rounded w-30">
             <SelectValue placeholder="Distance" />
           </SelectTrigger>
@@ -73,8 +40,6 @@
             <SelectItem value="30">30 Miles</SelectItem>
           </SelectContent>
         </Select>
-
-        <!-- Budget -->
 
         <Select v-model="pendingBudget">
           <SelectTrigger class="border p-2 rounded w-30">
@@ -91,8 +56,6 @@
           </SelectContent>
         </Select>
 
-        <!-- Job Type -->
-
         <Select v-model="pendingJobType">
           <SelectTrigger class="border p-2 rounded w-30">
             <SelectValue placeholder="All Types" />
@@ -104,7 +67,6 @@
             <SelectItem value="both">Both</SelectItem>
           </SelectContent>
         </Select>
-
       </div>
 
       <div v-if="loading" class="flex flex-col gap-5">
@@ -123,7 +85,6 @@
         <div v-if="!jobs.length && !jobList.length" class="text-sm text-muted-foreground text-center mt-4">
           No results found.
         </div>
-        
         
         <Card
           v-for="job in filteredJobs.slice(0, 20)"
@@ -146,11 +107,13 @@
             <h3 class="text-lg font-bold text-slate-900 truncate">{{ job.title }}</h3>
             <div class="mt-1 flex flex-col gap-1">
               <p class="text-sm text-slate-500">
-                by {{ job.customer?.name || job.user_name || 'Unknown customer' }}</p>
+                by {{ job.customer?.name || job.user_name || 'Unknown customer' }}
+              </p>
               <p class="text-sm text-slate-500 capitalize">{{ job.request_type || 'Location not found' }}</p>
               <p class="text-sm text-slate-500">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="inline mr-1 mb-0.5"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"></path><circle cx="12" cy="10" r="3"></circle></svg>
-                {{ job.city }}, {{ job.state || 'California' }}</p>
+                {{ job.city }}, {{ job.state || 'California' }}
+              </p>
             </div>
             
             <div class="mt-3">
@@ -172,7 +135,8 @@
           </div>
 
           <div class="flex flex-col sm:items-end w-full sm:w-auto gap-3 mt-4 sm:mt-0">
-            <Button @click="openJobModal(job)" class="w-full sm:w-auto  text-white font-semibold">
+            <!-- View Job modal button (unchanged) -->
+            <Button @click="openJobModal(job)" class="w-full sm:w-auto text-white font-semibold">
               View Job
             </Button>
 
@@ -206,9 +170,7 @@
 
           <div class="flex justify-between items-center mb-6">
             <h2 class="text-2xl md:text-3xl font-extrabold text-[#1a202c]">{{ selectedJob.title || 'Pest Control Help' }}</h2>
-            <Button variant="ghost" size="icon" class="text-slate-700 hover:bg-slate-100">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
-            </Button>
+            
           </div>
 
           <div v-if="selectedJob.images && selectedJob.images.length" class="relative flex items-center mb-10">
@@ -227,11 +189,10 @@
                 :key="img.id"
                 class="snap-center shrink-0 w-48 h-48 bg-slate-200 rounded-xl overflow-hidden"
               >
-                <img
-                  :src="img.image"
-                  class="w-full h-full object-cover"
-                />
+                <img :src="img.image" class="w-full h-full object-cover" />
               </div>
+              <div class="snap-center shrink-0 w-48 h-48 bg-green-300 rounded-xl overflow-hidden"></div>
+              <div class="snap-center shrink-0 w-48 h-48 rounded-xl overflow-hidden"></div>
             </div>
 
             <Button
@@ -262,28 +223,21 @@
 
               <div class="flex items-center text-slate-600 font-medium">
                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-3"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"></path><circle cx="12" cy="10" r="3"></circle></svg>
-                {{ selectedJob.city + ', ' + selectedJob.state || 'Location not found' }}
+                {{ selectedJob.city + ', ' + (selectedJob.state || 'California') }}
               </div>
 
               <div class="flex items-center text-slate-600 font-medium capitalize">
                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-3"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
                 {{ selectedJob.urgency || 'Urgency not provided' }}
               </div>
+
               <div class="flex items-center text-slate-600 font-medium">
-                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-3">
-                  <path d="M8 2v4"></path>
-                  <path d="M16 2v4"></path>
-                  <rect width="18" height="18" x="3" y="4" rx="2"></rect>
-                  <path d="M3 10h18"></path>
-                </svg>
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-3"><path d="M8 2v4"></path><path d="M16 2v4"></path><rect width="18" height="18" x="3" y="4" rx="2"></rect><path d="M3 10h18"></path></svg>
                 {{ formatDate(selectedJob.deadline) }}
               </div>
 
               <div class="flex items-center text-slate-600 font-medium capitalize">
-                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-3">
-                  <rect width="20" height="14" x="2" y="7" rx="2" ry="2"></rect>
-                  <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
-                </svg>
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-3"><rect width="20" height="14" x="2" y="7" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
                 {{ selectedJob.request_type || 'Location not found' }}
               </div>
 
@@ -303,7 +257,6 @@
                 {{ service.name || service }}
               </span>
             </div>
-            
           </div>
 
           <hr class="border-slate-100 mb-8" />
@@ -412,16 +365,16 @@ import { useJobStore } from "@/store/jobStore";
 import { useUserStore, ALL_USERS } from "@/store/userStore";
 import { useApplicationStore } from "@/store/applicationStore";
 
-const jobStore = useJobStore();
-const { jobList } = storeToRefs(jobStore);
-
+const jobStore  = useJobStore();
 const userStore = useUserStore();
 
-const services = ref([]);
-const jobs = ref([]);
-const loading = ref(false);
-const selectedJob = ref(null);
-const isDialogOpen = ref(false);
+const { jobList } = storeToRefs(jobStore);
+
+const services      = ref([]);
+const jobs          = ref([]);
+const loading       = ref(false);
+const selectedJob   = ref(null);
+const isDialogOpen  = ref(false);
 
 const applicationForm = ref({
   proposedRate: "",
@@ -432,16 +385,16 @@ const applicationForm = ref({
 });
 
 const pendingDistance = ref('');
-const pendingBudget = ref('');
-const pendingJobType = ref('');
-const pendingService = ref('');
+const pendingBudget   = ref('');
+const pendingJobType  = ref('');
+const pendingService  = ref('');
 const pendingLocation = ref('');
 
-const searchLocation = ref("");
+const searchLocation   = ref("");
 const selectedDistance = ref("");
-const selectedBudget = ref("");
-const selectedJobType = ref("");
-const selectedService = ref(null);
+const selectedBudget   = ref("");
+const selectedJobType  = ref("");
+const selectedService  = ref(null);
 
 const backendAvailable = ref(true);
 
@@ -462,17 +415,12 @@ function formatDate(date) {
 }
 
 function getUserName(job) {
-  console.log('Looking up user_id:', job.user_id, typeof job.user_id);
   const savedProfile = userStore.profiles[job.user_id];
-  console.log('savedProfile:', savedProfile);
   if (savedProfile?.name) return savedProfile.name;
 
-  // Direct match on ALL_USERS by string id
   const user = ALL_USERS.find(u => u.id === job.user_id);
-  console.log('matched user:', user);
   if (user) return user.name;
 
-  // Fallback: match provider by numeric providerId
   if (job.provider_id) {
     const provider = ALL_USERS.find(u => u.providerId === job.provider_id);
     if (provider) return provider.name;
@@ -482,7 +430,7 @@ function getUserName(job) {
 }
 
 const filteredJobs = computed(() => {
-  if (backendAvailable.value) return jobs.value; // backend already filtered
+  if (backendAvailable.value) return jobs.value;
 
   return jobs.value.filter(job => {
     if (selectedService.value) {
@@ -503,9 +451,8 @@ const filteredJobs = computed(() => {
   });
 });
 
-
 function getDistanceMiles(lat1, lng1, lat2, lng2) {
-  const R = 3958.8; // Earth radius in miles
+  const R = 3958.8;
   const dLat = (lat2 - lat1) * Math.PI / 180;
   const dLng = (lng2 - lng1) * Math.PI / 180;
   const a = Math.sin(dLat/2) ** 2 +
@@ -515,8 +462,12 @@ function getDistanceMiles(lat1, lng1, lat2, lng2) {
 }
 
 async function fetchServices() {
-  const res = await fetch("http://localhost:8000/api/services/");
-  services.value = await res.json();
+  try {
+    const res = await fetch("http://localhost:8000/api/services/");
+    services.value = await res.json();
+  } catch {
+    // backend unavailable — silently ignore
+  }
 }
 
 async function fetchJobs() {
@@ -553,8 +504,7 @@ async function toggle(job) {
   try {
     const res = await toggleFavoriteJob(job.id);
     job.is_favorited = res.data.favorited;
-  } catch (err) {
-    console.error(err);
+  } catch {
     jobStore.toggleFavorite(job.job_id);
     job.is_favorited = jobStore.isFavorited(job.job_id);
   }
@@ -594,44 +544,38 @@ function scrollRight() {
 }
 
 function searchJobsHandler() {
-  searchLocation.value = pendingLocation.value;
+  searchLocation.value  = pendingLocation.value;
   selectedService.value = pendingService.value;
   selectedDistance.value = pendingDistance.value;
-  selectedBudget.value = pendingBudget.value;
+  selectedBudget.value  = pendingBudget.value;
   selectedJobType.value = pendingJobType.value === '.' ? '' : pendingJobType.value;
   fetchJobs();
 }
 
 function fallbackJob(job, index = 0, coords = { lat: 33.7701, lng: -118.1937 }, getUserName) {
   return {
-    job_id: job.job_id || `fallback_${index + 1}`,
-    user_id: job.user_id || "u_fallback",
-    user_name: getUserName(job),
-    provider_id: job.provider_id ?? 0,
-    title: job.title || "Untitled Job",
-    description: job.description || "No description provided",
-    services: [job.service] || ["General Repair"],
-    budget: job.price ?? 0,
-    city: job.city || "Long Beach",
-    state: job.state || "California",
-    lat: Number(job.lat ?? coords.lat),
-    lng: Number(job.lng ?? coords.lng),
-    language: job.language || "English",
-    urgency: job.urgency || "normal",
-    deadline: job.date || new Date().toISOString(),
+    job_id:       job.job_id || `fallback_${index + 1}`,
+    user_id:      job.user_id || "u_fallback",
+    user_name:    getUserName(job),
+    provider_id:  job.provider_id ?? 0,
+    title:        job.title       || "Untitled Job",
+    description:  job.description || "No description provided",
+    services:     [job.service]   || ["General Repair"],
+    budget:       job.price       ?? 0,
+    city:         job.city        || "Long Beach",
+    state:        job.state       || "California",
+    lat:          Number(job.lat  ?? coords.lat),
+    lng:          Number(job.lng  ?? coords.lng),
+    language:     job.language    || "English",
+    urgency:      job.urgency     || "normal",
+    deadline:     job.date        || new Date().toISOString(),
     request_type: job.request_type || "quote",
     is_favorited: jobStore.isFavorited(job.job_id) ?? false,
-    
   };
 }
-
 </script>
+
 <style scoped>
-.hide-scrollbar::-webkit-scrollbar {
-  display: none;
-}
-.hide-scrollbar {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-}
+.hide-scrollbar::-webkit-scrollbar { display: none; }
+.hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 </style>

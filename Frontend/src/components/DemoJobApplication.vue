@@ -55,10 +55,21 @@
               {{ job.city }} · {{ job.service }}
             </p>
 
-            <p class="text-sm text-slate-500">
-              Status:
-              <span class="font-medium capitalize">{{ job.status }}</span>
-            </p>
+            <!-- Application status badge (NOT the job's open/in-progress/done status) -->
+            <div class="mt-2">
+              <span
+                :class="[
+                  'inline-block text-xs font-bold px-3 py-1 rounded-full border',
+                  applicationStatus(job.job_id) === 'Accepted'
+                    ? 'bg-green-50 text-green-700 border-green-200'
+                    : applicationStatus(job.job_id) === 'Rejected'
+                    ? 'bg-red-50 text-red-600 border-red-200'
+                    : 'bg-yellow-50 text-yellow-700 border-yellow-200'
+                ]"
+              >
+                {{ applicationStatus(job.job_id) }}
+              </span>
+            </div>
 
             <div class="mt-2 font-bold text-slate-900">
               ${{ job.price || job.budget || 0 }}
@@ -120,6 +131,23 @@
               Applied {{ selectedAppData.appliedAt ? new Date(selectedAppData.appliedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '' }}
             </p>
           </template>
+
+          <!-- Application status inside modal -->
+          <div class="mt-5 pt-4 border-t border-slate-100">
+            <p class="text-xs font-semibold text-slate-400 uppercase tracking-wide mb-2">Application Status</p>
+            <span
+              :class="[
+                'inline-block text-sm font-bold px-4 py-1.5 rounded-full border',
+                applicationStatus(selectedJob.job_id) === 'Accepted'
+                  ? 'bg-green-50 text-green-700 border-green-200'
+                  : applicationStatus(selectedJob.job_id) === 'Rejected'
+                  ? 'bg-red-50 text-red-600 border-red-200'
+                  : 'bg-yellow-50 text-yellow-700 border-yellow-200'
+              ]"
+            >
+              {{ applicationStatus(selectedJob.job_id) }}
+            </span>
+          </div>
         </div>
       </DialogContent>
     </Dialog>
@@ -143,13 +171,14 @@ const selectedJob = ref(null);
 const isDialogOpen = ref(false);
 const ready = ref(false);
 
-// ensure applications exist
+// ensure applications and decisions are loaded fresh
 onMounted(() => {
   jobStore.initApplications();
+  jobStore.loadDecisions();
   ready.value = true;
 });
 
-// 🔥 CORE LOGIC: only jobs current user applied to
+// Only jobs current user applied to
 const filteredJobs = computed(() => {
   const userId = userStore.currentUser?.id;
   if (!userId) return [];
@@ -160,6 +189,20 @@ const filteredJobs = computed(() => {
     appliedIds.includes(job.job_id)
   );
 });
+
+/**
+ * Derive a human-readable application status for a given jobId.
+ * The decision is stored globally keyed by jobId + providerUserId.
+ * Returns: 'Accepted' | 'Rejected' | 'Applied'
+ */
+function applicationStatus(jobId) {
+  const userId = userStore.currentUser?.id;
+  if (!userId) return 'Applied';
+  const decision = jobStore.getDecision(jobId, userId);
+  if (decision === 'accepted') return 'Accepted';
+  if (decision === 'rejected') return 'Rejected';
+  return 'Applied';
+}
 
 // UI actions
 function openJob(job) {

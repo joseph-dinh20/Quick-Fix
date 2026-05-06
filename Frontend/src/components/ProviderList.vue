@@ -36,7 +36,10 @@ import Scheduler from "@/components/Scheduler.vue";
 import { useProviderProfileStore } from "@/store/providerProfileStore";
 import { useProviderRatingsStore } from "@/store/providerRatingsStore";
 
+import { useUserStore } from "@/store/userStore";
+
 const providerProfileStore = useProviderProfileStore();
+const userStore = useUserStore();
 const ratingsStore = useProviderRatingsStore();
 
 // Reactively merged: any saved edit reflects automatically.
@@ -54,7 +57,6 @@ const profileOpen = ref({});
 const schedulerOpen = ref(false);
 const selectedProvider = ref(null);
 
-
 const navigate = (hash) => {
   window.location.hash = hash;
 };
@@ -64,6 +66,7 @@ function handleSelect(provider, index) {
   selectedProvider.value = provider;
   schedulerOpen.value = true;
 }
+
 </script>
 
 <template>
@@ -72,11 +75,10 @@ function handleSelect(provider, index) {
       Find work
     </h1>
     
-    <Button variant="ghost" size="icon"     class="text-slate-700"
+    <Button variant="ghost" size="icon" class="text-slate-700"
     @click="navigate('#/DemoMap')"
     >
       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21"></polygon><line x1="9" x2="9" y1="3" y2="18"></line><line x1="15" x2="15" y1="6" y2="21"></line></svg>
-      
     </Button>
   </div>
   <div>
@@ -136,11 +138,14 @@ function handleSelect(provider, index) {
               </Dialog>
             </div>
           </div>
-          <CardTitle class="flex w-15 flex-col items-center">
+
+          <!-- ── Price column ───────────────────────────────────────────────── -->
+          <CardTitle class="flex w-15 flex-col items-center gap-1">
             ${{ provider.price }}
             <CardDescription>per hour</CardDescription>
           </CardTitle>
         </CardHeader>
+
         <CardContent class="flex flex-col gap-2">
           <Separator class="my-2" />
           <CardTitle>
