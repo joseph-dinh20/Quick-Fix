@@ -51,6 +51,7 @@ const timeOfDay = [
   { time: "Afternoon", text: "2:00 PM – 6:00 PM" },
   { time: "Evening", text: "6:00 PM – 9:00 PM" },
 ];
+const minDate = todayDate.subtract({ days: 365 });
 const selectedTime = ref();
 const isOpen = ref(false);
 const df = new DateFormatter("en-US", { dateStyle: "long" });
@@ -164,12 +165,13 @@ function isDateUnavailable(date) {
                 v-model="selectedDate"
                 :default-placeholder="todayDate"
                 layout="month-and-year"
-                :minValue="nextDay"
+                :minValue="minDate"
                 :numberOfMonths="1"
                 :is-date-disabled="isDateUnavailable"
                 :is-date-unavailable="isDateUnavailable"
                 initial-focus
               />
+              <!-- :minValue="nextDay" -->
             </PopoverContent>
           </Popover>
         </div>
