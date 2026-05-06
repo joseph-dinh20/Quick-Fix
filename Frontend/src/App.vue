@@ -72,6 +72,7 @@ onMounted(async () => {
   }
   if (isProvider.value) {
     jobStore.loadFavorites();
+    jobStore.loadApplications(); 
   }
 });
 
