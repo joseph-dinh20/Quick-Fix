@@ -15,6 +15,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
+import { Separator } from "@/components/ui/separator";
 import {
   Select,
   SelectContent,
@@ -30,15 +31,19 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { CheckCircle2, AlertCircle } from "lucide-vue-next";
+import { CheckCircle2, AlertCircle, Phone, Mail } from "lucide-vue-next";
 
 import defaultAvatar from "@/assets/avatars/defaultAvatar.png";
 import { useOrderHistoryStore } from "@/store/orderHistoryStore";
 import { useUserStore } from "@/store/userStore";
+import { useReportsStore } from "@/store/reportsStore";
 import { storeToRefs } from "pinia";
+
+import Report from "@/components/Report.vue";
 
 const historyStore = useOrderHistoryStore();
 const userStore = useUserStore();
+const reportsStore = useReportsStore();
 const { orders } = storeToRefs(historyStore);
 
 function formatDate(date) {
@@ -59,7 +64,6 @@ function statusOf(order) {
     : "completed";
 }
 
-// Only orders for the currently logged-in provider
 const myJobs = computed(() => {
   const myProviderId = userStore.currentUser?.providerId;
   if (!myProviderId) return [];
@@ -104,6 +108,53 @@ function submitComplete() {
   completeDialogOpen.value = false;
   activeOrder.value = null;
 }
+
+// ===== Customer Contact Dialog =====
+const customerDialogOpen = ref(false);
+const activeCustomerOrder = ref(null);
+
+function phoneFromCustomerId(customerId) {
+  if (!customerId) return "(555) 000-0000";
+  // Simple deterministic generator from id string
+  let hash = 0;
+  for (let i = 0; i < customerId.length; i++) {
+    hash = (hash * 31 + customerId.charCodeAt(i)) >>> 0;
+  }
+  const digits = String(hash).padStart(7, "0").slice(0, 7);
+  return `(555) ${digits.slice(0, 3)}-${digits.slice(3, 7)}`;
+}
+
+function openCustomerDialog(order) {
+  activeCustomerOrder.value = order;
+  customerDialogOpen.value = true;
+}
+
+const activeCustomerPhone = computed(() => {
+  if (!activeCustomerOrder.value) return "";
+  return phoneFromCustomerId(activeCustomerOrder.value.customerId);
+});
+
+const activeCustomerEmail = computed(() => {
+  return activeCustomerOrder.value?.customerEmail || "No email on file";
+});
+
+// ===== Report Dialog =====
+const reportDialogOpen = ref(false);
+const reportOrder = ref(null);
+
+function openReportDialog(order) {
+  customerDialogOpen.value = false;
+  reportOrder.value = order;
+  setTimeout(() => {
+    reportDialogOpen.value = true;
+  }, 150);
+}
+
+function reportButtonLabel(order) {
+  return reportsStore.hasReported(order.id, "provider-to-customer")
+    ? "View Report"
+    : "Report Customer";
+}
 </script>
 
 <template>
@@ -130,12 +181,23 @@ function submitComplete() {
             :style="{ animationDelay: `${i * 0.05}s` }"
           >
             <TableCell>
-              <Avatar class="scale-[1.3] align-top">
-                <AvatarFallback><img :src="defaultAvatar" /></AvatarFallback>
-              </Avatar>
+              <button
+                class="cursor-pointer transition-transform hover:scale-110"
+                @click="openCustomerDialog(order)"
+                aria-label="View customer info"
+              >
+                <Avatar class="scale-[1.3] align-top">
+                  <AvatarFallback><img :src="defaultAvatar" /></AvatarFallback>
+                </Avatar>
+              </button>
             </TableCell>
             <TableCell>
-              {{ order.customerName || "Customer" }}
+              <button
+                class="cursor-pointer text-left hover:underline"
+                @click="openCustomerDialog(order)"
+              >
+                {{ order.customerName || "Customer" }}
+              </button>
             </TableCell>
             <TableCell>
               <Badge
@@ -166,7 +228,6 @@ function submitComplete() {
               </Badge>
             </TableCell>
 
-            <!-- Pay column -->
             <TableCell class="font-medium">
               <template v-if="order.hoursWorked">
                 <div class="flex flex-col">
@@ -187,9 +248,7 @@ function submitComplete() {
               </template>
             </TableCell>
 
-            <!-- Action column -->
             <TableCell>
-              <!-- Already completed -->
               <Button
                 v-if="order.hoursWorked"
                 variant="outline"
@@ -201,7 +260,6 @@ function submitComplete() {
                 Done
               </Button>
 
-              <!-- Completed (past date) but not yet marked -->
               <Button
                 v-else-if="statusOf(order) === 'completed'"
                 variant="outline"
@@ -212,7 +270,6 @@ function submitComplete() {
                 Mark Complete
               </Button>
 
-              <!-- Scheduled (upcoming) — nothing to do yet -->
               <span v-else class="text-muted-foreground text-xs">
                 Upcoming
               </span>
@@ -221,7 +278,7 @@ function submitComplete() {
         </tbody>
 
         <TableFooter />
-        <TableCaption v-if="myJobs.length"> Your booked jobs. </TableCaption>
+        <TableCaption v-if="myJobs.length">Your booked jobs.</TableCaption>
         <TableCaption v-else>
           No bookings yet. Customers will appear here once they hire you.
         </TableCaption>
@@ -276,7 +333,7 @@ function submitComplete() {
 
           <div
             v-if="completeForm.hoursWorked && activeOrder"
-            class="bg-muted/50 space-y-1 rounded-md p-3 text-sm"
+            class="bg-muted/50 mt-1 space-y-1 rounded-md p-3 text-sm"
           >
             <div class="flex justify-between">
               <span class="text-muted-foreground">Hours</span>
@@ -308,6 +365,86 @@ function submitComplete() {
         </DialogFooter>
       </DialogContent>
     </Dialog>
+
+    <!-- ===== Customer Contact Dialog ===== -->
+    <Dialog v-model:open="customerDialogOpen">
+      <DialogContent class="sm:max-w-md">
+        <DialogHeader>
+          <DialogTitle>Customer Info</DialogTitle>
+          <DialogDescription>
+            Contact details for your booking.
+          </DialogDescription>
+        </DialogHeader>
+
+        <div v-if="activeCustomerOrder" class="space-y-4 py-2">
+          <div class="flex items-center gap-4">
+            <Avatar class="scale-[1.3]">
+              <AvatarFallback><img :src="defaultAvatar" /></AvatarFallback>
+            </Avatar>
+            <div class="flex-1">
+              <p class="text-lg font-semibold">
+                {{ activeCustomerOrder.customerName }}
+              </p>
+              <p class="text-muted-foreground text-sm">
+                Booked on {{ formatDate(activeCustomerOrder.createdAt) }}
+              </p>
+            </div>
+          </div>
+
+          <Separator />
+
+          <div class="space-y-3">
+            <button
+              type="button"
+              class="hover:bg-muted flex w-full items-center gap-3 rounded-md p-2 text-left transition"
+              @click="window.location.href = `tel:${activeCustomerPhone}`"
+            >
+              <Phone class="text-muted-foreground size-4" />
+              <div class="flex flex-col">
+                <span class="text-muted-foreground text-xs">Phone</span>
+                <span class="font-medium">{{ activeCustomerPhone }}</span>
+              </div>
+            </button>
+
+            <button
+              type="button"
+              class="hover:bg-muted flex w-full items-center gap-3 rounded-md p-2 text-left transition"
+              @click="window.location.href = `mailto:${activeCustomerEmail}`"
+              :disabled="!activeCustomerOrder.customerEmail"
+            >
+              <Mail class="text-muted-foreground size-4" />
+              <div class="flex flex-col">
+                <span class="text-muted-foreground text-xs">Email</span>
+                <span class="font-medium break-all">
+                  {{ activeCustomerEmail }}
+                </span>
+              </div>
+            </button>
+          </div>
+        </div>
+
+        <DialogFooter class="flex-col gap-2 sm:flex-row sm:justify-end">
+          <Button
+            v-if="activeCustomerOrder"
+            variant="outline"
+            class="text-amber-700 hover:bg-amber-50 hover:text-amber-800"
+            @click="openReportDialog(activeCustomerOrder)"
+          >
+            {{ reportButtonLabel(activeCustomerOrder) }}
+          </Button>
+          <Button variant="outline" @click="customerDialogOpen = false">
+            Close
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+
+    <!-- ===== Report Dialog ===== -->
+    <Report
+      v-model:open="reportDialogOpen"
+      :order="reportOrder"
+      direction="provider-to-customer"
+    />
   </div>
 </template>
 
