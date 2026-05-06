@@ -45,7 +45,7 @@ watch(
   (newUser) => {
     user.value = newUser;
     isLoggedIn.value = !!newUser;
-    isProvider.value = user.value.userType == 'provider';
+    isProvider.value = user.value?.userType == 'provider';
   },
   { immediate: true }
 );
