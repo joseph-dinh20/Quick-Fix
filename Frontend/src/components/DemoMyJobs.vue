@@ -48,10 +48,21 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
-// ---------------------------------------------------
 
 import ServiceSelect from "./ServiceSelect.vue";
 import CardTitle from "./ui/card/CardTitle.vue";
+
+import { storeToRefs } from "pinia";
+
+import { useJobStore } from "@/store/jobStore";
+import { useUserStore } from "@/store/userStore";
+
+
+// ---------------------------------------------------
+
+const userStore = useUserStore();
+const jobStore = useJobStore();
+const { jobList } = storeToRefs(jobStore);
 
 const jobs = ref([]);
 const currentSort = ref("Sort by");
@@ -152,12 +163,35 @@ function applySearch() {
     displayQuery.value = searchQuery.value;
 }
 
+function fallbackJob(job, index = 0) {
+  return {
+    job_id: job.job_id || `fallback_${index + 1}`,
+    user_id: job.user_id || "u_fallback",
+    provider_id: job.provider_id ?? 0,
+    title: job.title || "Untitled Job",
+    description: job.description || "No description provided",
+    services: [job.service] || ["General Repair"],
+    budget: job.price ?? 0,
+    city: job.city || "Long Beach",
+    state: job.state || "California",
+    lat: Number(job.lat ?? coords.lat),
+    lng: Number(job.lng ?? coords.lng),
+    language: job.language || "English",
+    urgency: job.urgency || "normal",
+    deadline: job.date || new Date().toISOString(),
+    request_type: job.request_type || "quote",
+    is_favorited: job.is_favorited ?? false,
+    status: job.status ?? "Open"
+  };
+}
+
 async function fetchJobs() {
     try {
         const res = await getMyJobs();
         jobs.value = res.data;
     } catch (err) {
-        console.error(err);
+        console.error("Failed to fetch from backend, using fallback", err);
+        jobs.value = jobStore.getMergedJobs().filter(job => job.user_id === userStore.currentUser?.id).map((job, index) => fallbackJob(job, index));
     }
 }
 
@@ -635,13 +669,16 @@ onMounted(fetchJobs);
                                         stroke="currentColor"
                                         stroke-width="2"
                                         stroke-linecap="round"
-                                        stroke-linejoin="round">
+                                        stroke-linejoin="round"
+                                        class="mr-3"
+                                        >
+                                        
                                         <path
                                             d="M14.7 6.3a4 4 0 0 0-5.4 5.4l-5 5a2 2 0 0 0 2.8 2.8l5-5a4 4 0 0 0 5.4-5.4l-2.2 2.2-2.8-2.8 2.2-2.2z"></path>
                                     </svg>
                                     {{
                                         selectedJob.assigned_provider_name ||
-                                        "Unknown provider"
+                                        "Unassigned"
                                     }}
 
                                     <Button @click="saveJobChanges">

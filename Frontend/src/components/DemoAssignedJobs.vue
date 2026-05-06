@@ -4,7 +4,9 @@
       
       <div class="flex justify-between items-center mb-8">
         <h1 class="text-3xl font-extrabold tracking-tight">Assigned Jobs</h1>
-        <Button variant="ghost" size="icon" class="text-slate-700">
+        <Button variant="ghost" size="icon" class="text-slate-700"
+        @click="navigate('#/DemoMap?view=jobs')"
+        >
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21"></polygon><line x1="9" x2="9" y1="3" y2="18"></line><line x1="15" x2="15" y1="6" y2="21"></line></svg>
         </Button>
       </div>
@@ -71,7 +73,7 @@
           <div class="flex-1 min-w-0">
             <h3 class="text-lg font-bold text-slate-900 truncate">{{ job.title }}</h3>
             <div class="mt-1 flex flex-col gap-1">
-              <p class="text-sm text-slate-500">by {{ job.customer?.name || 'Unknown customer' }}</p>
+              <p class="text-sm text-slate-500">by {{ job.customer?.name || job.customer || 'Unknown customer' }}</p>
               <p class="text-sm text-slate-500">{{ job.city + ', ' + job.state || 'Location not provided' }}</p>
             </div>
             <div class="mt-3">
@@ -103,7 +105,7 @@
                 :key="service.id"
                 class="text-xs bg-slate-100 px-2 py-1 rounded-md text-slate-600"
               >
-                {{ service.name }}
+                {{ service.name || service }}
               </span>
             </div>
           </div>
@@ -197,7 +199,7 @@
 
               <div class="flex items-center text-slate-600 font-medium">
                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-3"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-                {{ selectedJob.customer?.name || 'Unknown customer' }}
+                {{ selectedJob.customer?.name || selectedJob.customer || 'Unknown customer' }}
               </div>
 
               <div class="flex items-center text-slate-600 font-medium">
@@ -248,7 +250,7 @@
                 :key="service.id"
                 class="text-xs bg-slate-100 px-2 py-1 rounded-md text-slate-600 ml-2"
               >
-                {{ service.name }}
+                {{ service.name || service }}
               </span>
             </div>
           </div>
@@ -270,6 +272,9 @@
 <script>
 import { fetchAssignedJobs, completeJob } from "@/services/api"
 // import { getFavoriteJobs, toggleFavoriteJob } from "@/services/api";
+import { storeToRefs } from "pinia";
+import { useJobStore } from "@/store/jobStore";
+import { useUserStore, ALL_USERS } from "@/store/userStore";
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -283,6 +288,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { ChevronDown, Search } from 'lucide-vue-next'
+
 
 export default {
   name: "JobsList",
@@ -305,6 +311,8 @@ export default {
 
   data() {
     return {
+      jobStore: useJobStore(),
+      userStore: useUserStore(),
       jobs: [],
       loading: false,
       selectedJob: null,
@@ -312,6 +320,7 @@ export default {
       searchQuery: '',
       displayQuery: '',
       currentSort: 'Sort by',
+      backendAvailable: true,
     };
   },
   
@@ -342,6 +351,9 @@ export default {
   },
 
   methods: {
+    navigate(path) {
+      window.location.hash = path;
+    },
 
     applySearch() {
       this.displayQuery = this.searchQuery
@@ -357,6 +369,30 @@ export default {
         month: "short",
         day: "numeric",
       })
+    },
+
+    fallbackJob(job, index = 0) {
+      const customer = ALL_USERS.find(u => u.id === job.user_id);
+      return {
+        job_id: job.job_id || `fallback_${index + 1}`,
+        user_id: job.user_id || "u_fallback",
+        provider_id: job.provider_id ?? 0,
+        title: job.title || "Untitled Job",
+        description: job.description || "No description provided",
+        services: job.service ? [job.service] : ["General Repair"],
+        budget: job.price ?? 0,
+        city: job.city || "Long Beach",
+        state: job.state || "California",
+        lat: Number(job.lat ?? 33.7701),   // ← hardcode default, no coords ref
+        lng: Number(job.lng ?? -118.1937),
+        languages: job.language || "English",
+        urgency: job.urgency || "normal",
+        deadline: job.date || new Date().toISOString(),
+        request_type: job.request_type || "quote",
+        is_favorited: job.is_favorited ?? false,
+        status: job.status ?? "Open",
+        customer: customer?.name || "Unknown Customer"
+      };
     },
 
     async fetchJobs() {
@@ -375,7 +411,9 @@ export default {
           })),
         }));
       } catch (err) {
-        console.error(err);
+        console.error("Backend failed to load, using fallback data", err);
+        this.jobs = this.jobStore.getMergedJobs().filter(job => `p_${job.provider_id}` === this.userStore.currentUser?.id).map((job, index) => this.fallbackJob(job, index));
+        this.backendAvailable = false;
       } finally {
         this.loading = false;
       }
@@ -388,6 +426,8 @@ export default {
         console.log(res);
       } catch (err) {
         console.error(err);
+        this.jobStore.saveJob(job.job_id, { status: "Complete" });
+        job.status = "Complete";
       }
     },
 
