@@ -132,9 +132,9 @@
 
             <h2 class="text-xl font-medium truncate">{{ otherParticipant?.name }}</h2>
 
-            <!-- "View Provider" — shown only when a provider snapshot is available -->
+            <!-- "View Provider" — shown only to customers when a provider snapshot is available -->
             <Button
-              v-if="activeChat.linkedProviderId && activeProviderSnapshot"
+              v-if="activeChat.linkedProviderId && activeProviderSnapshot && userStore.isCustomer"
               variant="outline"
               size="sm"
               class="ml-1 shrink-0 text-xs rounded-full border-green-400 text-green-700 hover:bg-green-50 dark:text-green-400 dark:border-green-700 dark:hover:bg-green-950"
@@ -143,9 +143,9 @@
               View Provider
             </Button>
 
-            <!-- "View Job Listing" — shown only when a job snapshot is available -->
+            <!-- "View Job Listing" — shown only to providers when a job snapshot is available -->
             <Button
-              v-if="activeChat.linkedJobId && activeJobSnapshot"
+              v-if="activeChat.linkedJobId && activeJobSnapshot && userStore.isProvider"
               variant="outline"
               size="sm"
               class="ml-1 shrink-0 text-xs rounded-full border-blue-400 text-blue-700 hover:bg-blue-50 dark:text-blue-400 dark:border-blue-700 dark:hover:bg-blue-950"

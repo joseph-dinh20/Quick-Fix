@@ -37,6 +37,8 @@ import defaultAvatar from "@/assets/avatars/defaultAvatar.png";
 import { useOrderHistoryStore } from "@/store/orderHistoryStore";
 import { useUserStore } from "@/store/userStore";
 import { useReportsStore } from "@/store/reportsStore";
+import { useChatStore } from "@/store/chatStore";
+import { ALL_USERS } from "@/store/userStore";
 import { storeToRefs } from "pinia";
 
 import Report from "@/components/Report.vue";
@@ -44,6 +46,7 @@ import Report from "@/components/Report.vue";
 const historyStore = useOrderHistoryStore();
 const userStore = useUserStore();
 const reportsStore = useReportsStore();
+const chatStore = useChatStore();
 const { orders } = storeToRefs(historyStore);
 
 function formatDate(date) {
@@ -154,6 +157,53 @@ function reportButtonLabel(order) {
   return reportsStore.hasReported(order.id, "provider-to-customer")
     ? "View Report"
     : "Report Customer";
+}
+
+const navigate = (hash) => { window.location.hash = hash; };
+
+function messageCustomer(order) {
+  if (!userStore.currentUser) return;
+
+  const customerId = order.customerId || 'u_unknown';
+
+  // Resolve the customer's display name — prefer saved profile, then ALL_USERS
+  let customerName = userStore.profiles?.[customerId]?.name || '';
+  if (!customerName) {
+    const found = ALL_USERS.find(u => u.id === customerId);
+    customerName = found?.name || order.customerName || 'Unknown Customer';
+  }
+  const customerAvatarUrl = userStore.profiles?.[customerId]?.avatar || '';
+
+  const customerInfo = {
+    id: customerId,
+    name: customerName,
+    avatarUrl: customerAvatarUrl,
+  };
+
+  // Build a job-like object from the order so the snapshot has all the fields
+  // the "View Job Listing" dialog in ChatMessages expects.
+  const jobSnapshot = {
+    job_id:       order.jobId || order.id,
+    user_id:      customerId,
+    user_name:    customerName,
+    title:        order.serviceCategory || order.service || 'Service',
+    description:  order.description || '',
+    service:      order.serviceCategory || order.service || 'Service',
+    services:     order.serviceCategory ? [{ name: order.serviceCategory }] : [],
+    budget:       order.hourlyRate ?? 0,
+    city:         order.city || '',
+    state:        order.state || '',
+    urgency:      order.urgency || 'normal',
+    deadline:     order.scheduledDate || order.createdAt,
+    request_type: order.request_type || 'quote',
+    language:     order.language || 'English',
+    customer:     { name: customerName },
+  };
+
+  const chatId = chatStore.openOrCreateJobChat(jobSnapshot, customerInfo, userStore.currentUser);
+  chatStore.setPendingChat(chatId);
+  customerDialogOpen.value = false;
+  navigate('#/ChatMessages');
 }
 </script>
 
@@ -431,6 +481,17 @@ function reportButtonLabel(order) {
             @click="openReportDialog(activeCustomerOrder)"
           >
             {{ reportButtonLabel(activeCustomerOrder) }}
+          </Button>
+          <Button
+            v-if="activeCustomerOrder"
+            variant="outline"
+            class="text-green-700 hover:bg-green-50 hover:text-green-800"
+            @click="messageCustomer(activeCustomerOrder)"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-1.5">
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+            </svg>
+            Message
           </Button>
           <Button variant="outline" @click="customerDialogOpen = false">
             Close

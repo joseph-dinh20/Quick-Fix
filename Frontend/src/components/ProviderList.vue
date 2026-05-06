@@ -34,12 +34,12 @@ import Provider from "@/components/Provider.vue";
 import Scheduler from "@/components/Scheduler.vue";
 
 import { useProviderProfileStore } from "@/store/providerProfileStore";
+import { useProviderRatingsStore } from "@/store/providerRatingsStore";
+
 import { useUserStore } from "@/store/userStore";
-import { useChatStore } from "@/store/chatStore";
 
 const providerProfileStore = useProviderProfileStore();
 const userStore = useUserStore();
-const chatStore = useChatStore();
 const ratingsStore = useProviderRatingsStore();
 
 // Reactively merged: any saved edit reflects automatically.
@@ -67,25 +67,6 @@ function handleSelect(provider, index) {
   schedulerOpen.value = true;
 }
 
-/**
- * Opens an existing chat with this provider (or creates a new one), then
- * navigates to the Messages view.
- *
- * Requires the current user to be logged in — customers click this button
- * so they can message a provider about hiring them.
- */
-function openChat(provider) {
-  if (!userStore.currentUser) {
-    // Not logged in — redirect to login, saving the intended destination
-    sessionStorage.setItem("redirectAfterLogin", "#/Messages");
-    window.location.hash = "#/Login";
-    return;
-  }
-
-  const chatId = chatStore.openOrCreateProviderChat(provider, userStore.currentUser);
-  chatStore.setPendingChat(chatId);
-  navigate("#/ChatMessages");
-}
 </script>
 
 <template>
@@ -158,36 +139,8 @@ function openChat(provider) {
             </div>
           </div>
 
-          <!-- ── Price column + Message button ─────────────────────────────── -->
+          <!-- ── Price column ───────────────────────────────────────────────── -->
           <CardTitle class="flex w-15 flex-col items-center gap-1">
-            <!--
-              Message button: clicking creates (or reuses) a chat for this
-              provider and navigates the customer to the Messages view.
-              Updated to call openOrCreateProviderChat() which now requires
-              the currentUser to be passed in so chats can be user-scoped.
-            -->
-            <Button
-              variant="ghost"
-              size="icon"
-              class="text-slate-700 hover:bg-slate-100 hover:text-green-700"
-              :title="`Message ${provider.name}`"
-              @click="openChat(provider)"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              >
-                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
-              </svg>
-            </Button>
-
             ${{ provider.price }}
             <CardDescription>per hour</CardDescription>
           </CardTitle>

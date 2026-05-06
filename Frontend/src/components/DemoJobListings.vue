@@ -140,26 +140,6 @@
               View Job
             </Button>
 
-            <!--
-              ── Message Customer button ────────────────────────────────────────
-              Only visible to logged-in providers. Clicking it:
-                1. Resolves the customer's info from the job's user_id.
-                2. Creates (or re-opens) a chat thread in the chat store.
-                3. Snapshots the full job object for the "View Job Listing" modal.
-                4. Navigates to the Messages page.
-            -->
-            <Button
-              v-if="userStore.isProvider"
-              variant="outline"
-              @click="openJobChat(job)"
-              class="w-full sm:w-auto font-semibold flex items-center justify-center gap-1.5"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
-              </svg>
-              Message Customer
-            </Button>
-
             <Button
               variant="link"
               @click="toggle(job)"
@@ -311,11 +291,9 @@ import { storeToRefs } from "pinia";
 
 import { useJobStore } from "@/store/jobStore";
 import { useUserStore, ALL_USERS } from "@/store/userStore";
-import { useChatStore } from "@/store/chatStore";   // ← NEW
 
 const jobStore  = useJobStore();
 const userStore = useUserStore();
-const chatStore = useChatStore();                    // ← NEW
 
 const { jobList } = storeToRefs(jobStore);
 
@@ -452,43 +430,6 @@ async function toggle(job) {
 function openJobModal(job) {
   selectedJob.value = job;
   isDialogOpen.value = true;
-}
-
-// ── NEW: Open / create a chat with the customer who posted this job ─────────────
-/**
- * Called when a provider clicks "Message Customer" on a job card.
- *
- * Flow:
- *  1. Resolve the customer's display name + avatar from userStore / ALL_USERS.
- *  2. Call chatStore.openOrCreateJobChat() — creates the thread if it doesn't
- *     exist yet and snapshots the full job object.
- *  3. Mark the new chat as pending so ChatMessages auto-selects it on mount.
- *  4. Navigate to the Messages page.
- */
-function openJobChat(job) {
-  if (!userStore.currentUser) return;
-
-  const customerId = job.user_id || 'u_unknown';
-
-  // Prefer any manually-saved profile name, then the ALL_USERS list
-  let customerName = userStore.profiles[customerId]?.name || '';
-  if (!customerName) {
-    const found = ALL_USERS.find(u => u.id === customerId);
-    customerName = found?.name || job.user_name || job.customer?.name || 'Unknown Customer';
-  }
-
-  // Avatar URL — may not exist for demo customers; empty string is fine
-  const customerAvatarUrl = userStore.profiles[customerId]?.avatar || '';
-
-  const customerInfo = {
-    id: customerId,
-    name: customerName,
-    avatarUrl: customerAvatarUrl,
-  };
-
-  const chatId = chatStore.openOrCreateJobChat(job, customerInfo, userStore.currentUser);
-  chatStore.setPendingChat(chatId);
-  navigate('#/ChatMessages');
 }
 
 function scrollLeft() {
