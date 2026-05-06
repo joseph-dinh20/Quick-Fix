@@ -33,11 +33,23 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
+import {
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { Badge } from "@/components/ui/badge";
+import { ChevronDown } from "lucide-vue-next";
 import { ref, reactive, computed, watch, onMounted } from "vue";
 
 import { useUserStore } from "@/store/userStore";
-import { useProviderProfileStore } from "@/store/providerProfileStore";
+import {
+  useProviderProfileStore,
+  ALL_JOB_CATEGORIES,
+} from "@/store/providerProfileStore";
 import { useToast } from "vue-toast-notification";
 
 const userStore = useUserStore();
@@ -53,6 +65,7 @@ const form = reactive({
   price: 0,
   aboutMe: "",
   workPhotos: [],
+  jobs: [],
 });
 
 const provider = ref(null);
@@ -69,13 +82,34 @@ onMounted(() => {
   form.price = merged.price || 0;
   form.aboutMe = merged.aboutMe || "";
   form.workPhotos = [...(merged.workPhotos || [])];
+  form.jobs = [...(merged.jobs || [...ALL_JOB_CATEGORIES])];
 });
 
 // === Read More logic (kept per your request) ===
-// Note: this references `provider.aboutMe` which now refers to the loaded provider data.
 const showReadMoreButton = computed(() => {
   if (!provider.value) return false;
   return (provider.value.aboutMe || "").split(" ").length > 80;
+});
+
+// === Job categories ===
+function isJobChecked(category) {
+  return form.jobs.includes(category);
+}
+
+function toggleJob(category, checked) {
+  if (checked) {
+    if (!form.jobs.includes(category)) {
+      form.jobs = [...form.jobs, category];
+    }
+  } else {
+    form.jobs = form.jobs.filter((j) => j !== category);
+  }
+}
+
+const jobsButtonLabel = computed(() => {
+  if (form.jobs.length === 0) return "Select services";
+  if (form.jobs.length === ALL_JOB_CATEGORIES.length) return "All services";
+  return form.jobs.join(", ");
 });
 
 // === Image utilities ===
@@ -163,6 +197,10 @@ function handleSave() {
     $toast.error("Rate must be a non-negative number.");
     return;
   }
+  if (form.jobs.length === 0) {
+    $toast.error("Please select at least one service category.");
+    return;
+  }
 
   providerProfileStore.saveProfile(userStore.currentUser.providerId, {
     name: form.name.trim(),
@@ -170,6 +208,7 @@ function handleSave() {
     price: numericPrice,
     aboutMe: form.aboutMe.trim(),
     workPhotos: [...form.workPhotos],
+    jobs: [...form.jobs],
   });
 
   $toast.success("Profile saved.");
@@ -217,6 +256,43 @@ function handleSave() {
       </CardHeader>
 
       <CardContent>
+        <!-- Services offered -->
+        <div class="mb-5 flex flex-col gap-2">
+          <Label class="p-2">Services Offered</Label>
+          <DropdownMenu>
+            <DropdownMenuTrigger as-child>
+              <Button variant="outline" class="w-fit justify-between gap-2">
+                <span>{{ jobsButtonLabel }}</span>
+                <ChevronDown class="size-4 opacity-60" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="start" class="w-56">
+              <DropdownMenuLabel>Pick all that apply</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuCheckboxItem
+                v-for="category in ALL_JOB_CATEGORIES"
+                :key="category"
+                :model-value="isJobChecked(category)"
+                @update:model-value="(v) => toggleJob(category, v)"
+                @select.prevent
+              >
+                {{ category }}
+              </DropdownMenuCheckboxItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+
+          <div v-if="form.jobs.length > 0" class="flex flex-wrap gap-1">
+            <Badge
+              v-for="job in form.jobs"
+              :key="job"
+              variant="outline"
+              class="bg-green-600 text-white"
+            >
+              {{ job }}
+            </Badge>
+          </div>
+        </div>
+
         <Label class="p-2">Profile Description</Label>
         <Textarea
           v-model="form.aboutMe"

@@ -3,11 +3,13 @@ import { defineStore } from "pinia";
 import { ref } from "vue";
 import providersData from "@/store/data/providers.json";
 
+const ALL_JOB_CATEGORIES = ["Home Repair", "Gardening"];
+
 export const useProviderProfileStore = defineStore(
   "providerProfile",
   () => {
     // User-edited provider data, keyed by providerId.
-    // Shape: { [providerId]: { name, avatar, price, aboutMe, workPhotos } }
+    // Shape: { [providerId]: { name, avatar, price, aboutMe, workPhotos, jobs } }
     const edits = ref({});
 
     function saveProfile(providerId, updates) {
@@ -25,6 +27,9 @@ export const useProviderProfileStore = defineStore(
       const edit = edits.value[providerId] || {};
       return {
         ...seed,
+        // Default `jobs` to all categories if no edit has been saved.
+        // Providers can pare this down on their profile.
+        jobs: edit.jobs || seed.jobs || [...ALL_JOB_CATEGORIES],
         ...(edit.name !== undefined ? { name: edit.name } : {}),
         ...(edit.avatar ? { avatar: edit.avatar } : {}),
         ...(edit.price !== undefined ? { price: edit.price } : {}),
@@ -35,7 +40,6 @@ export const useProviderProfileStore = defineStore(
       };
     }
 
-    // Returns the full provider list with all edits applied.
     function getMergedProviders() {
       return providersData.map((p) => getMergedProvider(p.userID));
     }
@@ -46,3 +50,5 @@ export const useProviderProfileStore = defineStore(
     persist: true,
   },
 );
+
+export { ALL_JOB_CATEGORIES };

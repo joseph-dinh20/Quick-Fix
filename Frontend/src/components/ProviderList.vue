@@ -40,12 +40,21 @@ import { useChatStore } from "@/store/chatStore";
 const providerProfileStore = useProviderProfileStore();
 const userStore = useUserStore();
 const chatStore = useChatStore();
+const ratingsStore = useProviderRatingsStore();
 
 // Reactively merged: any saved edit reflects automatically.
 const providers = computed(() => providerProfileStore.getMergedProviders());
 
-const profileOpen    = ref({});
-const schedulerOpen  = ref(false);
+// Helpers for live rating display
+function liveAverage(provider) {
+  return ratingsStore.getAverageFor(provider.userID) || "—";
+}
+function liveReviewCount(provider) {
+  return ratingsStore.getRatingsFor(provider.userID).length;
+}
+
+const profileOpen = ref({});
+const schedulerOpen = ref(false);
 const selectedProvider = ref(null);
 
 const navigate = (hash) => {
@@ -109,8 +118,8 @@ function openChat(provider) {
               <CardDescription class="mt-1">
                 <Badge variant="outline">
                   <img class="inline-block w-4 align-top" :src="starIcon" />
-                  {{ provider.averageRating }}
-                  ({{ provider.ratings.length }}) reviews
+                  {{ liveAverage(provider) }}
+                  ({{ liveReviewCount(provider) }}) reviews
                 </Badge>
               </CardDescription>
 

@@ -202,6 +202,7 @@ async function handleSubmit() {
     serviceCategory: orderStore.serviceCategory || "Service",
     customerId: userStore.currentUser?.id,
     customerName: userStore.currentUser?.name,
+    customerEmail: userStore.currentUser?.email,
     provider: {
       userID: selectedProvider.value?.userID,
       name: selectedProvider.value?.name,

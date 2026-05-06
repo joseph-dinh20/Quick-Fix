@@ -1,16 +1,9 @@
 <template>
   <div class="mb-10 my-4">
-    
     <header class="fixed top-0 left-0 right-0 bg-white z-20">
-      
       <!-- NAV ROOT -->
-      <NavigationMenuRoot
-        v-model="currentTrigger"
-        class="w-full"
-      >
-
+      <NavigationMenuRoot v-model="currentTrigger" class="w-full">
         <NavigationMenuList class="flex w-full items-center px-2 pt-4 pr-10">
-
           <!-- LEFT: Logo (fixed zone) -->
           <div class="flex-1 flex items-center justify-start">
             <NavigationMenuItem>
@@ -18,18 +11,13 @@
                 @click="navigateTo('/')"
                 class="flex items-center h-16 cursor-pointer overflow-hidden"
               >
-                <img
-                  :src="LogoImage"
-                  alt="Logo"
-                  class="w-auto "
-                />
+                <img :src="LogoImage" alt="Logo" class="scale-[.8]" />
               </div>
             </NavigationMenuItem>
           </div>
 
           <!-- CENTER: Navigation (always centered) -->
           <div class="flex-1 flex items-center justify-center gap-3">
-
             <NavigationMenuItem>
               <NavigationMenuTriggerNav
                 :show-chevron="false"
@@ -52,7 +40,8 @@
             </NavigationMenuItem>
 
             <NavigationMenuItem>
-              <NavigationMenuTriggerNav v-if="isCustomer"
+              <NavigationMenuTriggerNav
+                v-if="isCustomer"
                 :show-chevron="false"
                 class="text-grass11 hover:bg-green3 group flex items-center gap-1 rounded px-3 h-12 text-sm font-medium transition-colors"
                 @click="navigateTo(isLoggedIn ? '#/DemoCreateJob' : '#/Login')"
@@ -63,34 +52,33 @@
             </NavigationMenuItem>
 
             <NavigationMenuItem v-if="isLoggedIn">
-              <NavigationMenuTriggerNav v-if="isCustomer"
+              <NavigationMenuTriggerNav
+                v-if="isCustomer"
                 :show-chevron="false"
                 class="text-grass11 hover:bg-green3 group flex items-center gap-1 rounded px-3 h-12 text-sm font-medium transition-colors"
                 @click="navigateTo('#/FavoriteProvider')"
               >
-                <Bookmark :stroke-width="1.5" class="w-4 h-4"/>
+                <Bookmark :stroke-width="1.5" class="w-4 h-4" />
                 Saved Providers
               </NavigationMenuTriggerNav>
             </NavigationMenuItem>
 
             <NavigationMenuItem v-if="isLoggedIn">
-              <NavigationMenuTriggerNav v-if="isProvider"
+              <NavigationMenuTriggerNav
+                v-if="isProvider"
                 :show-chevron="false"
                 class="text-grass11 hover:bg-green3 group flex items-center gap-1 rounded px-3 h-12 text-sm font-medium transition-colors"
                 @click="navigateTo('#/DemoSavedJobs')"
               >
-                <Bookmark :stroke-width="1.5" class="w-4 h-4"/>
+                <Bookmark :stroke-width="1.5" class="w-4 h-4" />
                 Saved Jobs
               </NavigationMenuTriggerNav>
             </NavigationMenuItem>
-
           </div>
 
           <!-- RIGHT: Auth / Account -->
           <div class="flex-1 flex items-center justify-end gap-2">
-
             <template v-if="isLoggedIn">
-
               <NavigationMenuItem>
                 <NavigationMenuTriggerNav
                   :show-chevron="false"
@@ -108,22 +96,58 @@
                   class="h-12 px-3 text-grass11 hover:bg-green3 rounded text-sm font-medium transition-colors"
                 >
                   <CircleUserRound :stroke-width="1.5" class="w-4 h-4 mr-1" />
-                  {{ user.name || user.username  || "Account" }}
+                  {{ user.name || user.username || "Account" }}
                 </NavigationMenuTriggerDropdown>
 
                 <NavigationMenuContent
                   class="absolute top-full mt-1 w-48 bg-white rounded-lg shadow-lg border z-50 p-1 flex flex-col"
                 >
-                  <NavigationMenuListItem class="py-1.5" href="#/DemoMyJobs" title="Your Jobs" v-if="isCustomer"/>
-                  <NavigationMenuListItem class="py-1.5" href="/" title="Your Applications"
-                   v-if="isProvider"/>
-                  <NavigationMenuListItem class="py-1.5" href="#/DemoAssignedJobs" title="Assigned Jobs"
-                   v-if="isProvider"/>
-                  <NavigationMenuListItem class="py-1.5" href="#/OrderHistory" title="Order History" v-if="isCustomer"/>
-                  <NavigationMenuListItem class="py-1.5" href="#/ProviderOrderHistory" title="Order History" v-if="isProvider"/>
-                  <NavigationMenuListItem class="py-1.5" href="#/ChatMessages" title="Messages" />
-                  <NavigationMenuListItem v-if="isProvider" class="py-1.5" href="#/Profile" title="Provider Profile" />
-                  <NavigationMenuListItem class="py-1.5" href="#/Settings" title="Settings" />
+                  <NavigationMenuListItem
+                    class="py-1.5"
+                    href="#/DemoMyJobs"
+                    title="Your Jobs"
+                    v-if="isCustomer"
+                  />
+                  <NavigationMenuListItem
+                    class="py-1.5"
+                    href="/"
+                    title="Your Applications"
+                    v-if="isProvider"
+                  />
+                  <NavigationMenuListItem
+                    class="py-1.5"
+                    href="#/DemoAssignedJobs"
+                    title="Assigned Jobs"
+                    v-if="isProvider"
+                  />
+                  <NavigationMenuListItem
+                    class="py-1.5"
+                    href="#/OrderHistory"
+                    title="Order History"
+                    v-if="isCustomer"
+                  />
+                  <NavigationMenuListItem
+                    class="py-1.5"
+                    href="#/ProviderOrderHistory"
+                    title="Order History"
+                    v-if="isProvider"
+                  />
+                  <NavigationMenuListItem
+                    class="py-1.5"
+                    href="#/ChatMessages"
+                    title="Messages"
+                  />
+                  <NavigationMenuListItem
+                    v-if="isProvider"
+                    class="py-1.5"
+                    href="#/Profile"
+                    title="Provider Profile"
+                  />
+                  <NavigationMenuListItem
+                    class="py-1.5"
+                    href="#/Settings"
+                    title="Settings"
+                  />
                   <li class="py-1.5">
                     <button
                       type="button"
@@ -134,13 +158,10 @@
                     </button>
                   </li>
                 </NavigationMenuContent>
-
               </NavigationMenuItem>
-
             </template>
 
             <template v-else>
-
               <NavigationMenuItem>
                 <Button variant="outline" @click="navigateTo('#/Signup')">
                   Sign Up
@@ -148,22 +169,15 @@
               </NavigationMenuItem>
 
               <NavigationMenuItem>
-                <Button @click="navigateTo('#/Login')">
-                  Login
-                </Button>
+                <Button @click="navigateTo('#/Login')"> Login </Button>
               </NavigationMenuItem>
-
             </template>
-
           </div>
-
         </NavigationMenuList>
       </NavigationMenuRoot>
 
       <Separator class="mb-4 border-t border-gray-200" />
-
     </header>
-
   </div>
 </template>
 
@@ -182,7 +196,7 @@ import {
   NavigationMenuList,
   NavigationMenuRoot,
   NavigationMenuViewport,
-} from 'reka-ui';
+} from "reka-ui";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Bookmark, CircleUserRound, CirclePlus, Search } from "lucide-vue-next";
@@ -199,15 +213,15 @@ const $toast = useToast();
 const props = defineProps({
   isLoggedIn: {
     type: Boolean,
-    default: false
+    default: false,
   },
   user: {
     type: Object,
     default: () => ({
       name: "Profile",
-      username: "Profile"
-    })
-  }
+      username: "Profile",
+    }),
+  },
 });
 
 const user = ref(props.user ?? { name: "Profile", username: "Profile" });
@@ -240,7 +254,7 @@ watch(
       user.value = newUser;
     }
   },
-  { immediate: true } 
+  { immediate: true },
 );
 </script>
 
@@ -279,7 +293,9 @@ header {
 }
 
 .NavigationMenuContent {
-  transition: opacity 0.2s ease, transform 0.2s ease;
+  transition:
+    opacity 0.2s ease,
+    transform 0.2s ease;
 }
 
 /* Ensure logo scales nicely */
@@ -288,3 +304,4 @@ img {
   height: auto;
 }
 </style>
+

@@ -15,6 +15,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
+import { Separator } from "@/components/ui/separator";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -39,17 +40,26 @@ import {
   HoverCardContent,
   HoverCardTrigger,
 } from "@/components/ui/hover-card";
-import { Star, AlertCircle } from "lucide-vue-next";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Star, AlertCircle, Phone, Mail } from "lucide-vue-next";
 
 import defaultAvatar from "@/assets/avatars/defaultAvatar.png";
+import starIcon from "@/assets/icons/star.png";
 import { useOrderHistoryStore } from "@/store/orderHistoryStore";
 import { useProviderRatingsStore } from "@/store/providerRatingsStore";
+import { useProviderProfileStore } from "@/store/providerProfileStore";
 import { useUserStore } from "@/store/userStore";
+import { useReportsStore } from "@/store/reportsStore";
 import { storeToRefs } from "pinia";
+
+import Provider from "@/components/Provider.vue";
+import Report from "@/components/Report.vue";
 
 const historyStore = useOrderHistoryStore();
 const ratingsStore = useProviderRatingsStore();
+const providerProfileStore = useProviderProfileStore();
 const userStore = useUserStore();
+const reportsStore = useReportsStore();
 const { orders } = storeToRefs(historyStore);
 
 const removingId = ref(null);
@@ -72,16 +82,15 @@ function statusOf(order) {
     : "completed";
 }
 
-// Hours until the scheduled appointment. Negative if already past.
 function hoursUntil(order) {
   if (!order.scheduledDate) return Infinity;
   const appt = new Date(order.scheduledDate + "T00:00:00").getTime();
   return (appt - Date.now()) / (1000 * 60 * 60);
 }
 
-// Cancel is locked within 48 hours of the appointment.
 function isCancelLocked(order) {
-  return hoursUntil(order) < 48;
+  // return hoursUntil(order) < 48; //cannot cancel within 48 hours of booking time left
+  return hoursUntil(order) < -10000; //enabled for testing and cancel at any time
 }
 
 const sortedOrders = computed(() =>
@@ -145,13 +154,11 @@ function submitRating() {
     userComment: rateForm.userComment.trim(),
   };
 
-  // 1) Push the rating into the provider's ratings list
   const providerId = order.provider?.userID;
   if (providerId) {
     ratingsStore.addRating(providerId, rating);
   }
 
-  // 2) Mark the order as rated so the button changes to "rated" state
   historyStore.markAsRated(order.id, {
     userRated: rateForm.userRated,
     userComment: rateForm.userComment.trim(),
@@ -159,6 +166,81 @@ function submitRating() {
 
   rateDialogOpen.value = false;
   activeOrder.value = null;
+}
+
+// ===== Provider info dialog =====
+const providerDialogOpen = ref(false);
+const fullProfileOpen = ref(false);
+const activeProvider = ref(null);
+const activeProviderOrder = ref(null);
+
+function phoneFromProviderId(providerId) {
+  if (!providerId) return "(555) 000-0000";
+  const id = String(providerId).padStart(7, "0");
+  const digits = (id + "0000000").slice(0, 7);
+  return `(555) ${digits.slice(0, 3)}-${digits.slice(3, 7)}`;
+}
+
+function emailFromName(name) {
+  if (!name) return "provider@quickfix.com";
+  return name.replace(/[^a-zA-Z]/g, "").toLowerCase() + "@quickfix.com";
+}
+
+function openProviderDialog(order) {
+  const providerId = order.provider?.userID;
+  if (!providerId) return;
+
+  const merged = providerProfileStore.getMergedProvider(providerId);
+  activeProvider.value = merged || order.provider;
+  activeProviderOrder.value = order;
+  providerDialogOpen.value = true;
+}
+
+function openFullProfile() {
+  providerDialogOpen.value = false;
+  setTimeout(() => {
+    fullProfileOpen.value = true;
+  }, 150);
+}
+
+const activeProviderPhone = computed(() => {
+  if (!activeProvider.value) return "";
+  return phoneFromProviderId(activeProvider.value.userID);
+});
+
+const activeProviderEmail = computed(() => {
+  if (!activeProvider.value) return "";
+  return emailFromName(activeProvider.value.name);
+});
+
+// Live-merged rating for the contact dialog
+const activeProviderAverage = computed(() => {
+  if (!activeProvider.value) return "—";
+  return ratingsStore.getAverageFor(activeProvider.value.userID) || "—";
+});
+
+const activeProviderReviewCount = computed(() => {
+  if (!activeProvider.value) return 0;
+  return ratingsStore.getRatingsFor(activeProvider.value.userID).length;
+});
+
+// ===== Report flow =====
+const reportDialogOpen = ref(false);
+const reportOrder = ref(null);
+
+function openReportDialog(order) {
+  // Close the contact dialog first so they don't stack
+  providerDialogOpen.value = false;
+  reportOrder.value = order;
+  setTimeout(() => {
+    reportDialogOpen.value = true;
+  }, 150);
+}
+
+function reportButtonLabel(order) {
+  return reportsStore.hasReported(order.id, "customer-to-provider")
+    ? "View Report"
+    : "Report Provider";
 }
 </script>
 
@@ -191,12 +273,27 @@ function submitRating() {
             :style="{ animationDelay: `${i * 0.05}s` }"
           >
             <TableCell>
-              <Avatar class="scale-[1.3] align-top">
-                <AvatarImage :src="order.provider?.avatar" />
-                <AvatarFallback><img :src="defaultAvatar" /></AvatarFallback>
-              </Avatar>
+              <button
+                class="cursor-pointer transition-transform hover:scale-110"
+                @click="openProviderDialog(order)"
+                aria-label="View provider info"
+              >
+                <Avatar class="scale-[1.3] align-top">
+                  <AvatarImage :src="order.provider?.avatar" />
+                  <AvatarFallback><img :src="defaultAvatar" /></AvatarFallback>
+                </Avatar>
+              </button>
             </TableCell>
-            <TableCell>{{ order.provider?.name }}</TableCell>
+
+            <TableCell>
+              <button
+                class="cursor-pointer text-left hover:underline"
+                @click="openProviderDialog(order)"
+              >
+                {{ order.provider?.name }}
+              </button>
+            </TableCell>
+
             <TableCell>
               <Badge
                 variant="outline"
@@ -205,6 +302,7 @@ function submitRating() {
                 {{ order.serviceCategory || "Service" }}
               </Badge>
             </TableCell>
+
             <TableCell>
               <div class="flex flex-col">
                 <span>{{ formatDate(order.scheduledDate) }}</span>
@@ -213,6 +311,7 @@ function submitRating() {
                 </span>
               </div>
             </TableCell>
+
             <TableCell>
               <Badge
                 variant="outline"
@@ -225,17 +324,18 @@ function submitRating() {
                 {{ statusOf(order) }}
               </Badge>
             </TableCell>
+
             <TableCell class="font-medium">
               <template v-if="order.hoursWorked">
                 <div class="flex flex-col">
-                  <span
-                    >${{
+                  <span>
+                    ${{
                       (
                         (order.hourlyRate ?? 0) * order.hoursWorked +
                         (order.serviceFee ?? 0)
                       ).toFixed(2)
-                    }}</span
-                  >
+                    }}
+                  </span>
                   <span class="text-muted-foreground text-xs">
                     Total paid ({{ order.hoursWorked }}h)
                   </span>
@@ -246,11 +346,8 @@ function submitRating() {
               </template>
             </TableCell>
 
-            <!-- Action column -->
             <TableCell>
-              <!-- SCHEDULED: Cancel button (with AlertDialog confirm + 48h lockout) -->
               <template v-if="statusOf(order) === 'scheduled'">
-                <!-- Locked: show greyed-out button with HoverCard explaining why -->
                 <HoverCard v-if="isCancelLocked(order)" :open-delay="100">
                   <HoverCardTrigger as-child>
                     <span class="inline-block">
@@ -279,7 +376,6 @@ function submitRating() {
                   </HoverCardContent>
                 </HoverCard>
 
-                <!-- Active cancel: AlertDialog confirms before removal -->
                 <AlertDialog v-else>
                   <AlertDialogTrigger as-child>
                     <Button
@@ -319,7 +415,6 @@ function submitRating() {
                 </AlertDialog>
               </template>
 
-              <!-- COMPLETED: Rate button (or rated badge if already rated) -->
               <template v-else>
                 <Button
                   v-if="!order.userRated"
@@ -356,6 +451,98 @@ function submitRating() {
       </Table>
     </Card>
 
+    <!-- ===== Provider Contact Dialog ===== -->
+    <Dialog v-model:open="providerDialogOpen">
+      <DialogContent class="sm:max-w-md">
+        <DialogHeader>
+          <DialogTitle>Provider Info</DialogTitle>
+          <DialogDescription>
+            Contact details and quick stats for your booked provider.
+          </DialogDescription>
+        </DialogHeader>
+
+        <div v-if="activeProvider" class="space-y-4 py-2">
+          <div class="flex items-center gap-4">
+            <Avatar class="scale-[1.3]">
+              <AvatarImage :src="activeProvider.avatar" />
+              <AvatarFallback><img :src="defaultAvatar" /></AvatarFallback>
+            </Avatar>
+            <div class="flex-1">
+              <p class="text-lg font-semibold">{{ activeProvider.name }}</p>
+              <p class="text-muted-foreground text-sm">
+                ${{ (activeProvider.price ?? 0).toFixed(2) }}/hr
+              </p>
+            </div>
+            <Badge variant="outline">
+              <img class="inline-block w-4 align-top" :src="starIcon" />
+              {{ activeProviderAverage }}
+              ({{ activeProviderReviewCount }})
+            </Badge>
+          </div>
+
+          <Separator />
+
+          <div class="space-y-3">
+            <button
+              type="button"
+              class="hover:bg-muted flex w-full items-center gap-3 rounded-md p-2 text-left transition"
+              @click="window.location.href = `tel:${activeProviderPhone}`"
+            >
+              <Phone class="text-muted-foreground size-4" />
+              <div class="flex flex-col">
+                <span class="text-muted-foreground text-xs">Phone</span>
+                <span class="font-medium">{{ activeProviderPhone }}</span>
+              </div>
+            </button>
+
+            <button
+              type="button"
+              class="hover:bg-muted flex w-full items-center gap-3 rounded-md p-2 text-left transition"
+              @click="window.location.href = `mailto:${activeProviderEmail}`"
+            >
+              <Mail class="text-muted-foreground size-4" />
+              <div class="flex flex-col">
+                <span class="text-muted-foreground text-xs">Email</span>
+                <span class="font-medium break-all">
+                  {{ activeProviderEmail }}
+                </span>
+              </div>
+            </button>
+          </div>
+        </div>
+
+        <DialogFooter class="flex-col gap-2 sm:flex-row sm:justify-end">
+          <Button
+            v-if="activeProviderOrder"
+            variant="outline"
+            class="text-amber-700 hover:bg-amber-50 hover:text-amber-800"
+            @click="openReportDialog(activeProviderOrder)"
+          >
+            {{ reportButtonLabel(activeProviderOrder) }}
+          </Button>
+          <Button variant="outline" @click="providerDialogOpen = false">
+            Close
+          </Button>
+          <Button @click="openFullProfile">View Full Profile</Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+
+    <!-- ===== Full Provider Profile Dialog ===== -->
+    <Dialog v-model:open="fullProfileOpen">
+      <DialogContent class="m-0 h-full max-h-95/100 max-w-150 gap-0 p-0">
+        <DialogHeader class="sr-only">
+          <DialogTitle>Provider Profile</DialogTitle>
+          <DialogDescription>Full profile details</DialogDescription>
+        </DialogHeader>
+        <ScrollArea class="h-full max-h-full">
+          <div class="p-4">
+            <Provider v-if="activeProvider" :provider="activeProvider" />
+          </div>
+        </ScrollArea>
+      </DialogContent>
+    </Dialog>
+
     <!-- ===== Rate Provider Dialog ===== -->
     <Dialog v-model:open="rateDialogOpen">
       <DialogContent class="sm:max-w-md">
@@ -368,7 +555,6 @@ function submitRating() {
         </DialogHeader>
 
         <div class="space-y-4 py-2">
-          <!-- Star picker -->
           <div class="flex items-center justify-center gap-1">
             <button
               v-for="n in 5"
@@ -388,7 +574,6 @@ function submitRating() {
             </button>
           </div>
 
-          <!-- Comment -->
           <div class="space-y-2">
             <label class="text-sm font-medium">Leave a comment</label>
             <Textarea
@@ -416,7 +601,7 @@ function submitRating() {
       </DialogContent>
     </Dialog>
 
-    <!-- ===== View Rating Dialog (for already-rated orders) ===== -->
+    <!-- ===== View Rating Dialog (already-rated orders) ===== -->
     <Dialog v-model:open="viewRatingDialogOpen">
       <DialogContent class="sm:max-w-md">
         <DialogHeader>
@@ -451,6 +636,13 @@ function submitRating() {
         </DialogFooter>
       </DialogContent>
     </Dialog>
+
+    <!-- ===== Report Dialog ===== -->
+    <Report
+      v-model:open="reportDialogOpen"
+      :order="reportOrder"
+      direction="customer-to-provider"
+    />
   </div>
 </template>
 
