@@ -312,6 +312,79 @@
             <h3 class="font-bold text-[#1a202c] text-lg mb-4">About the Job</h3>
             <p class="text-slate-600 leading-relaxed whitespace-pre-wrap">{{ selectedJob.description || `No description` }}</p>
           </div>
+          <hr class="border-slate-100 mb-8" />
+
+          <!-- Application Form -->
+          <div>
+            <h3 class="font-bold text-[#1a202c] text-lg mb-5">Your Application</h3>
+
+            <div v-if="selectedJob.applied" class="rounded-xl bg-green-50 border border-green-200 p-4 text-green-700 text-sm font-medium">
+              ✓ You've already applied to this job.
+            </div>
+
+            <div v-else class="flex flex-col gap-4">
+              <!-- Rate -->
+              <div class="flex gap-3">
+                <div class="flex-1">
+                  <label class="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-1 block">Proposed Rate</label>
+                  <div class="relative">
+                    <span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 font-medium">$</span>
+                    <Input
+                      v-model="applicationForm.proposedRate"
+                      type="number"
+                      min="0"
+                      placeholder="0"
+                      class="pl-7"
+                    />
+                  </div>
+                </div>
+                <div class="w-36">
+                  <label class="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-1 block">Rate Type</label>
+                  <Select v-model="applicationForm.rateType">
+                    <SelectTrigger>
+                      <SelectValue placeholder="Type" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="hourly">Per Hour</SelectItem>
+                      <SelectItem value="flat">Flat Rate</SelectItem>
+                      <SelectItem value="daily">Per Day</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+
+              <!-- Availability -->
+              <div class="flex gap-3">
+                <div class="flex-1">
+                  <label class="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-1 block">Available Date</label>
+                  <Input v-model="applicationForm.availableDate" type="date" />
+                </div>
+                <div class="flex-1">
+                  <label class="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-1 block">Available Time</label>
+                  <Input v-model="applicationForm.availableTime" type="time" />
+                </div>
+              </div>
+
+              <!-- Cover Note -->
+              <div>
+                <label class="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-1 block">Cover Note</label>
+                <textarea
+                  v-model="applicationForm.coverNote"
+                  rows="3"
+                  placeholder="Briefly introduce yourself and why you're a good fit..."
+                  class="w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring resize-none"
+                />
+              </div>
+
+              <Button
+                class="w-full text-white font-semibold"
+                :disabled="!applicationForm.proposedRate"
+                @click="applyToJob(selectedJob)"
+              >
+                Submit Application
+              </Button>
+            </div>
+          </div>
 
         </div>
       </DialogContent>
@@ -334,8 +407,10 @@ import { ref, onMounted, computed } from "vue"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { storeToRefs } from "pinia";
 
+
 import { useJobStore } from "@/store/jobStore";
 import { useUserStore, ALL_USERS } from "@/store/userStore";
+import { useApplicationStore } from "@/store/applicationStore";
 
 const jobStore = useJobStore();
 const { jobList } = storeToRefs(jobStore);
@@ -347,6 +422,14 @@ const jobs = ref([]);
 const loading = ref(false);
 const selectedJob = ref(null);
 const isDialogOpen = ref(false);
+
+const applicationForm = ref({
+  proposedRate: "",
+  rateType: "hourly",
+  availableDate: "",
+  availableTime: "",
+  coverNote: "",
+});
 
 const pendingDistance = ref('');
 const pendingBudget = ref('');
@@ -438,28 +521,29 @@ async function fetchServices() {
 
 async function fetchJobs() {
   loading.value = true;
+
   try {
-    const res = await searchJobs({
-      services: selectedService.value || undefined,
-      budget: selectedBudget.value || undefined,
-      request_type: selectedJobType.value || undefined,
-      max_distance: selectedDistance.value || undefined,
-      location: searchLocation.value || undefined
-    });
-    const data = res.data.results || res.data;
-    console.log('jobs received:', data.length);
-    jobs.value = data.map(job => ({
-      ...job,
-      images: (job.images || []).map(img => ({
-        ...img,
-        image: img.image?.startsWith('http') ? img.image : `http://localhost:8000${img.image}`
-      }))
+    // simulate API delay (optional but makes it feel real)
+    await new Promise((r) => setTimeout(r, 300));
+
+    const data = jobStore.getMergedJobs();
+
+    console.log("demo jobs loaded:", data.length);
+
+    jobs.value = data.map((job, index) => ({
+      ...fallbackJob(
+        job,
+        index,
+        { lat: 33.7701, lng: -118.1937 },
+        getUserName
+      ),
+      images: job.images || [],
     }));
+
+    backendAvailable.value = false;
   } catch (err) {
     console.error(err);
-    // jobs.value = getMergedJobs();
-    jobs.value = jobStore.getMergedJobs().map((job, index) => fallbackJob(job, index,{ lat: 33.7701, lng: -118.1937 }, getUserName));
-    backendAvailable.value = false;
+    jobs.value = [];
   } finally {
     loading.value = false;
   }
@@ -477,8 +561,28 @@ async function toggle(job) {
 }
 
 function openJobModal(job) {
-  selectedJob.value = job;
+  selectedJob.value = {
+    ...job,
+    applied: jobStore.hasApplied(job.job_id, userStore.currentUser?.id),
+  };
+  applicationForm.value = { proposedRate: "", rateType: "hourly", availableDate: "", availableTime: "", coverNote: "" };
   isDialogOpen.value = true;
+}
+
+async function applyToJob(job) {
+  if (!userStore.isProvider) {
+    alert("Only service providers can apply.");
+    return;
+  }
+
+  const success = jobStore.applyToJob(job.job_id, userStore.currentUser.id, applicationForm.value);
+
+  if (!success) {
+    alert("You already applied.");
+    return;
+  }
+
+  selectedJob.value = { ...selectedJob.value, applied: true };
 }
 
 function scrollLeft() {
