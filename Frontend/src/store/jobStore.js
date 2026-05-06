@@ -387,11 +387,12 @@ export const useJobStore = defineStore(
             getDecision,
             loadDecisions,
             getAcceptedJobsForProvider,
+            globalApplicantsMap
         };
     },
     {
         persist: {
-            pick: ["edits", "applications"],
+            pick: ["edits"],
         },
     },
 );

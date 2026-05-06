@@ -173,23 +173,28 @@ const ready = ref(false);
 
 // ensure applications and decisions are loaded fresh
 onMounted(() => {
-  jobStore.initApplications();
+  jobStore.loadAllGlobalApplications(); // use global keys like customer page
   jobStore.loadDecisions();
   ready.value = true;
 });
 
-// Only jobs current user applied to
 const filteredJobs = computed(() => {
+  if (!ready.value) return [];
   const userId = userStore.currentUser?.id;
   if (!userId) return [];
 
-  const appliedIds = jobStore.getAppliedJobIds(userId);
+  // Search through globalApplicantsMap instead of user-scoped applications
+  const appliedJobIds = [];
+  for (const [jobId, entries] of Object.entries(jobStore.globalApplicantsMap)) {
+    const didApply = entries.some(entry => {
+      const entryUserId = typeof entry === 'string' ? entry : entry.userId;
+      return entryUserId === userId;
+    });
+    if (didApply) appliedJobIds.push(jobId);
+  }
 
-  return jobStore.getMergedJobs().filter(job =>
-    appliedIds.includes(job.job_id)
-  );
+  return jobStore.getMergedJobs().filter(job => appliedJobIds.includes(job.job_id));
 });
-
 /**
  * Derive a human-readable application status for a given jobId.
  * The decision is stored globally keyed by jobId + providerUserId.
