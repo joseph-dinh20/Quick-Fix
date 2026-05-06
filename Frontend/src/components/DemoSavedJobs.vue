@@ -4,7 +4,9 @@
       
       <div class="flex justify-between items-center mb-8">
         <h1 class="text-3xl font-extrabold tracking-tight">Favorite Jobs</h1>
-        <Button variant="ghost" size="icon" class="text-slate-700">
+        <Button variant="ghost" size="icon" class="text-slate-700"
+        @click="navigate('#/DemoMap?view=jobs')"
+        >
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21"></polygon><line x1="9" x2="9" y1="3" y2="18"></line><line x1="15" x2="15" y1="6" y2="21"></line></svg>
         </Button>
       </div>
@@ -56,12 +58,12 @@
           <div class="flex-1 min-w-0">
             <h3 class="text-lg font-bold text-slate-900 truncate">{{ job.title }}</h3>
             <div class="mt-1 flex flex-col gap-1">
-              <p class="text-sm text-slate-500">{{ job.customer?.name || 'Unknown customer' }}</p>
-              <p class="text-sm text-slate-500">{{ job.request_type || 'Request type not provided' }}</p>
+              <p class="text-sm text-slate-500">{{ job.customer?.name || job.customer || 'Unknown customer' }}</p>
+              <p class="text-sm text-slate-500 capitalize">{{ job.request_type || 'Request type not provided' }}</p>
             </div>
             <div class="mt-3">
               <span class="text-sm font-bold text-slate-900">
-                {{ job.budget ? `$${job.budget}` : '$0' }}
+                {{ job.budget ? `$${job.budget}` : '$' + job.price || '$0' }}
               </span>
               <span class="text-sm text-slate-500"> / hr</span>
             </div>
@@ -72,7 +74,7 @@
                 :key="service.id"
                 class="text-xs bg-slate-100 px-2 py-1 rounded-md text-slate-600"
               >
-                {{ service.name }}
+                {{ service.name || service }}
               </span>
             </div>
           </div>
@@ -158,7 +160,7 @@
 
               <div class="flex items-center text-slate-600 font-medium">
                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-3"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-                {{ selectedJob.customer?.name || 'Unknown customer' }}
+                {{ selectedJob.customer?.name || selectedJob.customer || 'Unknown customer' }}
               </div>
 
               <div class="flex items-center text-slate-600 font-medium">
@@ -168,7 +170,7 @@
 
               <div class="flex items-center text-slate-600 font-medium capitalize">
                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-3"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"></path><circle cx="12" cy="10" r="3"></circle></svg>
-                {{ selectedJob.city + ', ' + selectedJob.state || 'Request type not provided' }}
+                {{ selectedJob.city + ', ' + `${selectedJob.state || 'California'}` || 'Request type not provided' }}
               </div>
 
               <div class="flex items-center text-slate-600 font-medium capitalize">
@@ -183,7 +185,7 @@
                   <rect width="18" height="18" x="3" y="4" rx="2"></rect>
                   <path d="M3 10h18"></path>
                 </svg>
-                {{ formatDate(selectedJob.deadline) || 'No deadline provided' }}
+                {{ formatDate(selectedJob.deadline || selectedJob.date) || 'No deadline provided' }}
               </div>
 
               <div class="flex items-center text-slate-600 font-medium capitalize">
@@ -198,7 +200,7 @@
 
             <div class="mt-6 pt-2">
               <span class="text-lg font-bold text-[#1a202c]">
-                {{ selectedJob.budget ? `$${selectedJob.budget}` : '$0' }}
+                {{ selectedJob.budget ? `$${selectedJob.budget}` : '$' + selectedJob.price|| '$0' }}
               </span>
               <span class="text-base text-slate-500 font-medium mr-5"> / hr</span>
               
@@ -207,7 +209,7 @@
                 :key="service.id"
                 class="text-xs bg-slate-100 px-2 py-1 rounded-md text-slate-600 ml-2"
               >
-                {{ service.name }}
+                {{ service.name || service }}
               </span>
             </div>
           </div>
@@ -233,7 +235,9 @@ import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
-
+import { computed } from "vue";
+import { useJobStore } from "@/store/jobStore";
+import { ALL_USERS } from "@/store/userStore";
 
 export default {
   name: "JobsList",
@@ -249,6 +253,8 @@ export default {
 
   data() {
     return {
+      jobStore: useJobStore(),
+      favoritedJobs: computed(() => useJobStore().getFavoritedJobs()),
       jobs: [],
       loading: false,
       selectedJob: null,
@@ -261,12 +267,27 @@ export default {
   },
 
   methods: {
+    navigate(path) {
+      window.location.hash = path;
+    },
+
     formatDate(date) {
       if (!date) return '-'
       return new Date(date).toLocaleDateString('en-US', {
         year: 'numeric', month: 'short', day: 'numeric',
       })
     },
+
+    fallbackJob(job, index) {
+      const customer = ALL_USERS.find(u => u.id === job.user_id);
+      return {
+        ...job,
+        services: job.service ? [job.service] : [],
+        customer: customer?.name || "Unknown Customer",
+        is_favorited: true
+      }
+    },
+
     async fetchJobs() {
       this.loading = true;
       try {
@@ -283,7 +304,8 @@ export default {
           })),
         }));
       } catch (err) {
-        console.error(err);
+        console.error("Backend failed, using fallback data", err);
+        this.jobs = this.favoritedJobs.map((job, index) => this.fallbackJob(job, index));
       } finally {
         this.loading = false;
       }
@@ -294,7 +316,8 @@ export default {
         const res = await toggleFavoriteJob(job.id);
         job.is_favorited = res.data.favorited;
       } catch (err) {
-        console.error(err);
+        this.jobStore.toggleFavorite(job.job_id);
+        job.is_favorited = this.jobStore.isFavorited(job.job_id);
       }
     },
 
