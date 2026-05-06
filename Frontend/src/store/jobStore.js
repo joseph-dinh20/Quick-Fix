@@ -9,6 +9,7 @@ export const useJobStore = defineStore(
     const jobList = ref(jobsData);
     const edits = ref({});
     const favorites = ref(new Set());
+    const applications = ref({});
 
     function getFavoritesKey() {
       const userStore = useUserStore();
@@ -33,12 +34,97 @@ export const useJobStore = defineStore(
       return favorites.value.has(jobId);
     }
 
+    function getAppliedJobIds(userId) {
+      return Object.entries(applications.value)
+        .filter(([jobId, entries]) =>
+          entries.some(
+            (entry) => (typeof entry === "string" ? entry : entry.userId) === userId
+          )
+        )
+        .map(([jobId]) => jobId);
+    }
+
     function saveJob(jobId, updates) {
       const existing = edits.value[jobId] || {};
       edits.value = {
         ...edits.value,
         [jobId]: { ...existing, ...updates },
       };
+    }
+
+    function getApplicationsKey() {
+      const userStore = useUserStore();
+      return `applications_${userStore.currentUser?.id || "guest"}`;
+    }
+
+    function loadApplications() {
+      applications.value = JSON.parse(
+        localStorage.getItem(getApplicationsKey()) || "{}"
+      );
+    }
+
+    function initApplications() {
+      loadApplications();
+    }
+
+    function saveApplications() {
+      localStorage.setItem(
+        getApplicationsKey(),
+        JSON.stringify(applications.value)
+      );
+    }
+
+    function applyToJob(jobId, userId, formData = {}) {
+      if (!applications.value[jobId]) {
+        applications.value[jobId] = [];
+      }
+
+      const existing = applications.value[jobId].find(
+        (entry) => (typeof entry === "string" ? entry : entry.userId) === userId
+      );
+      if (existing) return false;
+
+      applications.value[jobId].push({
+        userId,
+        proposedRate: formData.proposedRate ?? "",
+        rateType: formData.rateType ?? "hourly",
+        availableDate: formData.availableDate ?? "",
+        availableTime: formData.availableTime ?? "",
+        coverNote: formData.coverNote ?? "",
+        appliedAt: new Date().toISOString(),
+      });
+
+      saveApplications();
+      return true;
+    }
+
+    function hasApplied(jobId, userId) {
+      return (
+        applications.value[jobId]?.some(
+          (entry) => (typeof entry === "string" ? entry : entry.userId) === userId
+        ) || false
+      );
+    }
+
+    function getApplicationData(jobId, userId) {
+      const entry = applications.value[jobId]?.find(
+        (e) => (typeof e === "string" ? e : e.userId) === userId
+      );
+      return typeof entry === "object" ? entry : null;
+    }
+
+    function unapplyFromJob(jobId, userId) {
+      if (!applications.value[jobId]) return;
+
+      applications.value[jobId] = applications.value[jobId].filter(
+        (entry) => (typeof entry === "string" ? entry : entry.userId) !== userId
+      );
+
+      if (applications.value[jobId].length === 0) {
+        delete applications.value[jobId];
+      }
+
+      saveApplications();
     }
 
     function getMergedJob(jobId) {
@@ -72,6 +158,7 @@ export const useJobStore = defineStore(
       return getMergedJobs().filter((job) => isFavorited(job.job_id));
     }
 
+
     return {
       jobList,
       edits,
@@ -87,11 +174,19 @@ export const useJobStore = defineStore(
       loadFavorites,
       toggleFavorite,
       isFavorited,
+      applications,
+      applyToJob,
+      hasApplied,
+      getAppliedJobIds,
+      loadApplications,
+      initApplications,
+      unapplyFromJob,
+      getApplicationData,
     };
   },
   { persist: 
     {
-      pick: ["edits"],
+      pick: ["edits", "applications"],
     },
  }
 );
