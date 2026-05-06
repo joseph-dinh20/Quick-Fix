@@ -102,52 +102,16 @@
                 <NavigationMenuContent
                   class="absolute top-full mt-1 w-48 bg-white rounded-lg shadow-lg border z-50 p-1 flex flex-col"
                 >
-                  <NavigationMenuListItem
-                    class="py-1.5"
-                    href="#/DemoMyJobs"
-                    title="Your Jobs"
-                    v-if="isCustomer"
-                  />
-                  <NavigationMenuListItem
-                    class="py-1.5"
-                    href="/"
-                    title="Your Applications"
-                    v-if="isProvider"
-                  />
-                  <NavigationMenuListItem
-                    class="py-1.5"
-                    href="#/DemoAssignedJobs"
-                    title="Assigned Jobs"
-                    v-if="isProvider"
-                  />
-                  <NavigationMenuListItem
-                    class="py-1.5"
-                    href="#/OrderHistory"
-                    title="Order History"
-                    v-if="isCustomer"
-                  />
-                  <NavigationMenuListItem
-                    class="py-1.5"
-                    href="#/ProviderOrderHistory"
-                    title="Order History"
-                    v-if="isProvider"
-                  />
-                  <NavigationMenuListItem
-                    class="py-1.5"
-                    href="#/ChatMessages"
-                    title="Messages"
-                  />
-                  <NavigationMenuListItem
-                    v-if="isProvider"
-                    class="py-1.5"
-                    href="#/Profile"
-                    title="Provider Profile"
-                  />
-                  <NavigationMenuListItem
-                    class="py-1.5"
-                    href="#/Settings"
-                    title="Settings"
-                  />
+                  <NavigationMenuListItem class="py-1.5" href="#/DemoMyJobs" title="Your Jobs" v-if="isCustomer"/>
+                  <NavigationMenuListItem class="py-1.5" href="#/DemoJobApplication" title="Your Applications"
+                   v-if="isProvider"/>
+                  <NavigationMenuListItem class="py-1.5" href="#/DemoAssignedJobs" title="Assigned Jobs"
+                   v-if="isProvider"/>
+                  <NavigationMenuListItem class="py-1.5" href="#/OrderHistory" title="Order History" v-if="isCustomer"/>
+                  <NavigationMenuListItem class="py-1.5" href="#/ProviderOrderHistory" title="Order History" v-if="isProvider"/>
+                  <NavigationMenuListItem class="py-1.5" href="#/ChatMessages" title="Messages" />
+                  <NavigationMenuListItem v-if="isProvider" class="py-1.5" href="#/Profile" title="Provider Profile" />
+                  <NavigationMenuListItem class="py-1.5" href="#/Settings" title="Settings" />
                   <li class="py-1.5">
                     <button
                       type="button"

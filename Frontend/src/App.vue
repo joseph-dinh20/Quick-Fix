@@ -18,6 +18,7 @@ import { Toaster } from "@/components/ui/sonner";
 import NavigationBar from "./components/NavigationBar.vue";
 import ReportForm from "./components/ReportForm.vue";
 import DemoAssignedJobs from "./components/DemoAssignedJobs.vue";
+import DemoJobApplication from "./components/DemoJobApplication.vue";
 import DemoSavedJobs from "./components/DemoSavedJobs.vue";
 import DemoJobListings from "./components/DemoJobListings.vue";
 import JoinUs from "./components/JoinUs.vue";
@@ -116,6 +117,7 @@ const routes = {
   "/Scheduler": Scheduler,
   "/ReportForm": ReportForm,
   "/DemoAssignedJobs": DemoAssignedJobs,
+  "/DemoJobApplication": DemoJobApplication,
   "/ReviewProvider": ReviewProvider,
   "/ChatMessages": ChatMessages,
   "/DemoSavedJobs": DemoSavedJobs,

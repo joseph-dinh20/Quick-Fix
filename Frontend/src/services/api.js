@@ -212,6 +212,15 @@ export function deleteReviewImage(id) {
 export const createReport = (data) => {
     return api.post("/reports/", data);
 };
+
+export function applyToJob(jobId) {
+  return api.post(`/jobs/${jobId}/apply/`);
+}
+
+export function unapplyFromJob(jobId) {
+  return api.delete(`/jobs/${jobId}/apply/`);
+}
+
 export function fetchAssignedJobs() {
   return api.get(`/jobs/assigned/`)
 }
