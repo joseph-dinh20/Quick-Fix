@@ -29,6 +29,7 @@ import Settings from "./components/Settings.vue";
 import Scheduler from "./components/Scheduler.vue";
 import DemoMap from "./components/DemoMap.vue";
 import BecomeFixer from "./components/BecomeFixer.vue";
+import CustomerProfile from "./components/CustomerProfile.vue";
 import { useUserStore } from "@/store/userStore";
 import { useJobStore } from "@/store/jobStore";
 
@@ -126,6 +127,7 @@ const routes = {
   "/DemoMap": DemoMap,
   "/Settings": Settings,
   "/BecomeFixer": BecomeFixer,
+  "/CustomerProfile": CustomerProfile,
 };
 
 const currentPath = ref(window.location.hash);

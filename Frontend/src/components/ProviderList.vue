@@ -34,16 +34,18 @@ import Provider from "@/components/Provider.vue";
 import Scheduler from "@/components/Scheduler.vue";
 
 import { useProviderProfileStore } from "@/store/providerProfileStore";
+import { useUserStore } from "@/store/userStore";
 import { useChatStore } from "@/store/chatStore";
 
 const providerProfileStore = useProviderProfileStore();
+const userStore = useUserStore();
 const chatStore = useChatStore();
 
 // Reactively merged: any saved edit reflects automatically.
 const providers = computed(() => providerProfileStore.getMergedProviders());
 
-const profileOpen = ref({});
-const schedulerOpen = ref(false);
+const profileOpen    = ref({});
+const schedulerOpen  = ref(false);
 const selectedProvider = ref(null);
 
 const navigate = (hash) => {
@@ -57,18 +59,21 @@ function handleSelect(provider, index) {
 }
 
 /**
- * Opens an existing chat with this provider, or creates a new one, then
+ * Opens an existing chat with this provider (or creates a new one), then
  * navigates to the Messages view.
  *
- * The chat store:
- *  1. Deduplicates — if a chat already exists for this provider it reuses it.
- *  2. Snapshots all provider fields needed for the "View Provider" modal.
- *  3. Stores the chat id so ChatMessages can auto-select it on mount.
- *
- * NOTE: Adjust the hash below ('#/Messages') to match your actual route.
+ * Requires the current user to be logged in — customers click this button
+ * so they can message a provider about hiring them.
  */
 function openChat(provider) {
-  const chatId = chatStore.openOrCreateChat(provider);
+  if (!userStore.currentUser) {
+    // Not logged in — redirect to login, saving the intended destination
+    sessionStorage.setItem("redirectAfterLogin", "#/Messages");
+    window.location.hash = "#/Login";
+    return;
+  }
+
+  const chatId = chatStore.openOrCreateProviderChat(provider, userStore.currentUser);
   chatStore.setPendingChat(chatId);
   navigate("#/ChatMessages");
 }
@@ -144,11 +149,13 @@ function openChat(provider) {
             </div>
           </div>
 
-          <!-- ── Price + Message button ──────────────────────────────── -->
+          <!-- ── Price column + Message button ─────────────────────────────── -->
           <CardTitle class="flex w-15 flex-col items-center gap-1">
             <!--
               Message button: clicking creates (or reuses) a chat for this
-              provider and navigates to the Messages view.
+              provider and navigates the customer to the Messages view.
+              Updated to call openOrCreateProviderChat() which now requires
+              the currentUser to be passed in so chats can be user-scoped.
             -->
             <Button
               variant="ghost"
@@ -176,6 +183,7 @@ function openChat(provider) {
             <CardDescription>per hour</CardDescription>
           </CardTitle>
         </CardHeader>
+
         <CardContent class="flex flex-col gap-2">
           <Separator class="my-2" />
           <CardTitle>
