@@ -625,17 +625,18 @@ const allApplicationCards = computed(() => {
         .getMergedJobs()
         .filter((j) => j.user_id === clientId);
 
+        
     console.log(myJobs)
 
     const cards = [];
 
   for (const job of myJobs) {
         // Fetch applicants from the global store (persisted by providers when they apply)
-        const applicants = jobStore.getGlobalApplicantsForJob(job.job_id);
-    console.log(applicants);
+    const applicants = jobStore.getGlobalApplicantsForJob(job.job_id);
+        
         for (const entry of applicants) {
             const providerUserId =
-                typeof entry === "string" ? entry : entry.userID;
+                typeof entry === "string" ? entry : entry.userId;
 
             console.log("ID" + providerUserId);
             const appData = typeof entry === "object" ? entry : null;

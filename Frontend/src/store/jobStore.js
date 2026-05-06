@@ -156,6 +156,8 @@ export const useJobStore = defineStore(
         // Call this on mount in any client-side component that needs to see applications.
         function loadAllGlobalApplications() {
             const updated = {};
+
+            // 1. Read any existing globalApplications_* keys from localStorage.
             for (let i = 0; i < localStorage.length; i++) {
                 const key = localStorage.key(i);
                 if (key && key.startsWith("globalApplications_")) {
@@ -169,6 +171,32 @@ export const useJobStore = defineStore(
                     }
                 }
             }
+
+            // 2. Rebuild any missing global keys from the persisted `applications` ref.
+            //    Pinia restores `applications` on every page load (it is in the persist
+            //    pick list), but `_mergeApplicationIntoGlobal` is only called from
+            //    `applyToJob`. This means globalApplications_* keys can go missing after
+            //    a page reload even though the Pinia data is intact. We reconcile that
+            //    here so clients always see all provider applications.
+            for (const [jobId, entries] of Object.entries(applications.value)) {
+                if (
+                    Array.isArray(entries) &&
+                    entries.length > 0 &&
+                    (!updated[jobId] || updated[jobId].length === 0)
+                ) {
+                    updated[jobId] = entries;
+                    // Recreate the localStorage key so future reads don't need this fallback.
+                    try {
+                        localStorage.setItem(
+                            `globalApplications_${jobId}`,
+                            JSON.stringify(entries),
+                        );
+                    } catch {
+                        // localStorage quota exceeded — map is still populated, silently continue.
+                    }
+                }
+            }
+
             globalApplicantsMap.value = updated;
         }
 
