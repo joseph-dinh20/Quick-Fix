@@ -103,6 +103,8 @@
                   class="absolute top-full mt-1 w-48 bg-white rounded-lg shadow-lg border z-50 p-1 flex flex-col"
                 >
                   <NavigationMenuListItem class="py-1.5" href="#/DemoMyJobs" title="Your Jobs" v-if="isCustomer"/>
+                  <!-- Job Applications link — only for non-providers (customers) -->
+                  <NavigationMenuListItem class="py-1.5" href="#/ClientJobApplications" title="Job Applications" v-if="isCustomer"/>
                   <NavigationMenuListItem class="py-1.5" href="#/DemoJobApplication" title="Your Applications"
                    v-if="isProvider"/>
                   <NavigationMenuListItem class="py-1.5" href="#/DemoAssignedJobs" title="Assigned Jobs"
@@ -268,4 +270,3 @@ img {
   height: auto;
 }
 </style>
-

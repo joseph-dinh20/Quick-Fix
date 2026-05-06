@@ -170,9 +170,7 @@
 
           <div class="flex justify-between items-center mb-6">
             <h2 class="text-2xl md:text-3xl font-extrabold text-[#1a202c]">{{ selectedJob.title || 'Pest Control Help' }}</h2>
-            <Button variant="ghost" size="icon" class="text-slate-700 hover:bg-slate-100">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
-            </Button>
+            
           </div>
 
           <div v-if="selectedJob.images && selectedJob.images.length" class="relative flex items-center mb-10">
@@ -476,14 +474,6 @@ async function fetchJobs() {
   loading.value = true;
 
   try {
-    const res = await searchJobs({
-      services: selectedService.value || undefined,
-      budget: selectedBudget.value || undefined,
-      request_type: selectedJobType.value || undefined,
-      max_distance: selectedDistance.value || undefined,
-      location: searchLocation.value || undefined
-    });
-    
     // simulate API delay (optional but makes it feel real)
     await new Promise((r) => setTimeout(r, 300));
 

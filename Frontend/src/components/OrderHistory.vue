@@ -525,7 +525,7 @@ function messageProvider(order) {
           </div>
         </div>
 
-        <DialogFooter class="flex-col gap-2 sm:flex-row sm:justify-end">
+        <DialogFooter class="flex flex-wrap gap-2 sm:justify-end">
           <Button
             v-if="activeProviderOrder"
             variant="outline"
@@ -544,9 +544,6 @@ function messageProvider(order) {
               <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
             </svg>
             Message
-          </Button>
-          <Button variant="outline" @click="providerDialogOpen = false">
-            Close
           </Button>
           <Button @click="openFullProfile">View Full Profile</Button>
         </DialogFooter>
@@ -628,7 +625,7 @@ function messageProvider(order) {
 
     <!-- ===== View Rating Dialog (already-rated orders) ===== -->
     <Dialog v-model:open="viewRatingDialogOpen">
-      <DialogContent class="sm:max-w-md">
+      <DialogContent class="sm:max-w-2xl">
         <DialogHeader>
           <DialogTitle>Your rating</DialogTitle>
           <DialogDescription>

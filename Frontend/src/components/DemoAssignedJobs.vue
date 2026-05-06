@@ -52,10 +52,22 @@
         </Card>
       </div>
 
+      <!-- Empty state when no accepted jobs -->
+      <div v-else-if="filteredJobs.length === 0" class="text-center py-20 text-slate-400">
+        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24"
+          fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+          stroke-linejoin="round" class="mx-auto mb-4 opacity-40">
+          <rect width="18" height="18" x="3" y="3" rx="2"></rect>
+          <path d="m9 12 2 2 4-4"></path>
+        </svg>
+        <p class="text-lg font-medium">No assigned jobs yet</p>
+        <p class="text-sm mt-1">Jobs will appear here once a client accepts your application.</p>
+      </div>
+
       <div v-else class="flex flex-col gap-5">
         <Card
           v-for="job in filteredJobs.slice(0, 20)"
-          :key="job.id"
+          :key="job.job_id || job.id"
           class="flex flex-col sm:flex-row items-start sm:items-center p-4 shadow-sm hover:shadow-md transition-shadow border-slate-200 gap-6"
         >
           <div class="w-full sm:w-48 h-32 flex-shrink-0 bg-slate-100 rounded-lg overflow-hidden">
@@ -73,36 +85,33 @@
           <div class="flex-1 min-w-0">
             <h3 class="text-lg font-bold text-slate-900 truncate">{{ job.title }}</h3>
             <div class="mt-1 flex flex-col gap-1">
-              <p class="text-sm text-slate-500">by {{ job.customer?.name || job.customer || 'Unknown customer' }}</p>
-              <p class="text-sm text-slate-500">{{ job.city + ', ' + job.state || 'Location not provided' }}</p>
+              <p class="text-sm text-slate-500">by {{ job.customer?.name || job.customer || customerName(job.user_id) }}</p>
+              <p class="text-sm text-slate-500">{{ job.city }}{{ job.state ? ', ' + job.state : '' }}</p>
             </div>
             <div class="mt-3">
-
               <span class="text-sm font-bold text-slate-900">
-                {{ job.budget ? `$${job.budget}` : '$0' }}
+                {{ job.budget || job.price ? `$${job.budget || job.price}` : '$0' }}
               </span>
               <span class="text-sm text-slate-500 mr-3"> / hr</span>
-                              <Badge 
-                  variant="outline" 
-                  :class="[
-                    'font-medium px-2.5 py-0.5 rounded-md capitalize',
-                    job.status === 'open' 
-                      ? 'bg-red-50 text-red-600 border-red-200'
-                      : job.status === 'complete'
-                      ? 'bg-green-50 text-green-600 border-green-200'
-                      : job.status === 'in_progress'
-                      ? 'bg-yellow-50 text-yellow-600 border-yellow-200'
-                      : 'bg-blue-50 text-blue-600 border-blue-200'
-                  ]"
-                >
-                  {{ job.status === 'in_progress' ? 'In Progress' : job.status }}
-                </Badge>
+              <!-- Show "Accepted" badge to reflect that this job was assigned via acceptance -->
+              <Badge
+                variant="outline"
+                class="font-medium px-2.5 py-0.5 rounded-md bg-green-50 text-green-600 border-green-200"
+              >
+                Accepted
+              </Badge>
             </div>
 
             <div class="flex flex-wrap gap-2 mt-2">
               <span
-                v-for="service in job.services"
-                :key="service.id"
+                v-if="job.service"
+                class="text-xs bg-slate-100 px-2 py-1 rounded-md text-slate-600"
+              >
+                {{ job.service }}
+              </span>
+              <span
+                v-for="service in (job.services || [])"
+                :key="service.id || service"
                 class="text-xs bg-slate-100 px-2 py-1 rounded-md text-slate-600"
               >
                 {{ service.name || service }}
@@ -111,25 +120,19 @@
           </div>
 
           <div class="flex flex-col sm:items-end w-full sm:w-auto gap-3 mt-4 sm:mt-0">
-            <div v-if="1">
-            <Button 
+            <Button
               @click="markDone(job)"
               class="w-full sm:w-auto text-white font-semibold"
-              :disabled="job.status != 'in_progress'"
+              :disabled="job.status === 'Complete' || job.status === 'complete'"
             >
-              Mark as Complete
+              {{ job.status === 'Complete' || job.status === 'complete' ? 'Completed' : 'Mark as Complete' }}
             </Button>
-
-            </div>
- 
 
             <Button
               variant="link"
-              class="h-auto p-0 text-xs font-medium decoration-1 underline-offset-4"
-              :class="'text-slate-500 hover:text-slate-800'"
+              class="h-auto p-0 text-xs font-medium decoration-1 underline-offset-4 text-slate-500 hover:text-slate-800"
               @click="openJobModal(job)"
             >
-              <svg v-if="job.is_favorited" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-1.5"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"></path></svg>
               View Job
             </Button>
           </div>
@@ -152,7 +155,7 @@
         <div v-if="selectedJob" class="p-8 max-h-[85vh] overflow-y-auto">
 
           <div class="flex justify-between items-center mb-6">
-            <h2 class="text-2xl md:text-3xl font-extrabold text-[#1a202c]">{{ selectedJob.title || 'Pest Control Help' }}</h2>
+            <h2 class="text-2xl md:text-3xl font-extrabold text-[#1a202c]">{{ selectedJob.title || 'Job Details' }}</h2>
             <Button variant="ghost" size="icon" class="text-slate-700 hover:bg-slate-100">
               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
             </Button>
@@ -199,67 +202,30 @@
 
               <div class="flex items-center text-slate-600 font-medium">
                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-3"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-                {{ selectedJob.customer?.name || selectedJob.customer || 'Unknown customer' }}
+                {{ selectedJob.customer?.name || selectedJob.customer || customerName(selectedJob.user_id) }}
               </div>
 
               <div class="flex items-center text-slate-600 font-medium">
-                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-3"><circle cx="12" cy="12" r="10"></circle><line x1="2" x2="22" y1="12" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
-                {{ selectedJob.languages || 'Not specified' }}
-              </div>
-
-              <div class="flex items-center text-slate-600 font-medium capitalize">
                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-3"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"></path><circle cx="12" cy="10" r="3"></circle></svg>
-                {{ selectedJob.city + ', ' + selectedJob.state || 'ocation not provided' }}
-              </div>
-
-              <div class="flex items-center text-slate-600 font-medium capitalize">
-                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-3"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-                {{ selectedJob.urgency || 'Urgency not provided' }}
+                {{ selectedJob.city }}{{ selectedJob.state ? ', ' + selectedJob.state : '' }}
               </div>
 
               <div class="flex items-center text-slate-600 font-medium">
-                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-3">
-                  <path d="M8 2v4"></path>
-                  <path d="M16 2v4"></path>
-                  <rect width="18" height="18" x="3" y="4" rx="2"></rect>
-                  <path d="M3 10h18"></path>
-                </svg>
-                {{ formatDate(selectedJob.deadline) || 'No deadline provided' }}
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-3"><line x1="12" x2="12" y1="2" y2="22"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+                ${{ selectedJob.budget || selectedJob.price || 0 }} / hr
               </div>
 
-
-              <div class="flex items-center text-slate-600 font-medium capitalize">
-                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-3">
-                  <rect width="20" height="14" x="2" y="7" rx="2" ry="2"></rect>
-                  <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
-                </svg>
-                {{ selectedJob.request_type || 'Location not provided' }}
+              <div class="flex items-center text-slate-600 font-medium">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-3"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                {{ selectedJob.service || 'General' }}
               </div>
 
-
-            </div>
-
-            <div class="mt-6 pt-2">
-              <span class="text-lg font-bold text-[#1a202c]">
-                {{ selectedJob.budget ? `$${selectedJob.budget}` : '$0' }}
-              </span>
-              <span class="text-base text-slate-500 font-medium mr-5"> / hr</span>
-
-              <span
-                v-for="service in selectedJob.services"
-                :key="service.id"
-                class="text-xs bg-slate-100 px-2 py-1 rounded-md text-slate-600 ml-2"
-              >
-                {{ service.name || service }}
-              </span>
             </div>
           </div>
 
-          <hr class="border-slate-100 mb-8" />
-
-          <div>
-            <h3 class="font-bold text-[#1a202c] text-lg mb-4">About the Job</h3>
-            <p class="text-slate-600 leading-relaxed whitespace-pre-wrap">{{ selectedJob.description || `No description` }}</p>
+          <div v-if="selectedJob.description" class="mb-6">
+            <h3 class="font-bold text-[#1a202c] text-lg mb-3">Description</h3>
+            <p class="text-slate-600 text-sm leading-relaxed">{{ selectedJob.description }}</p>
           </div>
 
         </div>
@@ -271,7 +237,6 @@
 
 <script>
 import { fetchAssignedJobs, completeJob } from "@/services/api"
-// import { getFavoriteJobs, toggleFavoriteJob } from "@/services/api";
 import { storeToRefs } from "pinia";
 import { useJobStore } from "@/store/jobStore";
 import { useUserStore, ALL_USERS } from "@/store/userStore";
@@ -329,17 +294,17 @@ export default {
       let result = [...this.jobs]
 
       if (this.currentSort === 'Newest') {
-        result.sort((a, b) => new Date(b.deadline) - new Date(a.deadline))
+        result.sort((a, b) => new Date(b.deadline || b.date || 0) - new Date(a.deadline || a.date || 0))
       } else if (this.currentSort === 'Oldest') {
-        result.sort((a, b) => new Date(a.deadline) - new Date(b.deadline))
+        result.sort((a, b) => new Date(a.deadline || a.date || 0) - new Date(b.deadline || b.date || 0))
       } else if (this.currentSort === 'Title (A-Z)') {
-        result.sort((a, b) => a.title.localeCompare(b.title))
+        result.sort((a, b) => (a.title || '').localeCompare(b.title || ''))
       }
 
       if (!this.displayQuery.trim()) return result
       const q = this.displayQuery.toLowerCase()
       return result.filter(job =>
-        job.title.toLowerCase().includes(q) ||
+        (job.title || '').toLowerCase().includes(q) ||
         (job.description || '').toLowerCase().includes(q) ||
         (job.city || '').toLowerCase().includes(q)
       )
@@ -371,6 +336,12 @@ export default {
       })
     },
 
+    // Resolve a customer display name from user_id using ALL_USERS
+    customerName(userId) {
+      const user = ALL_USERS.find(u => u.id === userId);
+      return user?.name || 'Unknown Customer';
+    },
+
     fallbackJob(job, index = 0) {
       const customer = ALL_USERS.find(u => u.id === job.user_id);
       return {
@@ -380,18 +351,21 @@ export default {
         title: job.title || "Untitled Job",
         description: job.description || "No description provided",
         services: job.service ? [job.service] : ["General Repair"],
+        service: job.service || "General Repair",
         budget: job.price ?? 0,
         city: job.city || "Long Beach",
         state: job.state || "California",
-        lat: Number(job.lat ?? 33.7701),   // ← hardcode default, no coords ref
+        lat: Number(job.lat ?? 33.7701),
         lng: Number(job.lng ?? -118.1937),
         languages: job.language || "English",
         urgency: job.urgency || "normal",
         deadline: job.date || new Date().toISOString(),
         request_type: job.request_type || "quote",
         is_favorited: job.is_favorited ?? false,
-        status: job.status ?? "Open",
-        customer: customer?.name || "Unknown Customer"
+        // Store the status as "Accepted" since these came from accepted decisions
+        status: "Accepted",
+        customer: customer?.name || "Unknown Customer",
+        images: job.images || [],
       };
     },
 
@@ -411,8 +385,20 @@ export default {
           })),
         }));
       } catch (err) {
-        console.error("Backend failed to load, using fallback data", err);
-        this.jobs = this.jobStore.getMergedJobs().filter(job => `p_${job.provider_id}` === this.userStore.currentUser?.id).map((job, index) => this.fallbackJob(job, index));
+        console.error("Backend unavailable, using accepted jobs from decisions store", err);
+
+        // ── CORE FIX ──────────────────────────────────────────────────────────
+        // Use getAcceptedJobsForProvider instead of filtering by provider_id.
+        // This reads the global decisions store so only jobs where the client
+        // actually clicked "Accept" on the provider's application show up.
+        const currentUserId = this.userStore.currentUser?.id;
+        if (currentUserId) {
+          const acceptedJobs = this.jobStore.getAcceptedJobsForProvider(currentUserId);
+          this.jobs = acceptedJobs.map((job, index) => this.fallbackJob(job, index));
+        } else {
+          this.jobs = [];
+        }
+
         this.backendAvailable = false;
       } finally {
         this.loading = false;
@@ -422,10 +408,11 @@ export default {
     async markDone(job) {
       try {
         const res = await completeJob(job.id)
-        await this.loadJobs()
+        await this.fetchJobs()
         console.log(res);
       } catch (err) {
         console.error(err);
+        // Update locally in both stores
         this.jobStore.saveJob(job.job_id, { status: "Complete" });
         job.status = "Complete";
       }

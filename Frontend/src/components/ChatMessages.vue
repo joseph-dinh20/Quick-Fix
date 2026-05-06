@@ -1,8 +1,8 @@
 <template>
-  <div class="flex h-screen bg-background font-sans text-foreground overflow-hidden">
+  <div class="flex h-[90vh] bg-background font-sans text-foreground overflow-hidden">
 
     <!-- ─── Left sidebar: Conversation list ──────────────────────────────────── -->
-    <div class="w-full max-w-md border-r bg-card flex flex-col z-10">
+    <div class="w-full max-w-sm border-r bg-card flex flex-col z-10">
       <div class="p-6">
         <h1 class="text-2xl font-semibold tracking-tight">Conversations</h1>
       </div>
@@ -156,25 +156,7 @@
           </div>
 
           <div class="flex items-center gap-1 shrink-0">
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger as-child>
-                  <Button variant="ghost" size="icon" class="rounded-full">
-                    <Phone class="w-5 h-5 text-muted-foreground" />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>Call</TooltipContent>
-              </Tooltip>
-
-              <Tooltip>
-                <TooltipTrigger as-child>
-                  <Button variant="ghost" size="icon" class="rounded-full">
-                    <MoreVertical class="w-5 h-5 text-muted-foreground" />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>More Options</TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
+            
           </div>
         </div>
 
